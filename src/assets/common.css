@@ -1,0 +1,104 @@
+/*初始化*/
+
+html,
+body {
+	font-size: 20px;
+}
+
+* {
+	margin: 0px;
+	padding: 0;
+	font-family: "微软雅黑";
+}
+
+ul,
+li {
+	list-style: none;
+}
+
+a {
+	text-decoration: none;
+	appearance: none;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+}
+
+img {
+	pointer-events: none;
+}
+
+textarea {
+	padding: 0px;
+	border: none;
+	outline: none;
+	resize: none;
+}
+
+
+/*清除浮动*/
+
+.clearfix {
+	*zoom: 1;
+}
+
+.clearfix:before,
+.clearfix:after {
+	display: table;
+	line-height: 0;
+	content: "";
+}
+
+.clearfix:after {
+	clear: both;
+}
+
+
+/*flex布局*/
+
+.flexBox {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: -ms-flexbox;
+	display: flex;
+}
+
+.flex-1 {
+	-webkit-box-flex: 1;
+	-webkit-flex: 1;
+	-ms-flex: 1;
+	flex: 1;
+}
+
+
+/*文字超出一行、多行显示省略号*/
+
+.text-1 {
+	width: 300px;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.text-2 {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+}
+
+
+/*主体内容*/
+
+.body-container {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: #fff;
+}
+
+.body-container.bg {
+	background-color: #EFEFEF;
+}
