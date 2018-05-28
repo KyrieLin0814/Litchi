@@ -19,21 +19,25 @@
 				</div>
 				<ul class="card-list clearfix" v-if="item.more">
 					<li v-for="i in item.items.slice(0,4)">
-						<div class="img" :style="{backgroundImage: 'url(' + i.img + ')', backgroundSize: '100% 100%'}"></div>
-						<div class="txt">
-							<span>{{i.area}}</span>
-							<a>低至{{i.price}}元/天</a>
-						</div>
+						<router-link :to="{ name:'detail', params:{obj:i}}">
+							<div class="img" :style="{backgroundImage: 'url(' + i.img + ')', backgroundSize: '100% 100%'}"></div>
+							<div class="txt">
+								<span>{{i.area}}</span>
+								<a>低至{{i.price}}元/天</a>
+							</div>
+						</router-link>
 					</li>
 				</ul>
 
 				<ul class="card-list clearfix" v-else>
 					<li v-for="i in item.items">
-						<div class="img" :style="{backgroundImage: 'url(' + i.img + ')', backgroundSize: '100% 100%'}"></div>
-						<div class="txt">
-							<span>{{i.area}}</span>
-							<a>低至{{i.price}}元/天</a>
-						</div>
+						<router-link :to="{ name:'detail', params:{obj:i}}">
+							<div class="img" :style="{backgroundImage: 'url(' + i.img + ')', backgroundSize: '100% 100%'}"></div>
+							<div class="txt">
+								<span>{{i.area}}</span>
+								<a>低至{{i.price}}元/天</a>
+							</div>
+						</router-link>
 					</li>
 				</ul>
 			</div>

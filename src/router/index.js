@@ -3,16 +3,24 @@ import Router from 'vue-router'
 import store from '@/vuex/store'
 
 import index from '@/components/index'
+import detail from '@/components/detail'
 
 Vue.use(Router)
 
 //export default new Router({
 const router = new Router({
 	routes: [{
-		path: '/',
-		name: 'index',
-		component: index
-	}]
+			path: '/',
+			name: 'index',
+			component: index
+		},
+		{
+			path: '/detail',
+			name: 'detail',
+			component: detail,
+			props:true
+		}
+	]
 })
 
 router.beforeEach((to, from, next) => {

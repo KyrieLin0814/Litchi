@@ -102,3 +102,22 @@ textarea {
 .body-container.bg {
 	background-color: #EFEFEF;
 }
+
+
+/*checkbox*/
+.cube-checkbox-ui.cubeic-square-border{
+	border:1px solid #F39800;
+	width:14px;
+	height:14px;
+	border-radius:50%;
+}
+.cube-checkbox-hollow i:before{
+	border-radius:50%;
+}
+.car-list .cube-checkbox-wrap{
+	padding:5px 3px;
+}
+.car-list .cube-checkbox{
+	position:absolute;
+	padding:0;
+}
