@@ -4,6 +4,8 @@ import store from '@/vuex/store'
 
 import index from '@/components/index'
 import detail from '@/components/detail'
+import order from '@/components/order'
+import payPage from '@/components/payPage'
 
 Vue.use(Router)
 
@@ -18,7 +20,19 @@ const router = new Router({
 			path: '/detail',
 			name: 'detail',
 			component: detail,
-			props:true
+			props: true
+		},
+		{
+			path: '/order',
+			name: 'order',
+			component: order,
+			props: true
+		},
+		{
+			path: '/payPage',
+			name: 'payPage',
+			component: payPage,
+			props: true
 		}
 	]
 })

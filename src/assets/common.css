@@ -104,20 +104,77 @@ textarea {
 }
 
 
+/*路由过渡*/
+
+.fade-enter-active {
+	transition: all .5s ease;
+}
+
+.fade-enter,
+.fade-leave-to {
+	opacity: 0;
+}
+
+
 /*checkbox*/
-.cube-checkbox-ui.cubeic-square-border{
-	border:1px solid #F39800;
-	width:14px;
-	height:14px;
-	border-radius:50%;
+
+.car-list .cube-checkbox-ui.cubeic-square-border {
+	border: 1px solid #F39800;
+	width: 14px;
+	height: 14px;
+	border-radius: 50%;
 }
-.cube-checkbox-hollow i:before{
-	border-radius:50%;
+
+.car-list .cube-checkbox-hollow i:before {
+	border-radius: 50%;
 }
-.car-list .cube-checkbox-wrap{
-	padding:5px 3px;
+
+.car-list .car-list .cube-checkbox-wrap {
+	padding: 5px 3px;
 }
-.car-list .cube-checkbox{
-	position:absolute;
-	padding:0;
+
+.car-list .cube-checkbox {
+	position: absolute;
+	padding: 0;
+}
+
+.car-list .cube-checkbox-ui:before{
+	display:none;
+}
+
+.pay-box .cube-checkbox-ui:before {
+    color: #F39800;
+    display: inline-block;
+    -webkit-transform: scale(0.8);
+    transform: scale(0.8);
+}
+.pay-box .cube-checkbox_checked .cube-checkbox-ui i {
+    color: #F39800;
+    -webkit-transform: scale(0.8);
+    transform: scale(0.8);
+}
+
+
+/*标题*/
+
+.common-title {
+	height: 24px;
+	background-color: #C9CACA;
+	font-size: 0;
+}
+
+.common-title i {
+	padding: 0 0.3rem 0 0.5rem;
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	vertical-align: middle;
+}
+
+.common-title span {
+	display: inline-block;
+	font-size: .7rem;
+	color: #F39800;
+	line-height: 24px;
+	vertical-align: middle;
 }

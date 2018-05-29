@@ -4,7 +4,7 @@
 			<div class="banner" :style="{backgroundImage: 'url(' + obj.img + ')', backgroundSize: '100% auto', backgroundPosition:'center'}">
 				<p>{{obj.area}}</p>
 			</div>
-			<div class="car-title">
+			<div class="common-title">
 				<i></i>
 				<span>选择套餐</span>
 			</div>
@@ -55,6 +55,14 @@
 							</p>
 						</li>
 					</ul>
+					<div class="num-box" v-if="tabFlag=='choose'">
+						<p>天数</p>
+						<div>
+							<a class="del" @click="delFunc">-</a>
+							<a class="number">{{ finalNum }}</a>
+							<a class="add" @click="addFunc">+</a>
+						</div>
+					</div>
 
 					<ul class="list-2" :class="{'active': (tabFlag=='five')}">
 						<li>
@@ -102,12 +110,15 @@
 							</p>
 						</li>
 					</ul>
+
 				</div>
 				<div class="scroll-btn">
-					<i></i><span>上拉展开产品详情</span>
+					<div @click="jump">
+						<i></i><span>上拉展开产品详情</span>
+					</div>
 				</div>
 
-				<div class="detail-list">
+				<div class="detail-list d_jump">
 					<ul>
 						<li>
 							<p><span>推荐理由</span></p>
@@ -143,6 +154,18 @@
 								<li>卡槽通用，适合多种手机型号</li>
 								<li>卡槽通用，适合多种手机型号</li>
 								<li>卡槽通用，适合多种手机型号</li>
+								<li>超低价格</li>
+								<li>卡槽通用，适合多种手机型号</li>
+								<li>卡槽通用，适合多种手机型号</li>
+								<li>卡槽通用，适合多种手机型号</li>
+								<li>超低价格</li>
+								<li>卡槽通用，适合多种手机型号</li>
+								<li>卡槽通用，适合多种手机型号</li>
+								<li>卡槽通用，适合多种手机型号</li>
+								<li>超低价格</li>
+								<li>卡槽通用，适合多种手机型号</li>
+								<li>卡槽通用，适合多种手机型号</li>
+								<li>卡槽通用，适合多种手机型号</li>
 							</ul>
 						</li>
 					</ul>
@@ -152,7 +175,7 @@
 
 		<div class="buy-box clearfix">
 			<p>总价： <span>{{ price }}</span> 元</p>
-			<a>加入购物车</a>
+			<a @click="addCar">加入购物车</a>
 		</div>
 	</div>
 </template>
@@ -162,6 +185,7 @@
 		name: 'detail',
 		data() {
 			return {
+				obj: {},
 				contentHeight: 0,
 				tabFlag: this.$store.state.tabFlag,
 				option: {
@@ -172,6 +196,7 @@
 					checkedid1: true
 				},
 				price: 9.9,
+				finalNum: 1,
 				chooseFlag: 'id1',
 				dataArr: [{
 						name: '自选天数包',
@@ -229,23 +254,16 @@
 
 			}
 		},
-		props: {
-			obj: {
-				type: Object
-			}
-		},
+		props: {},
 		created() {
-			console.log(this.$store.state.tabFlag)
-
-			this.contentHeight = document.documentElement.clientHeight - 254
-			console.log(this.contentHeight)
-			
-			window.onscroll=function(){
-				var t = document.documentElement.scrollTop
-				
-			}
+			this.obj = this.$store.state.routerData
+			console.log(this.obj)
 		},
-		mounted() {},
+		mounted() {
+			var that = this
+			that.contentHeight = document.documentElement.clientHeight - 254
+			//window.addEventListener('scroll', that.onScroll)
+		},
 		methods: {
 			tabFunc(str) {
 				this.tabFlag = str
@@ -255,6 +273,72 @@
 				this.chooseFlag = id
 				this.checkedObj = {}
 				this.checkedObj['checked' + id] = true
+			},
+			onScroll() {
+				let moPoint = document.documentElement.clientHeight - 53
+				let scrolled = document.documentElement.scrollTop || document.body.scrollTop　　　 // moPoint锚点对应的距离
+				if(scrolled >= moPoint) {
+					this.jump() //to top
+				} else {
+					this.jump(1) //to bottom
+				}
+			},
+			jump(index) {
+				// 用 class="d_jump" 添加锚点
+				//let jump = document.querySelectorAll('.d_jump')
+				//let total = jump[index].offsetTop
+				let total
+				if(index) {
+					total = document.documentElement.clientHeight - 53
+				} else {
+					total = 0
+				}
+
+				let distance = document.documentElement.scrollTop || document.body.scrollTop
+				// 平滑滚动，时长500ms，每10ms一跳，共50跳
+				let step = total / 30
+				if(total > distance) {
+					smoothDown()
+				} else {
+					let newTotal = distance - total
+					step = newTotal / 30
+					smoothUp()
+				}
+
+				function smoothDown() {
+					if(distance < total) {
+						distance += step　　　　　　　
+						document.body.scrollTop = distance
+						document.documentElement.scrollTop = distance
+						setTimeout(smoothDown, 10)
+					} else {
+						document.body.scrollTop = total
+						document.documentElement.scrollTop = total
+					}
+				}
+
+				function smoothUp() {
+					if(distance > total) {
+						distance -= step
+						document.body.scrollTop = distance
+						document.documentElement.scrollTop = distance
+						setTimeout(smoothUp, 10)
+					} else {
+						document.body.scrollTop = total
+						document.documentElement.scrollTop = total
+					}
+				}
+			},
+			addFunc() {
+				this.finalNum++
+			},
+			delFunc() {
+				if(this.finalNum > 1) {
+					this.finalNum--
+				}
+			},
+			addCar(){
+				this.$router.push("/order")
 			}
 		}
 	}
@@ -270,31 +354,11 @@
 		color: #fff;
 		text-align: center;
 		line-height: 110px;
-		font-size: 0;
 	}
 	
-	.car-title {
-		height: 24px;
-		background-color: #C9CACA;
-		font-size: 0;
-	}
-	
-	.car-title i {
-		padding: 0 0.3rem 0 0.5rem;
-		display: inline-block;
-		width: 16px;
-		height: 16px;
+	.common-title i {
 		background: url(../assets/common/shoppingcar.png)no-repeat center;
 		background-size: 16px 16px;
-		vertical-align: middle;
-	}
-	
-	.car-title span {
-		display: inline-block;
-		font-size: .7rem;
-		color: #F39800;
-		line-height: 24px;
-		vertical-align: middle;
 	}
 	
 	.car-tab {
@@ -329,6 +393,7 @@
 	}
 	
 	.car-list {
+		position: relative;
 		overflow-y: scroll;
 	}
 	
@@ -504,6 +569,51 @@
 		background-size: 13px 8px;
 	}
 	
+	.num-box {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		padding: 0 1.2rem;
+		height: 34px;
+		border-top: 1px solid #D4D5D5;
+		background: #fff;
+		font-size: 0;
+	}
+	
+	.num-box p {
+		float: left;
+		font-size: 0.7rem;
+		color: #3E3A39;
+		line-height: 34px;
+	}
+	
+	.num-box>div {
+		float: right;
+	}
+	
+	.num-box>div>a {
+		margin-top: 5px;
+		display: inline-block;
+		vertical-align: middle;
+		font-size: 0.7rem;
+		border: 1px solid #D4D5D5;
+		line-height: 18px;
+		height: 18px;
+	}
+	
+	.num-box>div>a.number {
+		padding: 2px 12px;
+		border-left: none;
+		border-right: none;
+	}
+	
+	.num-box>div>a.add,
+	.num-box>div>a.del {
+		padding: 2px 6px;
+		font-size: 0.8rem;
+	}
+	
 	.detail-list {
 		padding: 5px 1.2rem 60px;
 	}
@@ -532,7 +642,7 @@
 		position: relative;
 		font-size: 0.6rem;
 		color: #3E3A39;
-		line-height:18px;
+		line-height: 18px;
 	}
 	
 	.detail-list ul ul li:before {

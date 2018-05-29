@@ -9,6 +9,7 @@ import store from '@/vuex/store'
 import md5 from 'js-md5'
 
 import {
+	Style,
 	Button,
 	Textarea,
 	Upload,
