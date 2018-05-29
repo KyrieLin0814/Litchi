@@ -59,17 +59,17 @@
 		padding-left: 32px;
 		line-height: 24px;
 		font-size: .7rem;
-		border-bottom: 20px solid #C9CACA;
+		border-bottom: 20px solid #E4E4E4;
 	}
 	
 	.img-content {
-		border-bottom: 1px solid #C9CACA;
+		border-bottom: 1px solid #E4E4E4;
 	}
 	
 	.img-content>div {
 		float: left;
 		overflow: hidden;
-		height: 100px;
+		height: 90px;
 	}
 	
 	.img-content>div.img {

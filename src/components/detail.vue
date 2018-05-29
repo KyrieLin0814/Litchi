@@ -427,7 +427,7 @@
 	.sale {
 		position: absolute;
 		top: 0;
-		right: -2rem;
+		right: -0.8rem;
 		display: block;
 		font-size: 0.5rem;
 		line-height: 15px;

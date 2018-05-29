@@ -6,6 +6,7 @@ import index from '@/components/index'
 import detail from '@/components/detail'
 import order from '@/components/order'
 import payPage from '@/components/payPage'
+import postWay from '@/components/postWay'
 
 Vue.use(Router)
 
@@ -32,6 +33,12 @@ const router = new Router({
 			path: '/payPage',
 			name: 'payPage',
 			component: payPage,
+			props: true
+		},
+		{
+			path: '/postWay',
+			name: 'postWay',
+			component: postWay,
 			props: true
 		}
 	]

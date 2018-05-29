@@ -2,7 +2,7 @@
 	<div class="body-container">
 		<div class="common-title">
 			<i></i>
-			<span>确认订单</span>
+			<span>购买SIM卡</span>
 		</div>
 
 		<div class="num-box">
@@ -18,6 +18,28 @@
 				<p class="agreeTxt">同意<span>《用户授权协议》</span>和<span>《荔枝卡境外通信服务协议》</span></p>
 			</cube-checkbox>
 		</div>
+
+		<div class="buy-box clearfix">
+			<p>合计： <span>{{ totalPrice }}</span> 元</p>
+			<span class="slide" :class="{'active': slideFlage}" @click="slideFunc"></span>
+			<a @click="nextFunc">下一步</a>
+		</div>
+		
+		<transition name="fade" mode="out-in">
+			<div class="cost-box" :class="{'active': slideFlage}">
+				<p>费用详情</p>
+				<div class="flexBox">
+					<div>套餐费 ({{ mealCost }})</div>
+					<div class="flex-1"></div>
+					<div class="price"><span>{{ mealPrice }}</span>元</div>
+				</div>
+				<div class="flexBox">
+					<div>卡费 ({{ cardCost }})</div>
+					<div class="flex-1"></div>
+					<div class="price"><span>{{ cardPrice }}</span>元</div>
+				</div>
+			</div>
+		</transition>
 	</div>
 </template>
 
@@ -27,10 +49,21 @@
 		data() {
 			return {
 				num: 1,
-				checked: false
+				perPrice: 9.9,
+				totalPrice: 9.9,
+				checked: false,
+				slideFlage: true,
+				mealCost: '2.9元 x 1天 x 1张',
+				mealPrice: 2.9,
+				cardCost: '17元 x 1天 x 1张',
+				cardPrice: 17
 			}
 		},
-		components: {},
+		watch: {
+			num: function() {
+				this.totalPrice = (this.perPrice * this.num).toFixed(2)
+			}
+		},
 		created() {
 
 		},
@@ -44,6 +77,16 @@
 					this.num--
 				}
 			},
+			slideFunc() {
+				if(this.slideFlage) {
+					this.slideFlage = false
+				} else {
+					this.slideFlage = true
+				}
+			},
+			nextFunc() {
+				this.$router.push("/postWay")
+			}
 		}
 	}
 </script>
@@ -98,11 +141,13 @@
 		font-size: 0.8rem;
 	}
 	
-	.agree .agreeTxt{
-		font-size:0.6rem;
-		color:#9FA0A0;
+	.agree .agreeTxt {
+		font-size: 0.6rem;
+		color: #9FA0A0;
 	}
-	.agree .agreeTxt span{
-		color:#F39800
+	
+	.agree .agreeTxt span {
+		color: #F39800
 	}
+	
 </style>

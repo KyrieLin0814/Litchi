@@ -1,0 +1,167 @@
+<template>
+	<div class="body-container">
+		<div class="common-title">
+			<i></i>
+			<span>选择荔枝卡收获方式</span>
+		</div>
+
+		<div class="choose-way car-list">
+			<ul>
+				<li @click="chooseWay(1)">
+					<cube-checkbox v-model="checkedObj.type1" :option="option" :hollow-style="true" shape="circle" />
+					<div class="post-txt"><span>普通快递</span>（免费）</div>
+					<p><span>{{norPost}}</span>元</p>
+				</li>
+				<li @click="chooseWay(2)">
+					<cube-checkbox v-model="checkedObj.type2" :option="option" :hollow-style="true" shape="circle" />
+					<div class="post-txt"><span>顺风快递</span>（更快送达）</div>
+					<p><span>{{SFPost}}</span>元</p>
+				</li>
+				<li @click="chooseWay(3)">
+					<cube-checkbox v-model="checkedObj.type3" :option="option" :hollow-style="true" shape="circle" />
+					<div class="have">已有卡片，直接充值到我的旅游卡</div>
+				</li>
+			</ul>
+		</div>
+		<div class="more-info">
+			<p>收货地址</p>
+			<div>{{ adressTxt ? adressTxt : '编辑' }}</div>
+		</div>
+		<div class="more-info">
+			<p>已有旅游卡信息</p>
+			<div>{{ cardTxt ? cardTxt : '编辑' }}</div>
+		</div>
+
+		<div class="buy-box clearfix">
+			<p>合计： <span>{{ totalPrice }}</span> 元</p>
+			<span class="slide" :class="{'active': slideFlage}" @click="slideFunc"></span>
+			<a @click="payFunc">支付</a>
+		</div>
+
+		<transition name="fade" mode="out-in">
+			<div class="cost-box" :class="{'active': slideFlage}">
+				<p>费用详情</p>
+				<div class="flexBox">
+					<div>套餐费 ({{ mealCost }})</div>
+					<div class="flex-1"></div>
+					<div class="price"><span>{{ mealPrice }}</span>元</div>
+				</div>
+				<div class="flexBox">
+					<div>卡费 ({{ cardCost }})</div>
+					<div class="flex-1"></div>
+					<div class="price"><span>{{ cardPrice }}</span>元</div>
+				</div>
+			</div>
+		</transition>
+
+	</div>
+</template>
+
+<script>
+	export default {
+		name: 'name',
+		data() {
+			return {
+				option: {
+					label: '',
+					value: ''
+				},
+				checkedObj: {
+					type1: true
+				},
+				norPost:0,
+				SFPost:15,
+				slideFlage: true,
+				totalPrice: 9.9,
+				mealCost: '2.9元 x 1天 x 1张',
+				mealPrice: 2.9,
+				cardCost: '17元 x 1天 x 1张',
+				cardPrice: 17,
+				adressTxt: '',
+				cardTxt: ''
+			}
+		},
+		components: {},
+		created() {
+
+		},
+		mounted() {},
+		methods: {
+			slideFunc() {
+				if(this.slideFlage) {
+					this.slideFlage = false
+				} else {
+					this.slideFlage = true
+				}
+			},
+			payFunc(){
+				
+			},
+			chooseWay(id){
+				this.checkedObj = {}
+				this.checkedObj['type' + id] = true
+			}
+		}
+	}
+</script>
+
+<style scoped>
+	.common-title i {
+		background: url(../assets/common/sendWay.png)no-repeat center;
+		background-size: 16px 16px;
+	}
+	
+	.choose-way ul li{
+		position: relative;
+		padding:14px 1.5rem;
+		border-bottom:1px solid #D4D5D5;
+		font-size:0;
+	}
+	.choose-way ul li .cube-checkbox{
+		position:absolute;
+		left:9px;
+		top: 10px;
+		height: 20px;
+	}
+	.choose-way ul li div,
+	.choose-way ul li p{
+		display:inline-block;
+		font-size:0.7rem;
+		line-height:14px;
+		height:14px;
+	}
+	.choose-way ul li span{
+		display: inline-block;
+		color:#F39800;
+		line-height:14px;
+		height:14px;
+	}
+	.post-txt{
+		color:#C9CACA
+	}
+	.choose-way ul li p{
+		float:right;
+	}
+	.choose-way ul li p span{
+		padding-right:5px;
+	}
+	.have{
+		color:#3E3A39;
+	}
+	.more-info{
+		padding:10px 1.2rem;
+		font-size:0.7rem;
+		text-align: right;
+		border-bottom:1px solid #D4D5D5;
+	}
+	.more-info p{
+		color:#3E3A39;
+	}
+	.more-info div{
+		padding-right:1rem;	
+		color:#9FA0A0;
+		margin-top:10px;
+		background: url(../assets/common/more.png)no-repeat center right;
+		background-size: 6px 10px;
+	}
+</style>
