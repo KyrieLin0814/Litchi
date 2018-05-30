@@ -9,6 +9,11 @@ import payPage from '@/components/payPage'
 import postWay from '@/components/postWay'
 import adress from '@/components/adress'
 import haveCard from '@/components/haveCard'
+import paySuccess from '@/components/paySuccess'
+import payError from '@/components/payError'
+import status from '@/components/status'
+import quit from '@/components/quit'
+import quitSuccess from '@/components/quitSuccess'
 
 Vue.use(Router)
 
@@ -53,6 +58,36 @@ const router = new Router({
 			path: '/haveCard',
 			name: 'haveCard',
 			component: haveCard,
+			props: true
+		},
+		{
+			path: '/paySuccess',
+			name: 'paySuccess',
+			component: paySuccess,
+			props: true
+		},
+		{
+			path: '/payError',
+			name: 'payError',
+			component: payError,
+			props: true
+		},
+		{
+			path: '/status',
+			name: 'status',
+			component: status,
+			props: true
+		},
+		{
+			path: '/quit',
+			name: 'quit',
+			component: quit,
+			props: true
+		},
+		{
+			path: '/quitSuccess',
+			name: 'quitSuccess',
+			component: quitSuccess,
 			props: true
 		}
 	]

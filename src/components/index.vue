@@ -48,7 +48,7 @@
 				<router-link to="/"><span>帮助中心</span></router-link>
 			</div>
 			<div class="flex-1 order">
-				<router-link to="/">
+				<router-link to="/status">
 					<span>我的订单</span></router-link>
 			</div>
 		</div>

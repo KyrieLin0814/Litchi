@@ -313,13 +313,13 @@
 				}
 
 				let distance = document.documentElement.scrollTop || document.body.scrollTop
-				// 平滑滚动，时长300ms，每10ms一跳，共30跳
-				let step = total / 30
+				// 平滑滚动，时长400ms，每10ms一跳，共40跳
+				let step = total / 40
 				if(total > distance) {
 					smoothDown()
 				} else {
 					let newTotal = distance - total
-					step = newTotal / 30
+					step = newTotal / 40
 					smoothUp()
 				}
 

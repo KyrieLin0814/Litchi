@@ -110,13 +110,15 @@
 			},
 			setAddress() {
 				if(!this.checkedObj.type3) {
-					this.$router.push("/adress")
+					//this.$router.push("/adress")
 				}
+				this.$router.push("/adress")
 			},
 			haveCard() {
 				if(this.checkedObj.type3) {
-					this.$router.push("/haveCard")
+					//this.$router.push("/haveCard")
 				}
+				this.$router.push("/haveCard")
 			}
 		}
 	}

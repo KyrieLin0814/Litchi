@@ -307,3 +307,25 @@ textarea {
 	padding-right: 3px;
 	font-weight: bold;
 }
+
+
+/*按钮*/
+
+.btns a {
+	display: inline-block;
+	min-width: 10rem;
+	text-align: center;
+	font-size: 0.7rem;
+	color: #fff;
+	border-radius: 5px;
+	margin-bottom: 15px;
+	line-height: 32px;
+	background-color: #F39800;
+	border: 1px solid #F39800;
+}
+
+.btns a.done {
+	color: #F39800;
+	border: 1px solid #F39800;
+	background-color: #fff;
+}
