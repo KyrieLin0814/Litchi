@@ -2,7 +2,7 @@
 	<div class="body-container">
 		<div class="common-title">
 			<i></i>
-			<span>选择荔枝卡收获方式</span>
+			<span>选择荔枝卡收货方式</span>
 		</div>
 
 		<div class="choose-way car-list">
@@ -23,13 +23,13 @@
 				</li>
 			</ul>
 		</div>
-		<div class="more-info">
+		<div class="more-info" @click="setAddress">
 			<p>收货地址</p>
-			<div>{{ adressTxt ? adressTxt : '编辑' }}</div>
+			<div>{{ addressTxt ? addressTxt : '编辑' }}</div>
 		</div>
-		<div class="more-info">
+		<div class="more-info" @click="haveCard">
 			<p>已有旅游卡信息</p>
-			<div>{{ cardTxt ? cardTxt : '编辑' }}</div>
+			<div>{{ cardID ? cardID : '编辑' }}</div>
 		</div>
 
 		<div class="buy-box clearfix">
@@ -69,19 +69,26 @@
 				checkedObj: {
 					type1: true
 				},
-				norPost:0,
-				SFPost:15,
+				norPost: 0,
+				SFPost: 15,
 				slideFlage: true,
 				totalPrice: 9.9,
 				mealCost: '2.9元 x 1天 x 1张',
 				mealPrice: 2.9,
 				cardCost: '17元 x 1天 x 1张',
 				cardPrice: 17,
-				adressTxt: '',
-				cardTxt: ''
 			}
 		},
-		components: {},
+		props: {
+			addressTxt: {
+				type: String,
+				default: ''
+			},
+			cardID: {
+				type: String,
+				default: ''
+			}
+		},
 		created() {
 
 		},
@@ -94,12 +101,22 @@
 					this.slideFlage = true
 				}
 			},
-			payFunc(){
-				
+			payFunc() {
+
 			},
-			chooseWay(id){
+			chooseWay(id) {
 				this.checkedObj = {}
 				this.checkedObj['type' + id] = true
+			},
+			setAddress() {
+				if(!this.checkedObj.type3) {
+					this.$router.push("/adress")
+				}
+			},
+			haveCard() {
+				if(this.checkedObj.type3) {
+					this.$router.push("/haveCard")
+				}
 			}
 		}
 	}
@@ -111,56 +128,66 @@
 		background-size: 16px 16px;
 	}
 	
-	.choose-way ul li{
+	.choose-way ul li {
 		position: relative;
-		padding:14px 1.5rem;
-		border-bottom:1px solid #D4D5D5;
-		font-size:0;
+		padding: 14px 1.5rem;
+		border-bottom: 1px solid #D4D5D5;
+		font-size: 0;
 	}
-	.choose-way ul li .cube-checkbox{
-		position:absolute;
-		left:9px;
+	
+	.choose-way ul li .cube-checkbox {
+		position: absolute;
+		left: 9px;
 		top: 10px;
 		height: 20px;
 	}
+	
 	.choose-way ul li div,
-	.choose-way ul li p{
-		display:inline-block;
-		font-size:0.7rem;
-		line-height:14px;
-		height:14px;
-	}
-	.choose-way ul li span{
+	.choose-way ul li p {
 		display: inline-block;
-		color:#F39800;
-		line-height:14px;
-		height:14px;
+		font-size: 0.7rem;
+		line-height: 14px;
+		height: 14px;
 	}
-	.post-txt{
-		color:#C9CACA
+	
+	.choose-way ul li span {
+		display: inline-block;
+		color: #F39800;
+		line-height: 14px;
+		height: 14px;
 	}
-	.choose-way ul li p{
-		float:right;
+	
+	.post-txt {
+		color: #C9CACA
 	}
-	.choose-way ul li p span{
-		padding-right:5px;
+	
+	.choose-way ul li p {
+		float: right;
 	}
-	.have{
-		color:#3E3A39;
+	
+	.choose-way ul li p span {
+		padding-right: 5px;
 	}
-	.more-info{
-		padding:10px 1.2rem;
-		font-size:0.7rem;
+	
+	.have {
+		color: #3E3A39;
+	}
+	
+	.more-info {
+		padding: 10px 1.2rem;
+		font-size: 0.7rem;
 		text-align: right;
-		border-bottom:1px solid #D4D5D5;
+		border-bottom: 1px solid #D4D5D5;
 	}
-	.more-info p{
-		color:#3E3A39;
+	
+	.more-info p {
+		color: #3E3A39;
 	}
-	.more-info div{
-		padding-right:1rem;	
-		color:#9FA0A0;
-		margin-top:10px;
+	
+	.more-info div {
+		padding-right: 1rem;
+		color: #9FA0A0;
+		margin-top: 10px;
 		background: url(../assets/common/more.png)no-repeat center right;
 		background-size: 6px 10px;
 	}

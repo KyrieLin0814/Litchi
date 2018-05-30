@@ -7,6 +7,8 @@ import detail from '@/components/detail'
 import order from '@/components/order'
 import payPage from '@/components/payPage'
 import postWay from '@/components/postWay'
+import adress from '@/components/adress'
+import haveCard from '@/components/haveCard'
 
 Vue.use(Router)
 
@@ -40,12 +42,30 @@ const router = new Router({
 			name: 'postWay',
 			component: postWay,
 			props: true
+		},
+		{
+			path: '/adress',
+			name: 'adress',
+			component: adress,
+			props: true
+		},
+		{
+			path: '/haveCard',
+			name: 'haveCard',
+			component: haveCard,
+			props: true
 		}
 	]
 })
 
 router.beforeEach((to, from, next) => {
+	
+	if(from.path=="/detail"){
+		window.removeEventListener("scroll",store.state.listenerDom, false);
+	}
+	
 	next();
+	
 	//	if(localStorage.getItem("tokenStorage")) {
 	//		store.state.token = localStorage.getItem("tokenStorage")
 	//		store.state.role = localStorage.getItem("role")

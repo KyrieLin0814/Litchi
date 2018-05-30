@@ -1,0 +1,196 @@
+<template>
+	<div class="body-container">
+		<div class="common-title">
+			<i></i>
+			<span>填写荔枝卡收货地址</span>
+		</div>
+
+		<div class="adress-list">
+			<div>
+				<input type="text" v-model="name" placeholder="姓名">
+			</div>
+			<div>
+				<input type="number" maxlength="11" v-model="phone" placeholder="电话">
+			</div>
+			<div class="picker-btn" @click="choosePrivince">
+				<span>省</span>
+				<p class="text-1">{{ province?province:'请选择' }}</p>
+			</div>
+			<div class="picker-btn" @click="chooseCity">
+				<span>市</span>
+				<p class="text-1">{{ city?city:'请选择' }}</p>
+			</div>
+			<div class="picker-btn" @click="chooseArea">
+				<span>区</span>
+				<p class="text-1">{{ area?area:'请选择' }}</p>
+			</div>
+			<div>
+				<input type="tel" maxlength="11" v-model="address" placeholder="详细地址">
+			</div>
+		</div>
+
+		<a class="save" @click="saveFunc">保存</a>
+
+		<cube-popup type="my-popup" :mask="false" ref="myPopup">{{ popupTxt }}</cube-popup>
+	</div>
+</template>
+
+<script>
+	import { provinceList, cityList, areaList } from '@/assets/area.js'
+
+	export default {
+		name: 'adress',
+		data() {
+			return {
+				name: '',
+				phone: '',
+				province: '',
+				provinceVal: '',
+				city: '',
+				cityVal: '',
+				area: '',
+				areaVal: '',
+				address: '',
+				popupTxt: ''
+			}
+		},
+		components: {},
+		created() {},
+		mounted() {
+			var that = this
+			this.picker = this.$createPicker({
+				title: '请选择省份',
+				data: [provinceList],
+				onSelect: (selectedVal, selectedIndex, selectedText) => {
+					that.province = selectedText[0]
+					that.provinceVal = selectedVal[0]
+				},
+				onCancel: () => {}
+			})
+
+		},
+		methods: {
+			choosePrivince() {
+				this.picker.show()
+			},
+			chooseCity() {
+				var that = this
+				if(that.provinceVal) {
+					var cityArr = []
+					for(var item in cityList) {
+						if(cityList.hasOwnProperty(item)) {
+							if(item == that.provinceVal) {
+								cityArr = cityList[item]
+							}
+						}
+					}
+					that.picker2 = that.$createPicker({
+						title: '请选择城市',
+						data: [cityArr],
+						onSelect: (selectedVal, selectedIndex, selectedText) => {
+							that.city = selectedText[0]
+							that.cityVal = selectedVal[0]
+						},
+						onCancel: () => {}
+					})
+					that.picker2.show()
+				} else {
+					that.popupTxt = '请选择省份'
+					const component = that.$refs['myPopup']
+					component.show()
+					setTimeout(() => {
+						component.hide()
+					}, 1000)
+				}
+			},
+			chooseArea() {
+				var that = this
+				if(that.cityVal) {
+					var areaArr = []
+					for(var item in areaList) {
+						if(areaList.hasOwnProperty(item)) {
+							if(item == that.cityVal) {
+								areaArr = areaList[item]
+							}
+						}
+					}
+					that.picker3 = that.$createPicker({
+						title: '请选择城市',
+						data: [areaArr],
+						onSelect: (selectedVal, selectedIndex, selectedText) => {
+							that.area = selectedText[0]
+							that.areaVal = selectedVal[0]
+						},
+						onCancel: () => {}
+					})
+					that.picker3.show()
+				} else {
+					that.popupTxt = '请选择城市'
+					const component = that.$refs['myPopup']
+					component.show()
+					setTimeout(() => {
+						component.hide()
+					}, 1000)
+				}
+			},
+			saveFunc() {
+				var addressTxt = this.province + this.city + this.area + this.address
+				this.$router.push({
+					name: "postWay",
+					params: {
+						addressTxt: addressTxt
+					}
+				})
+			}
+		}
+	}
+</script>
+
+<style scoped>
+	.common-title i {
+		background: url(../assets/common/sendWay.png)no-repeat center;
+		background-size: 16px 16px;
+	}
+	
+	.adress-list>div {
+		padding: 0 1.2rem;
+		border-bottom: 1px solid #D4D5D5;
+		min-height: 40px;
+		font-size: 0.7rem;
+		color: #3E3A39;
+	}
+	
+	.adress-list>div input {
+		display: block;
+		outline: none;
+		line-height: 40px;
+	}
+	
+	.adress-list>div.picker-btn span {
+		float: left;
+		line-height: 40px;
+	}
+	
+	.adress-list>div.picker-btn p {
+		text-align: right;
+		max-width: 70%;
+		float: right;
+		line-height: 40px;
+		padding-right: 1rem;
+		color: #9FA0A0;
+		background: url(../assets/common/more.png)no-repeat center right;
+		background-size: 6px 10px;
+	}
+	
+	.save {
+		display: block;
+		text-align: center;
+		font-size: 0.7rem;
+		color: #fff;
+		border-radius: 5px;
+		width: 60%;
+		margin: 60px auto 0;
+		line-height: 32px;
+		background-color: #F39800;
+	}
+</style>

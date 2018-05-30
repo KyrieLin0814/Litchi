@@ -198,6 +198,8 @@
 				price: 9.9,
 				finalNum: 1,
 				chooseFlag: 'id1',
+				scrollDown: true,
+				scrollUp: true,
 				dataArr: [{
 						name: '自选天数包',
 						list: [{
@@ -251,7 +253,6 @@
 						]
 					},
 				]
-
 			}
 		},
 		props: {},
@@ -262,7 +263,10 @@
 		mounted() {
 			var that = this
 			that.contentHeight = document.documentElement.clientHeight - 254
-			//window.addEventListener('scroll', that.onScroll)
+			
+			that.$store.state.listenerDom = that.onScroll
+			
+			window.addEventListener('scroll', that.$store.state.listenerDom, false)
 		},
 		methods: {
 			tabFunc(str) {
@@ -277,10 +281,24 @@
 			onScroll() {
 				let moPoint = document.documentElement.clientHeight - 53
 				let scrolled = document.documentElement.scrollTop || document.body.scrollTop　　　 // moPoint锚点对应的距离
-				if(scrolled >= moPoint) {
-					this.jump() //to top
-				} else {
-					this.jump(1) //to bottom
+
+				if(scrolled > 20) {
+					if(this.scrollDown) {
+						this.jump(1) //to bottom
+						this.scrollDown = false
+					}
+				}else{
+					this.scrollDown = true
+				}
+
+
+				if(scrolled < (moPoint - 20)) {
+					if(this.scrollUp) {
+						this.jump() //to top
+						this.scrollUp = false
+					}
+				}else{
+					this.scrollUp = true
 				}
 			},
 			jump(index) {
@@ -295,7 +313,7 @@
 				}
 
 				let distance = document.documentElement.scrollTop || document.body.scrollTop
-				// 平滑滚动，时长500ms，每10ms一跳，共50跳
+				// 平滑滚动，时长300ms，每10ms一跳，共30跳
 				let step = total / 30
 				if(total > distance) {
 					smoothDown()
@@ -337,7 +355,7 @@
 					this.finalNum--
 				}
 			},
-			addCar(){
+			addCar() {
 				this.$router.push("/order")
 			}
 		}

@@ -156,6 +156,42 @@ textarea {
 }
 
 
+/*picker*/
+
+.cube-picker-choose {
+	height: 50px;
+}
+
+.cube-picker-cancel,
+.cube-picker-confirm {
+	font-size: 0.7rem;
+	line-height: 50px;
+}
+
+.cube-picker-confirm {
+	color: #F43530
+}
+
+.cube-picker-title {
+	font-size: 0.8rem;
+}
+
+.cube-picker-wheel-item {
+	font-size: 0.8rem;
+}
+
+
+/*弹框提示  popup*/
+
+.cube-my-popup .cube-popup-content {
+	font-size: 0.7rem;
+	padding: 0.8rem;
+	border-radius: 5px;
+	color: #fff;
+	background-color: rgba(0, 0, 0, 0.8);
+}
+
+
 /*标题*/
 
 .common-title {
@@ -179,7 +215,10 @@ textarea {
 	line-height: 24px;
 	vertical-align: middle;
 }
+
+
 /*购买*/
+
 .buy-box {
 	position: fixed;
 	bottom: 0;
@@ -214,7 +253,10 @@ textarea {
 	background-color: #F39800;
 	border-radius: 3px;
 }
+
+
 /*下拉收回*/
+
 .slide {
 	width: 22px;
 	height: 29px;
