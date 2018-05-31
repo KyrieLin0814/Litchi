@@ -45,11 +45,12 @@
 
 		<div class="footer flexBox">
 			<div class="flex-1 help">
-				<router-link to="/"><span>帮助中心</span></router-link>
+				<router-link to="/help"><span>帮助中心</span></router-link>
 			</div>
 			<div class="flex-1 order">
 				<router-link to="/status">
-					<span>我的订单</span></router-link>
+					<span>我的订单</span>
+				</router-link>
 			</div>
 		</div>
 	</div>

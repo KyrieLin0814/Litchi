@@ -14,6 +14,8 @@ import payError from '@/components/payError'
 import status from '@/components/status'
 import quit from '@/components/quit'
 import quitSuccess from '@/components/quitSuccess'
+import help from '@/components/help'
+import helpPage from '@/components/helpPage'
 
 Vue.use(Router)
 
@@ -88,6 +90,18 @@ const router = new Router({
 			path: '/quitSuccess',
 			name: 'quitSuccess',
 			component: quitSuccess,
+			props: true
+		},
+		{
+			path: '/help',
+			name: 'help',
+			component: help,
+			props: true
+		},
+		{
+			path: '/helpPage',
+			name: 'helpPage',
+			component: helpPage,
 			props: true
 		}
 	]

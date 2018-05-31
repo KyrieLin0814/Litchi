@@ -169,7 +169,7 @@ textarea {
 }
 
 .cube-picker-confirm {
-	color: #F43530
+	color: #F39800
 }
 
 .cube-picker-title {
@@ -328,4 +328,15 @@ textarea {
 	color: #F39800;
 	border: 1px solid #F39800;
 	background-color: #fff;
+}
+
+/*确认框*/
+.cube-dialog-main{
+	border-radius: 15px;
+}
+.cube-dialog-title-def{
+	color:#F39800;
+}
+.cube-dialog-btn {
+	color:#3E3A39
 }

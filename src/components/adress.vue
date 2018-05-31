@@ -115,7 +115,7 @@
 						}
 					}
 					that.picker3 = that.$createPicker({
-						title: '请选择城市',
+						title: '请选择地区',
 						data: [areaArr],
 						onSelect: (selectedVal, selectedIndex, selectedText) => {
 							that.area = selectedText[0]
@@ -125,7 +125,7 @@
 					})
 					that.picker3.show()
 				} else {
-					that.popupTxt = '请选择城市'
+					that.popupTxt = '请选择城市和地区'
 					const component = that.$refs['myPopup']
 					component.show()
 					setTimeout(() => {

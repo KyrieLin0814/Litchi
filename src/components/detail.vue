@@ -1,174 +1,185 @@
 <template>
 	<div class="body-container">
-		<div>
-			<div class="banner" :style="{backgroundImage: 'url(' + obj.img + ')', backgroundSize: '100% auto', backgroundPosition:'center'}">
-				<p>{{obj.area}}</p>
-			</div>
-			<div class="common-title">
-				<i></i>
-				<span>选择套餐</span>
-			</div>
-			<div class="car-content">
-				<div class="car-tab flexBox">
-					<div class="flex-1" @click="tabFunc('choose')" :class="{'active': (tabFlag=='choose')}"><span>自选天数包</span></div>
-					<div class="flex-1" @click="tabFunc('five')" :class="{'active': (tabFlag=='five')}"><span>5天包</span></div>
-					<div class="flex-1" @click="tabFunc('seven')" :class="{'active': (tabFlag=='seven')}"><span>7天包</span></div>
-				</div>
-				<div class="car-list" :style="{height: contentHeight + 'px'}">
-					<ul class="list-1" :class="{'active': (tabFlag=='choose')}">
-						<li @click="chooseFunc('id1')" :class="{'active': (chooseFlag=='id1')}">
-							<cube-checkbox v-model="checkedObj.checkedid1" :option="option" :hollow-style="true" shape="circle" />
-							<p>
-								100M 4G高速流量</br>
-								+流量用完自动关闭网络</br>
-								+新用户含套餐卡仅9.9元/张
-								<span class="sale">限时免费</span>
-							</p>
-							<div class="price-box">
-								<div class="now">
-									2.9<span>元/天</span>
-								</div>
-								<div class="old">
-									<span>15元</span>
+		<div class="fullpage-container">
+			<div class="fullpage-wp" v-fullpage="opts">
+				<div class="page-1 page">
+					<div class="banner" :style="{backgroundImage: 'url(' + obj.img + ')', backgroundSize: '100% auto', backgroundPosition:'center'}">
+						<p>{{obj.area}}</p>
+					</div>
+					<div class="common-title">
+						<i></i>
+						<span>选择套餐</span>
+					</div>
+					<div class="car-content">
+						<div class="car-tab flexBox">
+							<div class="flex-1" @click="tabFunc('choose')" :class="{'active': (tabFlag=='choose')}"><span>自选天数包</span></div>
+							<div class="flex-1" @click="tabFunc('five')" :class="{'active': (tabFlag=='five')}"><span>5天包</span></div>
+							<div class="flex-1" @click="tabFunc('seven')" :class="{'active': (tabFlag=='seven')}"><span>7天包</span></div>
+						</div>
+						<div class="car-list" :style="{height: contentHeight + 'px'}">
+							<ul class="list-1" :class="{'active': (tabFlag=='choose')}">
+								<li @click="chooseFunc('id1')" :class="{'active': (chooseFlag=='id1')}">
+									<cube-checkbox v-model="checkedObj.checkedid1" :option="option" :hollow-style="true" shape="circle" />
+									<p>
+										100M 4G高速流量</br>
+										+流量用完自动关闭网络</br>
+										+新用户含套餐卡仅9.9元/张
+										<span class="sale">限时免费</span>
+									</p>
+									<div class="price-box">
+										<div class="now">
+											2.9<span>元/天</span>
+										</div>
+										<div class="old">
+											<span>15元</span>
+										</div>
+									</div>
+								</li>
+								<li @click="chooseFunc('id2')" :class="{'active': (chooseFlag=='id2')}">
+									<cube-checkbox v-model="checkedObj.checkedid2" :option="option" :hollow-style="true" shape="circle" />
+									<p>
+										无限流量含300MB高速4G流量</br>
+										+赠送30分钟语音通话
+									</p>
+								</li>
+								<li @click="chooseFunc('id3')" :class="{'active': (chooseFlag=='id3')}">
+									<cube-checkbox v-model="checkedObj.checkedid3" :option="option" :hollow-style="true" shape="circle" />
+									<p>
+										无限流量含500MB高速4G流量</br>
+										+赠送30分钟语音通话
+									</p>
+								</li>
+								<li @click="chooseFunc('id4')" :class="{'active': (chooseFlag=='id4')}">
+									<cube-checkbox v-model="checkedObj.checkedid4" :option="option" :hollow-style="true" shape="circle" />
+									<p>
+										港澳通用 无限流量</br>
+										+含300MB高速4G流量
+									</p>
+								</li>
+							</ul>
+							<div class="num-box" v-if="tabFlag=='choose'">
+								<p>天数</p>
+								<div>
+									<a class="del" @click="delFunc">-</a>
+									<a class="number">{{ finalNum }}</a>
+									<a class="add" @click="addFunc">+</a>
 								</div>
 							</div>
-						</li>
-						<li @click="chooseFunc('id2')" :class="{'active': (chooseFlag=='id2')}">
-							<cube-checkbox v-model="checkedObj.checkedid2" :option="option" :hollow-style="true" shape="circle" />
-							<p>
-								无限流量含300MB高速4G流量</br>
-								+赠送30分钟语音通话
-							</p>
-						</li>
-						<li @click="chooseFunc('id3')" :class="{'active': (chooseFlag=='id3')}">
-							<cube-checkbox v-model="checkedObj.checkedid3" :option="option" :hollow-style="true" shape="circle" />
-							<p>
-								无限流量含500MB高速4G流量</br>
-								+赠送30分钟语音通话
-							</p>
-						</li>
-						<li @click="chooseFunc('id4')" :class="{'active': (chooseFlag=='id4')}">
-							<cube-checkbox v-model="checkedObj.checkedid4" :option="option" :hollow-style="true" shape="circle" />
-							<p>
-								港澳通用 无限流量</br>
-								+含300MB高速4G流量
-							</p>
-						</li>
-					</ul>
-					<div class="num-box" v-if="tabFlag=='choose'">
-						<p>天数</p>
-						<div>
-							<a class="del" @click="delFunc">-</a>
-							<a class="number">{{ finalNum }}</a>
-							<a class="add" @click="addFunc">+</a>
+
+							<ul class="list-2" :class="{'active': (tabFlag=='five')}">
+								<li>
+									<p>
+										<span class="title">流量详情</span>
+										<span class="txt">当地3G/4G网络，不限流量，超出300MB/天，限速128kbps</span>
+									</p>
+								</li>
+								<li>
+									<p>
+										<span class="title">热点分享</span>
+										<span class="txt">支持</span>
+									</p>
+								</li>
+								<li>
+									<p>
+										<span class="title">APN</span>
+										<span class="txt">3Gnet</span>
+									</p>
+								</li>
+								<li>
+									<p>
+										<span class="title">流量详情</span>
+										<span class="txt">当地3G/4G网络，不限流量，超出300MB/天，限速128kbps</span>
+									</p>
+								</li>
+							</ul>
+							<ul class="list-2" :class="{'active': (tabFlag=='seven')}">
+								<li>
+									<p>
+										<span class="title">流量详情</span>
+										<span class="txt">当地3G/4G网络，不限流量，超出300MB/天，限速128kbps</span>
+									</p>
+								</li>
+								<li>
+									<p>
+										<span class="title">热点分享</span>
+										<span class="txt">支持</span>
+									</p>
+								</li>
+								<li>
+									<p>
+										<span class="title">APN</span>
+										<span class="txt">3Gnet</span>
+									</p>
+								</li>
+							</ul>
+
+						</div>
+						<div class="scroll-btn">
+							<div>
+								<i></i><span>上拉展开产品详情</span>
+							</div>
 						</div>
 					</div>
-
-					<ul class="list-2" :class="{'active': (tabFlag=='five')}">
-						<li>
-							<p>
-								<span class="title">流量详情</span>
-								<span class="txt">当地3G/4G网络，不限流量，超出300MB/天，限速128kbps</span>
-							</p>
-						</li>
-						<li>
-							<p>
-								<span class="title">热点分享</span>
-								<span class="txt">支持</span>
-							</p>
-						</li>
-						<li>
-							<p>
-								<span class="title">APN</span>
-								<span class="txt">3Gnet</span>
-							</p>
-						</li>
-						<li>
-							<p>
-								<span class="title">流量详情</span>
-								<span class="txt">当地3G/4G网络，不限流量，超出300MB/天，限速128kbps</span>
-							</p>
-						</li>
-					</ul>
-					<ul class="list-2" :class="{'active': (tabFlag=='seven')}">
-						<li>
-							<p>
-								<span class="title">流量详情</span>
-								<span class="txt">当地3G/4G网络，不限流量，超出300MB/天，限速128kbps</span>
-							</p>
-						</li>
-						<li>
-							<p>
-								<span class="title">热点分享</span>
-								<span class="txt">支持</span>
-							</p>
-						</li>
-						<li>
-							<p>
-								<span class="title">APN</span>
-								<span class="txt">3Gnet</span>
-							</p>
-						</li>
-					</ul>
-
 				</div>
-				<div class="scroll-btn">
-					<div @click="jump">
-						<i></i><span>上拉展开产品详情</span>
+
+				<div class="page-2 page">
+
+					<div class="list-scroll-content">
+						<div class="list-scroll">
+							<div class="detail-list ">
+								<ul>
+									<li>
+										<p><span>推荐理由</span></p>
+										<ul>
+											<li>超低价格</li>
+											<li>卡槽通用，适合多种手机型号卡槽通用，适合多种手机型号</li>
+											<li>卡槽通用，适合多种手机型号</li>
+											<li>卡槽通用，适合多种手机型号</li>
+										</ul>
+									</li>
+									<li>
+										<p><span>推荐理由</span></p>
+										<ul>
+											<li>超低价格</li>
+											<li>卡槽通用，适合多种手机型号</li>
+											<li>卡槽通用，适合多种手机型号</li>
+											<li>卡槽通用，适合多种手机型号</li>
+										</ul>
+									</li>
+									<li>
+										<p><span>推荐理由</span></p>
+										<ul>
+											<li>超低价格</li>
+											<li>卡槽通用，适合多种手机型号</li>
+											<li>卡槽通用，适合多种手机型号</li>
+											<li>卡槽通用，适合多种手机型号</li>
+										</ul>
+									</li>
+									<li>
+										<p><span>推荐理由</span></p>
+										<ul>
+											<li>超低价格</li>
+											<li>卡槽通用，适合多种手机型号</li>
+											<li>卡槽通用，适合多种手机型号</li>
+											<li>卡槽通用，适合多种手机型号</li>
+											<li>超低价格</li>
+											<li>卡槽通用，适合多种手机型号</li>
+											<li>卡槽通用，适合多种手机型号</li>
+											<li>卡槽通用，适合多种手机型号</li>
+											<li>超低价格</li>
+											<li>卡槽通用，适合多种手机型号</li>
+											<li>卡槽通用，适合多种手机型号</li>
+											<li>卡槽通用，适合多种手机型号</li>
+											<li>超低价格</li>
+											<li>卡槽通用，适合多种手机型号</li>
+											<li>卡槽通用，适合多种手机型号</li>
+											<li>卡槽通用，适合多种手机型号</li>
+										</ul>
+									</li>
+								</ul>
+							</div>
+						</div>
 					</div>
-				</div>
-
-				<div class="detail-list d_jump">
-					<ul>
-						<li>
-							<p><span>推荐理由</span></p>
-							<ul>
-								<li>超低价格</li>
-								<li>卡槽通用，适合多种手机型号卡槽通用，适合多种手机型号</li>
-								<li>卡槽通用，适合多种手机型号</li>
-								<li>卡槽通用，适合多种手机型号</li>
-							</ul>
-						</li>
-						<li>
-							<p><span>推荐理由</span></p>
-							<ul>
-								<li>超低价格</li>
-								<li>卡槽通用，适合多种手机型号</li>
-								<li>卡槽通用，适合多种手机型号</li>
-								<li>卡槽通用，适合多种手机型号</li>
-							</ul>
-						</li>
-						<li>
-							<p><span>推荐理由</span></p>
-							<ul>
-								<li>超低价格</li>
-								<li>卡槽通用，适合多种手机型号</li>
-								<li>卡槽通用，适合多种手机型号</li>
-								<li>卡槽通用，适合多种手机型号</li>
-							</ul>
-						</li>
-						<li>
-							<p><span>推荐理由</span></p>
-							<ul>
-								<li>超低价格</li>
-								<li>卡槽通用，适合多种手机型号</li>
-								<li>卡槽通用，适合多种手机型号</li>
-								<li>卡槽通用，适合多种手机型号</li>
-								<li>超低价格</li>
-								<li>卡槽通用，适合多种手机型号</li>
-								<li>卡槽通用，适合多种手机型号</li>
-								<li>卡槽通用，适合多种手机型号</li>
-								<li>超低价格</li>
-								<li>卡槽通用，适合多种手机型号</li>
-								<li>卡槽通用，适合多种手机型号</li>
-								<li>卡槽通用，适合多种手机型号</li>
-								<li>超低价格</li>
-								<li>卡槽通用，适合多种手机型号</li>
-								<li>卡槽通用，适合多种手机型号</li>
-								<li>卡槽通用，适合多种手机型号</li>
-							</ul>
-						</li>
-					</ul>
 				</div>
 			</div>
 		</div>
@@ -185,6 +196,12 @@
 		name: 'detail',
 		data() {
 			return {
+				opts: {
+					start: 0,
+					dir: 'v',
+					duration: 500,
+					der: 0.3,
+				},
 				obj: {},
 				contentHeight: 0,
 				tabFlag: this.$store.state.tabFlag,
@@ -258,15 +275,11 @@
 		props: {},
 		created() {
 			this.obj = this.$store.state.routerData
-			console.log(this.obj)
+			//console.log(this.obj)
 		},
 		mounted() {
 			var that = this
 			that.contentHeight = document.documentElement.clientHeight - 254
-			
-			that.$store.state.listenerDom = that.onScroll
-			
-			window.addEventListener('scroll', that.$store.state.listenerDom, false)
 		},
 		methods: {
 			tabFunc(str) {
@@ -277,75 +290,6 @@
 				this.chooseFlag = id
 				this.checkedObj = {}
 				this.checkedObj['checked' + id] = true
-			},
-			onScroll() {
-				let moPoint = document.documentElement.clientHeight - 53
-				let scrolled = document.documentElement.scrollTop || document.body.scrollTop　　　 // moPoint锚点对应的距离
-
-				if(scrolled > 20) {
-					if(this.scrollDown) {
-						this.jump(1) //to bottom
-						this.scrollDown = false
-					}
-				}else{
-					this.scrollDown = true
-				}
-
-
-				if(scrolled < (moPoint - 20)) {
-					if(this.scrollUp) {
-						this.jump() //to top
-						this.scrollUp = false
-					}
-				}else{
-					this.scrollUp = true
-				}
-			},
-			jump(index) {
-				// 用 class="d_jump" 添加锚点
-				//let jump = document.querySelectorAll('.d_jump')
-				//let total = jump[index].offsetTop
-				let total
-				if(index) {
-					total = document.documentElement.clientHeight - 53
-				} else {
-					total = 0
-				}
-
-				let distance = document.documentElement.scrollTop || document.body.scrollTop
-				// 平滑滚动，时长400ms，每10ms一跳，共40跳
-				let step = total / 40
-				if(total > distance) {
-					smoothDown()
-				} else {
-					let newTotal = distance - total
-					step = newTotal / 40
-					smoothUp()
-				}
-
-				function smoothDown() {
-					if(distance < total) {
-						distance += step　　　　　　　
-						document.body.scrollTop = distance
-						document.documentElement.scrollTop = distance
-						setTimeout(smoothDown, 10)
-					} else {
-						document.body.scrollTop = total
-						document.documentElement.scrollTop = total
-					}
-				}
-
-				function smoothUp() {
-					if(distance > total) {
-						distance -= step
-						document.body.scrollTop = distance
-						document.documentElement.scrollTop = distance
-						setTimeout(smoothUp, 10)
-					} else {
-						document.body.scrollTop = total
-						document.documentElement.scrollTop = total
-					}
-				}
 			},
 			addFunc() {
 				this.finalNum++
@@ -632,8 +576,21 @@
 		font-size: 0.8rem;
 	}
 	
+	.list-scroll-content {
+		position: absolute;
+		left: 0;
+		top: 0;
+		right: 0;
+		bottom: 0;
+	}
+	
+	.list-scroll {
+		height: 100%;
+		overflow-y: scroll;
+	}
+	
 	.detail-list {
-		padding: 5px 1.2rem 60px;
+		padding: 15px 1.2rem 60px;
 	}
 	
 	.detail-list>ul {
