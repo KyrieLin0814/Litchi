@@ -104,6 +104,9 @@
 		border-radius: 15px;
 		outline: none;
 		color: #3E3A39;
+		background: url(../assets/common/search.png)no-repeat;
+		background-size:16px 17px;
+		background-position: 10px center;
 	}
 	
 	.help-list {

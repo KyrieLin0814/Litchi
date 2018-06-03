@@ -35,6 +35,7 @@
 										</div>
 									</div>
 								</li>
+
 								<li @click="chooseFunc('id2')" :class="{'active': (chooseFlag=='id2')}">
 									<cube-checkbox v-model="checkedObj.checkedid2" :option="option" :hollow-style="true" shape="circle" />
 									<p>
@@ -57,14 +58,6 @@
 									</p>
 								</li>
 							</ul>
-							<div class="num-box" v-if="tabFlag=='choose'">
-								<p>天数</p>
-								<div>
-									<a class="del" @click="delFunc">-</a>
-									<a class="number">{{ finalNum }}</a>
-									<a class="add" @click="addFunc">+</a>
-								</div>
-							</div>
 
 							<ul class="list-2" :class="{'active': (tabFlag=='five')}">
 								<li>
@@ -118,6 +111,15 @@
 							<div>
 								<i></i><span>上拉展开产品详情</span>
 							</div>
+
+							<div class="num-box" v-if="tabFlag=='choose'">
+								<p>天数</p>
+								<div>
+									<a class="del" @click="delFunc">-</a>
+									<a class="number">{{ finalNum }}</a>
+									<a class="add" @click="addFunc">+</a>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -163,17 +165,26 @@
 											<li>卡槽通用，适合多种手机型号</li>
 											<li>卡槽通用，适合多种手机型号</li>
 											<li>超低价格</li>
-											<li>卡槽通用，适合多种手机型号</li>
-											<li>卡槽通用，适合多种手机型号</li>
-											<li>卡槽通用，适合多种手机型号</li>
 											<li>超低价格</li>
 											<li>卡槽通用，适合多种手机型号</li>
 											<li>卡槽通用，适合多种手机型号</li>
 											<li>卡槽通用，适合多种手机型号</li>
 											<li>超低价格</li>
+											<li>超低价格</li>
 											<li>卡槽通用，适合多种手机型号</li>
 											<li>卡槽通用，适合多种手机型号</li>
 											<li>卡槽通用，适合多种手机型号</li>
+											<li>超低价格</li>
+											<li>超低价格</li>
+											<li>卡槽通用，适合多种手机型号</li>
+											<li>卡槽通用，适合多种手机型号</li>
+											<li>卡槽通用，适合多种手机型号</li>
+											<li>超低价格</li>
+											<li>超低价格</li>
+											<li>卡槽通用，适合多种手机型号</li>
+											<li>卡槽通用，适合多种手机型号</li>
+											<li>卡槽通用，适合多种手机型号</li>
+											<li>超低价格</li>
 										</ul>
 									</li>
 								</ul>
@@ -200,7 +211,8 @@
 					start: 0,
 					dir: 'v',
 					duration: 500,
-					der: 0.3,
+					der: 0.05,
+					afterChange: function(data) {},
 				},
 				obj: {},
 				contentHeight: 0,
@@ -280,6 +292,41 @@
 		mounted() {
 			var that = this
 			that.contentHeight = document.documentElement.clientHeight - 254
+
+			var startX, startY, moveEndX, moveEndY, X, Y;
+
+			var overscroll = function(el) {
+				el.addEventListener('touchstart', function(e) {
+					startY = e.touches[0].pageY;
+					startX = e.touches[0].pageX;
+//					var top = el.scrollTop,
+//						totalScroll = el.scrollHeight,
+//						currentScroll = top + el.offsetHeight;
+					//if(top === 0) {
+					//	el.scrollTop = 1;
+					//} else if(currentScroll === totalScroll) {
+					//	el.scrollTop = top - 1;
+					//}
+				});
+				el.addEventListener('touchmove', function(evt) {
+					moveEndX = evt.changedTouches[0].pageX;
+					moveEndY = evt.changedTouches[0].pageY;
+					Y = moveEndY - startY;
+					X = moveEndX - startX;
+
+					if(Math.abs(Y) > Math.abs(X) && Y > 0 && (document.querySelector('.list-scroll').scrollTop < 15)) {
+						//console.log("向下");
+						evt.preventDefault();
+					}
+					//					if(Math.abs(Y) > Math.abs(X) && Y < 0) {
+					//						console.log("向上");
+					//					}
+					//if(el.offsetHeight < el.scrollHeight)
+					//evt._isScroller = true;
+				});
+			}
+			overscroll(document.querySelector('.list-scroll'));
+
 		},
 		methods: {
 			tabFunc(str) {
@@ -506,6 +553,7 @@
 	}
 	
 	.scroll-btn {
+		position: relative;
 		height: 34px;
 		border-top: 1px solid #D4D5D5;
 		border-bottom: 1px solid #D4D5D5;
@@ -535,7 +583,7 @@
 		position: absolute;
 		left: 0;
 		right: 0;
-		bottom: 0;
+		top: -36px;
 		padding: 0 1.2rem;
 		height: 34px;
 		border-top: 1px solid #D4D5D5;
@@ -555,7 +603,6 @@
 	}
 	
 	.num-box>div>a {
-		margin-top: 5px;
 		display: inline-block;
 		vertical-align: middle;
 		font-size: 0.7rem;
@@ -574,6 +621,10 @@
 	.num-box>div>a.del {
 		padding: 2px 6px;
 		font-size: 0.8rem;
+	}
+	
+	.num-box>div>a.del {
+		padding: 2px 7px;
 	}
 	
 	.list-scroll-content {
