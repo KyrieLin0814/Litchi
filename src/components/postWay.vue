@@ -132,35 +132,37 @@
 	
 	.choose-way ul li {
 		position: relative;
-		padding: 14px 1.5rem;
+		padding: 14px 1.2rem;
 		border-bottom: 1px solid #D4D5D5;
 		font-size: 0;
 	}
 	
 	.choose-way ul li .cube-checkbox {
-		position: absolute;
-		left: 9px;
-		top: 10px;
-		height: 20px;
+		display:inline-block;
+		position: inherit;
+		margin-top:-1px;
 	}
 	
 	.choose-way ul li div,
 	.choose-way ul li p {
 		display: inline-block;
 		font-size: 0.7rem;
-		line-height: 14px;
-		height: 14px;
+		line-height: 16px;
+		height: 16px;
+		vertical-align: middle;
 	}
 	
 	.choose-way ul li span {
 		display: inline-block;
 		color: #F39800;
-		line-height: 14px;
-		height: 14px;
+		line-height: 16px;
+		height: 16px;
 	}
 	
 	.post-txt {
-		color: #C9CACA
+		color: #C9CACA;
+		vertical-align: middle;
+		margin-left:5px;
 	}
 	
 	.choose-way ul li p {
@@ -173,6 +175,7 @@
 	
 	.have {
 		color: #3E3A39;
+		margin-left:5px;
 	}
 	
 	.more-info {

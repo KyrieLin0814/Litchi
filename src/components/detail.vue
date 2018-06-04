@@ -419,6 +419,10 @@
 		padding: 10px 1.2rem;
 		border-bottom: 1px solid #D4D5D5;
 	}
+	.car-list .cube-checkbox {
+		position:absolute;
+		top:11px;
+	}
 	
 	.car-list li p {
 		position: relative;

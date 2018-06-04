@@ -140,6 +140,9 @@
 		padding: 2px 10px;
 		font-size: 0.8rem;
 	}
+	.num-box>div>a.del{
+		padding:2px 12px;
+	}
 	
 	.agree .agreeTxt {
 		font-size: 0.6rem;

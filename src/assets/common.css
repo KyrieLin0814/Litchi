@@ -125,6 +125,10 @@ textarea {
 	border-radius: 50%;
 }
 
+.car-list .cube-checkbox .cube-checkbox-wrap {
+	padding: 0;
+}
+
 .car-list .cube-checkbox-hollow i:before {
 	border-radius: 50%;
 }
@@ -134,7 +138,6 @@ textarea {
 }
 
 .car-list .cube-checkbox {
-	position: absolute;
 	padding: 0;
 }
 
@@ -330,13 +333,17 @@ textarea {
 	background-color: #fff;
 }
 
+
 /*确认框*/
-.cube-dialog-main{
+
+.cube-dialog-main {
 	border-radius: 15px;
 }
-.cube-dialog-title-def{
-	color:#F39800;
+
+.cube-dialog-title-def {
+	color: #F39800;
 }
+
 .cube-dialog-btn {
-	color:#3E3A39
+	color: #3E3A39
 }
