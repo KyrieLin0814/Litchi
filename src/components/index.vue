@@ -148,6 +148,20 @@
 		},
 		components: {},
 		created() {
+			var that = this
+			that.$http.post("http://wx.lizhisim.com/weixin/packageServer", {
+				data: {
+					connSeqNo: "Flymo201608300000000001",
+					partnerCode: "P000002",
+					token: "mkytrewsghjlngrkloinhgtresmklijy",
+					tradeType: "F001",
+					tradeTime: "2016-03-07 11:05:24",
+				},
+				sign: "16f82ae40d4dbd41b88fba22cd25536f"
+			}).then((res) => {
+
+			})
+
 			this.result = this.res
 			this.result.map(function(val, idx) {
 				if(val.items.length > 4) {
