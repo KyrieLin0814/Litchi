@@ -10,32 +10,32 @@
 		<div class="content">
 			<div class="item" v-for="(item,index) in result">
 				<div class="title">
-					<span class="area">{{item.area}}</span>
-					<span class="num">已覆盖{{ item.num }}个地区</span>
+					<span class="area">{{item.continentName}}</span>
+					<span class="num">已覆盖{{ item.list.length }}个地区</span>
 					<div class="btn" v-if="item.canMore">
 						<a v-if="item.more" class="more" @click="moreFunc(index)">更多</a>
 						<a v-else class="less" @click="lessFunc(index)">收起</a>
 					</div>
 				</div>
 				<ul class="card-list clearfix" v-if="item.more">
-					<li v-for="i in item.items.slice(0,4)">
+					<li v-for="i in item.list.slice(0,4)">
 						<a @click="routerFunc(i)">
-							<div class="img" :style="{backgroundImage: 'url(' + i.img + ')', backgroundSize: '100% 100%'}"></div>
+							<div class="img" :style="{backgroundImage: 'url(' + i.pictureIndex + ')', backgroundSize: '100% 100%'}"></div>
 							<div class="txt">
-								<span>{{i.area}}</span>
-								<a>低至{{i.price}}元/天</a>
+								<span>{{i.countryName}}</span>
+								<a v-if="i.strategyCode == '2'">低至{{i.strategy_desc}}元/天</a>
 							</div>
 						</a>
 					</li>
 				</ul>
 
 				<ul class="card-list clearfix" v-else>
-					<li v-for="i in item.items">
+					<li v-for="i in item.list">
 						<a @click="routerFunc(i)">
-							<div class="img" :style="{backgroundImage: 'url(' + i.img + ')', backgroundSize: '100% 100%'}"></div>
+							<div class="img" :style="{backgroundImage: 'url(' + i.pictureIndex + ')', backgroundSize: '100% 100%'}"></div>
 							<div class="txt">
-								<span>{{i.area}}</span>
-								<a>低至{{i.price}}元/天</a>
+								<span>{{i.countryName}}</span>
+								<a v-if="i.strategyCode == '2'">低至{{i.strategy_desc}}元/天</a>
 							</div>
 						</a>
 					</li>
@@ -61,117 +61,69 @@
 		name: 'index',
 		data() {
 			return {
-				num: 10,
-				result: [],
-				res: [{
-						area: '亚洲',
-						num: '10',
-						items: [{
-								area: '印度尼西亚',
-								price: 2.9,
-								img: "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1527415413&di=55737d7218d13d20479b651b73e41719&src=http://img.taopic.com/uploads/allimg/140628/235110-14062PJ11541.jpg"
-							},
-							{
-								area: '新加坡',
-								price: 2.9,
-								img: "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1527415413&di=55737d7218d13d20479b651b73e41719&src=http://img.taopic.com/uploads/allimg/140628/235110-14062PJ11541.jpg"
-							},
-							{
-								area: '印尼+新加坡',
-								price: 2.9,
-								img: "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1527415413&di=55737d7218d13d20479b651b73e41719&src=http://img.taopic.com/uploads/allimg/140628/235110-14062PJ11541.jpg"
-							},
-							{
-								area: '印度尼西亚',
-								price: 2.9,
-								img: "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1527415413&di=55737d7218d13d20479b651b73e41719&src=http://img.taopic.com/uploads/allimg/140628/235110-14062PJ11541.jpg"
-							},
-							{
-								area: '印度尼西亚',
-								price: 2.9,
-								img: "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1527415413&di=55737d7218d13d20479b651b73e41719&src=http://img.taopic.com/uploads/allimg/140628/235110-14062PJ11541.jpg"
-							}
-						]
-					},
-					{
-						area: '欧洲',
-						num: '2',
-						items: [{
-								area: '印度尼西亚',
-								price: 2.9,
-								img: "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1527415413&di=55737d7218d13d20479b651b73e41719&src=http://img.taopic.com/uploads/allimg/140628/235110-14062PJ11541.jpg"
-							},
-							{
-								area: '新加坡',
-								price: 2.9,
-								img: "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1527415413&di=55737d7218d13d20479b651b73e41719&src=http://img.taopic.com/uploads/allimg/140628/235110-14062PJ11541.jpg"
-							}
-						]
-					},
-					{
-						area: '非洲',
-						num: '2',
-						items: [{
-								area: '印度尼西亚',
-								price: 2.9,
-								img: "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1527415413&di=55737d7218d13d20479b651b73e41719&src=http://img.taopic.com/uploads/allimg/140628/235110-14062PJ11541.jpg"
-							},
-							{
-								area: '新加坡',
-								price: 2.9,
-								img: "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1527415413&di=55737d7218d13d20479b651b73e41719&src=http://img.taopic.com/uploads/allimg/140628/235110-14062PJ11541.jpg"
-							},
-							{
-								area: '印度尼西亚',
-								price: 2.9,
-								img: "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1527415413&di=55737d7218d13d20479b651b73e41719&src=http://img.taopic.com/uploads/allimg/140628/235110-14062PJ11541.jpg"
-							},
-							{
-								area: '新加坡',
-								price: 2.9,
-								img: "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1527415413&di=55737d7218d13d20479b651b73e41719&src=http://img.taopic.com/uploads/allimg/140628/235110-14062PJ11541.jpg"
-							},
-							{
-								area: '印度尼西亚',
-								price: 2.9,
-								img: "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1527415413&di=55737d7218d13d20479b651b73e41719&src=http://img.taopic.com/uploads/allimg/140628/235110-14062PJ11541.jpg"
-							},
-							{
-								area: '新加坡',
-								price: 2.9,
-								img: "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1527415413&di=55737d7218d13d20479b651b73e41719&src=http://img.taopic.com/uploads/allimg/140628/235110-14062PJ11541.jpg"
-							}
-						]
-					}
-				],
+				meals: [],
+				resArr: [],
+				result: []
 			}
 		},
-		components: {},
 		created() {
 			var that = this
 			that.$http.post("http://wx.lizhisim.com/weixin/packageServer", {
 				data: {
-					connSeqNo: "Flymo201608300000000001",
-					partnerCode: "P000002",
-					token: "mkytrewsghjlngrkloinhgtresmklijy",
-					tradeType: "F001",
-					tradeTime: "2016-03-07 11:05:24",
+					connSeqNo: that.$store.state.connSeqNo,
+					partnerCode: that.$store.state.partnerCode,
+					token: that.$store.state.token,
+					tradeTime: new Date(),
+					tradeType: "F001"
 				},
 				sign: "16f82ae40d4dbd41b88fba22cd25536f"
 			}).then((res) => {
+				console.log(res)
+				var result = res.data.data
+				var typeArr = []
+				for(var i = 0; i < result.tradeData.length; i++) {
+					for(var j = 0; j < result.tradeData[i].coverCountry.length; j++) {
+						if(typeArr.indexOf(result.tradeData[i].coverCountry[j].continentName) < 0) {
+							typeArr.push(result.tradeData[i].coverCountry[j].continentName)
+						}
 
-			})
-
-			this.result = this.res
-			this.result.map(function(val, idx) {
-				if(val.items.length > 4) {
-					val.canMore = true
-					val.more = false
-				} else {
-					val.canMore = false
-					val.more = true
+						that.meals.push(JSON.parse(JSON.stringify(result.tradeData[i])))
+						that.meals[that.meals.length - 1].continentName = result.tradeData[i].coverCountry[j].continentName
+						that.meals[that.meals.length - 1].countryName = result.tradeData[i].coverCountry[j].countryName
+						that.meals[that.meals.length - 1].mcc = result.tradeData[i].coverCountry[j].mcc
+					}
 				}
+				//console.log(typeArr)
+				//console.log(that.meals)
+				for(var x = 0; x < typeArr.length; x++) {
+					that.result[x] = {
+						continentName: typeArr[x],
+						list: []
+					}
+				}
+				for(var x = 0; x < typeArr.length; x++) {
+					for(var y = 0; y < that.meals.length; y++) {
+						if(that.meals[y].continentName == typeArr[x]) {
+							that.result[x].list.push(that.meals[y])
+						}
+					}
+				}
+
+				that.result.map(function(val, idx) {
+					if(val.list.length > 4) {
+						val.canMore = true
+						val.more = false
+					} else {
+						val.canMore = false
+						val.more = true
+					}
+				})
+				
+				that.$store.state.mealsData = that.result
+				console.log(that.$store.state.mealsData)
+				that.$forceUpdate()
 			})
+
 		},
 		mounted() {
 

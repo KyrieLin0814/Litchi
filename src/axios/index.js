@@ -11,14 +11,12 @@ const baseURL = 'http://47.104.137.169:8080' // 配置请求路径的baseURL
 const Axios = axios.create({
 	transformRequest: [function(data) {
 		//data = Qs.stringify(data);
-//		data.data.connSeqNo = store.state.connSeqNo,
-//		data.data.partnerCode = store.state.partnerCode,
-//		data.data.token = store.state.token,
-//		data.data.tradeTime = getNowFormatDate()
-//		console.log(JSON.stringify(data.data))
-//		var sign = md5(JSON.stringify(data.data))
-//		data.sign = sign
+		
+		data.data.tradeTime = getNowFormatDate()
+		var sign = md5(JSON.stringify(data.data))
+		data.sign = sign
 		console.log(data)
+		data = JSON.stringify(data)
 		return data;
 
 		function getNowFormatDate() {

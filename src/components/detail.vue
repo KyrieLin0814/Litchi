@@ -3,8 +3,8 @@
 		<div class="fullpage-container">
 			<div class="fullpage-wp" v-fullpage="opts">
 				<div class="page-1 page">
-					<div class="banner" :style="{backgroundImage: 'url(' + obj.img + ')', backgroundSize: '100% auto', backgroundPosition:'center'}">
-						<p>{{obj.area}}</p>
+					<div class="banner" :style="{backgroundImage: 'url(' + obj.pictureDetails + ')', backgroundSize: '100% auto', backgroundPosition:'center'}">
+						<p>{{obj.countryName}}</p>
 					</div>
 					<div class="common-title">
 						<i></i>
@@ -229,65 +229,13 @@
 				chooseFlag: 'id1',
 				scrollDown: true,
 				scrollUp: true,
-				dataArr: [{
-						name: '自选天数包',
-						list: [{
-								id: 1,
-								title: '100M 4G高速流量+流量用完自动关闭网络+新用户含套餐卡仅9.9元/张',
-								price: 9.9,
-								oldPrice: 15
-							},
-							{
-								id: 2,
-								title: '无限流量含300MB高速4G流量+赠送30分钟语音通话',
-								price: 9.9
-							},
-							{
-								id: 3,
-								title: '无限流量含500MB高速4G流量+赠送30分钟语音通话',
-								price: 9.9
-							}
-						]
-					},
-					{
-						name: '5天包',
-						list: [{
-								title: '流量详情',
-								txt: '当3g、4g网络时候，不限流量'
-							},
-							{
-								title: '热点分享',
-								txt: '支持'
-							},
-							{
-								title: 'APN',
-								txt: '3Gnet'
-							}
-						]
-					},
-					{
-						name: '7天包',
-						list: [{
-								title: '流量详情777',
-								txt: '当3g、4g网络时候，不限流量'
-							},
-							{
-								title: '热点分享777',
-								txt: '支持'
-							},
-							{
-								title: 'APN777',
-								txt: '3Gnet'
-							}
-						]
-					},
-				]
 			}
 		},
 		props: {},
 		created() {
-			this.obj = this.$store.state.routerData
-			//console.log(this.obj)
+			var that = this
+			that.obj = that.$store.state.routerData
+			console.log(that.obj)
 		},
 		mounted() {
 			var that = this
@@ -299,9 +247,9 @@
 				el.addEventListener('touchstart', function(e) {
 					startY = e.touches[0].pageY;
 					startX = e.touches[0].pageX;
-//					var top = el.scrollTop,
-//						totalScroll = el.scrollHeight,
-//						currentScroll = top + el.offsetHeight;
+					//					var top = el.scrollTop,
+					//						totalScroll = el.scrollHeight,
+					//						currentScroll = top + el.offsetHeight;
 					//if(top === 0) {
 					//	el.scrollTop = 1;
 					//} else if(currentScroll === totalScroll) {
@@ -419,9 +367,10 @@
 		padding: 10px 1.2rem;
 		border-bottom: 1px solid #D4D5D5;
 	}
+	
 	.car-list .cube-checkbox {
-		position:absolute;
-		top:11px;
+		position: absolute;
+		top: 11px;
 	}
 	
 	.car-list li p {
