@@ -6,6 +6,7 @@ const state = {
 	connSeqNo: "Flymo201608300000000001",
 	partnerCode: "P000002",
 	token: "mkytrewsghjlngrkloinhgtresmklijy",
+	iccid:"89234185686475549864",
 	mealsData:[],
 	routerData: {},
 	tabFlag: 'choose'

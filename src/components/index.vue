@@ -75,8 +75,7 @@
 					token: that.$store.state.token,
 					tradeTime: new Date(),
 					tradeType: "F001"
-				},
-				sign: "16f82ae40d4dbd41b88fba22cd25536f"
+				}
 			}).then((res) => {
 				console.log(res)
 				var result = res.data.data

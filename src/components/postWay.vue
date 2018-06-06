@@ -102,7 +102,7 @@
 				}
 			},
 			payFunc() {
-
+				this.payResult()
 			},
 			chooseWay(id) {
 				this.checkedObj = {}
@@ -119,6 +119,26 @@
 					//this.$router.push("/haveCard")
 				}
 				this.$router.push("/haveCard")
+			},
+			payResult() {
+				var that = this
+				that.$http.post("/travelSimGW/busiService", {
+					data: {
+						connSeqNo: that.$store.state.connSeqNo,
+						partnerCode: that.$store.state.partnerCode,
+						token: that.$store.state.token,
+						tradeTime: new Date(),
+						tradeType: "F010",
+						tradeData: {
+							orderId: "123456",
+							payType: "0",
+							payRst: "0",
+							payAmount: "20"
+						}
+					}
+				}).then((res) => {
+
+				})
 			}
 		}
 	}
@@ -138,9 +158,9 @@
 	}
 	
 	.choose-way ul li .cube-checkbox {
-		display:inline-block;
+		display: inline-block;
 		position: inherit;
-		margin-top:-1px;
+		margin-top: -1px;
 	}
 	
 	.choose-way ul li div,
@@ -162,7 +182,7 @@
 	.post-txt {
 		color: #C9CACA;
 		vertical-align: middle;
-		margin-left:5px;
+		margin-left: 5px;
 	}
 	
 	.choose-way ul li p {
@@ -175,7 +195,7 @@
 	
 	.have {
 		color: #3E3A39;
-		margin-left:5px;
+		margin-left: 5px;
 	}
 	
 	.more-info {

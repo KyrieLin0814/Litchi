@@ -5,7 +5,7 @@ import router from '@/router/'
 import md5 from 'js-md5'
 
 //axios配置全局参数
-const baseURL = 'http://47.104.137.169:8080' // 配置请求路径的baseURL
+const baseURL = 'http://47.52.192.207:6010' // 配置请求路径的baseURL
 //const baseURL = 'http://localhost:35320'
 
 const Axios = axios.create({
@@ -50,7 +50,7 @@ const Axios = axios.create({
 			return currentdate;
 		}
 	}],
-	//baseURL: baseURL,
+	baseURL: baseURL,
 	headers: {
 		'Content-Type': 'application/json;charset=UTF-8'
 	}

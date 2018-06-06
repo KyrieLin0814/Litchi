@@ -24,7 +24,7 @@
 			<span class="slide" :class="{'active': slideFlage}" @click="slideFunc"></span>
 			<a @click="nextFunc">下一步</a>
 		</div>
-		
+
 		<transition name="fade" mode="out-in">
 			<div class="cost-box" :class="{'active': slideFlage}">
 				<p>费用详情</p>
@@ -85,6 +85,25 @@
 				}
 			},
 			nextFunc() {
+				var that = this
+				that.$http.post("/travelSimGW/busiService", {
+					data: {
+						connSeqNo: that.$store.state.connSeqNo,
+						partnerCode: that.$store.state.partnerCode,
+						token: that.$store.state.token,
+						tradeTime: new Date(),
+						tradeType: "F002",
+						tradeData: {
+							iccid: that.$store.state.iccid,
+							orderList:[
+								{orderPeriod:"7"},
+								{packageCode:"P0001"}
+							]
+						}
+					}
+				}).then((res) => {
+
+				})
 				this.$router.push("/postWay")
 			}
 		}
@@ -140,8 +159,9 @@
 		padding: 2px 10px;
 		font-size: 0.8rem;
 	}
-	.num-box>div>a.del{
-		padding:2px 12px;
+	
+	.num-box>div>a.del {
+		padding: 2px 12px;
 	}
 	
 	.agree .agreeTxt {
@@ -152,5 +172,4 @@
 	.agree .agreeTxt span {
 		color: #F39800
 	}
-	
 </style>

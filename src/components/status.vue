@@ -74,7 +74,21 @@
 		},
 		components: {},
 		created() {
+			var that = this
+			that.$http.post("/travelSimGW/busiService", {
+				data: {
+					connSeqNo: that.$store.state.connSeqNo,
+					partnerCode: that.$store.state.partnerCode,
+					token: that.$store.state.token,
+					tradeTime: new Date(),
+					tradeType: "F011",
+					tradeData:{
+						iccid:that.$store.state.iccid
+					}
+				}
+			}).then((res) => {
 
+			})
 		},
 		mounted() {},
 		methods: {
