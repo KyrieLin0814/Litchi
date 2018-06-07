@@ -6,10 +6,10 @@
 		</div>
 
 		<div class="num-box">
-			<p>荔枝卡 x 1 境外套餐 x 1</p>
+			<p>荔枝卡 {{mealName}}</p>
 			<div>
 				<a class="del" @click="delFunc">-</a>
-				<a class="number">{{ num }}</a>
+				<a class="number">{{ finalNum }}</a>
 				<a class="add" @click="addFunc">+</a>
 			</div>
 		</div>
@@ -20,7 +20,7 @@
 		</div>
 
 		<div class="buy-box clearfix">
-			<p>合计： <span>{{ totalPrice }}</span> 元</p>
+			<p>合计： <span>{{ finalPrice.toFixed(2) }}</span> 元</p>
 			<span class="slide" :class="{'active': slideFlage}" @click="slideFunc"></span>
 			<a @click="nextFunc">下一步</a>
 		</div>
@@ -31,15 +31,17 @@
 				<div class="flexBox">
 					<div>套餐费 ({{ mealCost }})</div>
 					<div class="flex-1"></div>
-					<div class="price"><span>{{ mealPrice }}</span>元</div>
+					<div class="price"><span>{{ mealPrice.toFixed(2) }}</span>元</div>
 				</div>
 				<div class="flexBox">
 					<div>卡费 ({{ cardCost }})</div>
 					<div class="flex-1"></div>
-					<div class="price"><span>{{ cardPrice }}</span>元</div>
+					<div class="price"><span>{{ cardPrice.toFixed(2) }}</span>元</div>
 				</div>
 			</div>
 		</transition>
+
+		<cube-popup type="my-popup" :mask="false" ref="myPopup">{{popupTxt}}</cube-popup>
 	</div>
 </template>
 
@@ -48,33 +50,96 @@
 		name: 'payPage',
 		data() {
 			return {
-				num: 1,
-				perPrice: 9.9,
-				totalPrice: 9.9,
+				judgeData: {},
+				mealName: "荔枝卡套餐",
+				day: 0,
+				page: 0,
+				finalNum: 1,
+				perPrice: 0.00,
+				finalPrice: 0.00,
 				checked: false,
 				slideFlage: true,
-				mealCost: '2.9元 x 1天 x 1张',
-				mealPrice: 2.9,
+				mealCost: '',
+				mealPrice: 0.00,
 				cardCost: '17元 x 1天 x 1张',
-				cardPrice: 17
+				cardPrice: 17,
+				popupTxt: {}
 			}
 		},
 		watch: {
-			num: function() {
-				this.totalPrice = (this.perPrice * this.num).toFixed(2)
+			finalNum: function() {
+				this.finalPrice = (this.perPrice * this.finalNum)
 			}
 		},
 		created() {
+			var that = this
+			that.perPrice = that.$store.state.perPrice
+			that.finalPrice = that.$store.state.finalPrice
+			that.finalNum = that.$store.state.finalNum
+			that.judgeData = that.$store.state.finalMeal
+			that.mealName = that.judgeData.obj.packageName
 
+			if(that.judgeData.obj.maxDays == that.judgeData.obj.minDays) {
+				that.day = that.judgeData.obj.maxDays
+				that.page = that.finalNum
+			} else {
+				that.day = that.finalNum
+				that.page = 1
+			}
+
+			that.cost()
 		},
-		mounted() {},
 		methods: {
+			cost() {
+				this.mealCost = this.perPrice + "元 x " + this.day + "天 x " + this.page + "张"
+				this.mealPrice = this.perPrice * this.day * this.page
+			},
 			addFunc() {
-				this.num++
+				var that = this
+				if(that.judgeData.obj.maxDays == that.judgeData.obj.minDays) {
+					that.finalNum++
+						that.page = that.finalNum
+					that.cost()
+				} else {
+					if(that.judgeData.obj.maxDays == "-1") {
+						that.finalNum++
+							that.day = that.finalNum
+						that.cost()
+					} else {
+						if(that.finalNum < Number(that.judgeData.obj.maxDays)) {
+							that.finalNum++
+								that.day = that.finalNum
+							that.cost()
+						} else {
+							that.popupTxt = "超出最大数量"
+							const component = this.$refs['myPopup']
+							component.show()
+							setTimeout(() => {
+								component.hide()
+							}, 1000)
+						}
+					}
+				}
 			},
 			delFunc() {
-				if(this.num > 1) {
-					this.num--
+				var that = this
+				if(that.finalNum > 1) {
+					if(that.judgeData.obj.maxDays == that.judgeData.obj.minDays) {
+						that.finalNum--
+							that.page = that.finalNum
+						that.cost()
+					} else {
+						that.finalNum--
+							that.day = that.finalNum
+						that.cost()
+					}
+				} else {
+					that.popupTxt = "不能再少了"
+					const component = this.$refs['myPopup']
+					component.show()
+					setTimeout(() => {
+						component.hide()
+					}, 1000)
 				}
 			},
 			slideFunc() {
@@ -86,25 +151,16 @@
 			},
 			nextFunc() {
 				var that = this
-				that.$http.post("/travelSimGW/busiService", {
-					data: {
-						connSeqNo: that.$store.state.connSeqNo,
-						partnerCode: that.$store.state.partnerCode,
-						token: that.$store.state.token,
-						tradeTime: new Date(),
-						tradeType: "F002",
-						tradeData: {
-							iccid: that.$store.state.iccid,
-							orderList:[
-								{orderPeriod:"7"},
-								{packageCode:"P0001"}
-							]
-						}
-					}
-				}).then((res) => {
-
-				})
-				this.$router.push("/postWay")
+				if(that.checked) {
+					that.$router.push("/postWay")
+				} else {
+					that.popupTxt = "请同意用户协议再进行下一步操作"
+					const component = this.$refs['myPopup']
+					component.show()
+					setTimeout(() => {
+						component.hide()
+					}, 1000)
+				}
 			}
 		}
 	}

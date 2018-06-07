@@ -64,7 +64,7 @@
 								<i></i><span>上拉展开产品详情</span>
 							</div>
 
-							<div class="num-box" v-if="tabFlag=='choose'">
+							<div class="num-box">
 								<p>天数</p>
 								<div>
 									<a class="del" @click="delFunc">-</a>
@@ -109,9 +109,11 @@
 		</div>
 
 		<div class="buy-box clearfix">
-			<p>总价： <span>{{ price }}</span> 元</p>
+			<p>总价： <span>{{ price.toFixed(2) }}</span> 元</p>
 			<a @click="addCar">加入购物车</a>
 		</div>
+
+		<cube-popup type="my-popup" :mask="false" ref="myPopup">{{popupTxt}}</cube-popup>
 	</div>
 </template>
 
@@ -139,14 +141,19 @@
 				checkedObj: {
 					checkedid1: true
 				},
-				price: '0.00',
+				price: 0.00,
 				finalNum: 1,
 				chooseFlag: 'id1',
 				scrollDown: true,
 				scrollUp: true,
+				popupTxt: ''
 			}
 		},
-		props: {},
+		watch: {
+			finalNum(a, b) {
+				this.price = Number(this.judgeData.obj.price ? this.judgeData.obj.price : this.judgeData.obj.strategy_desc) * Number(this.finalNum)
+			}
+		},
 		created() {
 			var that = this
 			that.obj = that.$store.state.routerData
@@ -185,8 +192,8 @@
 				} else {
 					that.tabFunc(that.mealsList[0])
 				}
-				//				console.log(that.mealsList)
-				console.log(that.selfMeal)
+				//console.log(that.mealsList)
+				//console.log(that.selfMeal)
 			})
 		},
 		mounted() {
@@ -237,8 +244,10 @@
 					this.tabFlag = "choose"
 					this.$store.state.tabFlag = "choose"
 				}
+				this.finalNum = 1
 				this.judgeData = i
-				this.price = this.judgeData.obj.price ? this.judgeData.obj.price : this.judgeData.obj.strategy_desc
+				this.price = Number(this.judgeData.obj.price ? this.judgeData.obj.price : this.judgeData.obj.strategy_desc)
+				this.finalPrice = this.finalNum * this.price
 			},
 			chooseFunc(id) {
 				this.chooseFlag = id
@@ -247,17 +256,45 @@
 			},
 			addFunc() {
 				var that = this
-				if(that.finalNum < Number(that.judgeData.obj.maxDays)) {
+				if(that.judgeData.obj.maxDays == that.judgeData.obj.minDays) {
 					that.finalNum++
+				} else {
+					if(that.judgeData.obj.maxDays == "-1") {
+						that.finalNum++
+					} else {
+						if(that.finalNum < Number(that.judgeData.obj.maxDays)) {
+							that.finalNum++
+						} else {
+							that.popupTxt = "超出最大数量"
+							const component = this.$refs['myPopup']
+							component.show()
+							setTimeout(() => {
+								component.hide()
+							}, 1000)
+						}
+					}
 				}
 			},
 			delFunc() {
-				if(this.finalNum > 1) {
-					this.finalNum--
+				var that = this
+				if(that.finalNum > 1) {
+					that.finalNum--
+				} else {
+					that.popupTxt = "不能再少了"
+					const component = this.$refs['myPopup']
+					component.show()
+					setTimeout(() => {
+						component.hide()
+					}, 1000)
 				}
 			},
 			addCar() {
-				this.$router.push("/order")
+				var that = this
+				that.$store.state.finalMeal = that.judgeData
+				that.$store.state.perPrice = Number(this.judgeData.obj.price ? this.judgeData.obj.price : this.judgeData.obj.strategy_desc)
+				that.$store.state.finalNum = that.finalNum
+				that.$store.state.finalPrice = that.finalPrice
+				this.$router.push("/payPage")
 			},
 			compare(property) {
 				return function(a, b) {

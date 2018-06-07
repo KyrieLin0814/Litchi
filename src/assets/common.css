@@ -194,6 +194,9 @@ textarea {
 	background-color: rgba(0, 0, 0, 0.8);
 }
 
+.cube-popup_mask{
+	z-index: 9999!important;
+}
 
 /*标题*/
 

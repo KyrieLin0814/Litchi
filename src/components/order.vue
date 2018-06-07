@@ -42,7 +42,7 @@
 		mounted() {},
 		methods: {
 			pay() {
-				this.$router.push('/payPage')
+				this.$router.push('/postWay')
 			}
 		}
 	}

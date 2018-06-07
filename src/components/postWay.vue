@@ -139,6 +139,7 @@
 				}).then((res) => {
 
 				})
+				that.$router.push("/order")
 			}
 		}
 	}
