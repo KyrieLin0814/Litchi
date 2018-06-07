@@ -12,12 +12,13 @@
 					</div>
 					<div class="car-content">
 						<div class="car-tab flexBox">
-							<div class="flex-1" @click="tabFunc('choose')" :class="{'active': (tabFlag=='choose')}"><span>自选天数包</span></div>
-							<div class="flex-1" @click="tabFunc('five')" :class="{'active': (tabFlag=='five')}"><span>5天包</span></div>
-							<div class="flex-1" @click="tabFunc('seven')" :class="{'active': (tabFlag=='seven')}"><span>7天包</span></div>
+							<div class="flex-1" @click="tabFunc(selfMeal[0])" :class="{'active': (tabFlag=='choose')}" v-if="selfMeal.length"><span>{{selfMeal[0].title}}</span></div>
+							<div class="flex-1" @click="tabFunc(i)" :class="{'active': (tabFlag==i.obj.packageCode)}" v-for="i in mealsList"><span>{{i.title}}</span></div>
 						</div>
 						<div class="car-list" :style="{height: contentHeight + 'px'}">
-							<ul class="list-1" :class="{'active': (tabFlag=='choose')}">
+
+							<!--选项卡切换  暂不开启-->
+							<ul class="list-1" :class="{'active': (tabFlag=='choose')}" v-if="0">
 								<li @click="chooseFunc('id1')" :class="{'active': (chooseFlag=='id1')}">
 									<cube-checkbox v-model="checkedObj.checkedid1" :option="option" :hollow-style="true" shape="circle" />
 									<p>
@@ -35,73 +36,24 @@
 										</div>
 									</div>
 								</li>
+							</ul>
 
-								<li @click="chooseFunc('id2')" :class="{'active': (chooseFlag=='id2')}">
-									<cube-checkbox v-model="checkedObj.checkedid2" :option="option" :hollow-style="true" shape="circle" />
+							<!--自选包-->
+							<ul class="list-2" :class="{'active': (tabFlag=='choose')}" v-if="selfMeal.length">
+								<li>
 									<p>
-										无限流量含300MB高速4G流量</br>
-										+赠送30分钟语音通话
-									</p>
-								</li>
-								<li @click="chooseFunc('id3')" :class="{'active': (chooseFlag=='id3')}">
-									<cube-checkbox v-model="checkedObj.checkedid3" :option="option" :hollow-style="true" shape="circle" />
-									<p>
-										无限流量含500MB高速4G流量</br>
-										+赠送30分钟语音通话
-									</p>
-								</li>
-								<li @click="chooseFunc('id4')" :class="{'active': (chooseFlag=='id4')}">
-									<cube-checkbox v-model="checkedObj.checkedid4" :option="option" :hollow-style="true" shape="circle" />
-									<p>
-										港澳通用 无限流量</br>
-										+含300MB高速4G流量
+										<span class="title">{{selfMeal[0].obj.packageName}}</span>
+										<!--<span class="txt">当地3G/4G网络，不限流量，超出300MB/天，限速128kbps</span>-->
 									</p>
 								</li>
 							</ul>
 
-							<ul class="list-2" :class="{'active': (tabFlag=='five')}">
+							<!--套餐包-->
+							<ul class="list-2" :class="{'active': (tabFlag==i.obj.packageCode)}" v-for="i in mealsList">
 								<li>
 									<p>
-										<span class="title">流量详情</span>
-										<span class="txt">当地3G/4G网络，不限流量，超出300MB/天，限速128kbps</span>
-									</p>
-								</li>
-								<li>
-									<p>
-										<span class="title">热点分享</span>
-										<span class="txt">支持</span>
-									</p>
-								</li>
-								<li>
-									<p>
-										<span class="title">APN</span>
-										<span class="txt">3Gnet</span>
-									</p>
-								</li>
-								<li>
-									<p>
-										<span class="title">流量详情</span>
-										<span class="txt">当地3G/4G网络，不限流量，超出300MB/天，限速128kbps</span>
-									</p>
-								</li>
-							</ul>
-							<ul class="list-2" :class="{'active': (tabFlag=='seven')}">
-								<li>
-									<p>
-										<span class="title">流量详情</span>
-										<span class="txt">当地3G/4G网络，不限流量，超出300MB/天，限速128kbps</span>
-									</p>
-								</li>
-								<li>
-									<p>
-										<span class="title">热点分享</span>
-										<span class="txt">支持</span>
-									</p>
-								</li>
-								<li>
-									<p>
-										<span class="title">APN</span>
-										<span class="txt">3Gnet</span>
+										<span class="title">{{i.obj.packageName}}</span>
+										<!--<span class="txt">当地3G/4G网络，不限流量，超出300MB/天，限速128kbps</span>-->
 									</p>
 								</li>
 							</ul>
@@ -125,66 +77,27 @@
 				</div>
 
 				<div class="page-2 page">
-
 					<div class="list-scroll-content">
 						<div class="list-scroll">
-							<div class="detail-list ">
+							<div class="detail-list">
 								<ul>
 									<li>
-										<p><span>推荐理由</span></p>
-										<ul>
-											<li>超低价格</li>
-											<li>卡槽通用，适合多种手机型号卡槽通用，适合多种手机型号</li>
-											<li>卡槽通用，适合多种手机型号</li>
-											<li>卡槽通用，适合多种手机型号</li>
+										<p><span>套餐详情</span></p>
+
+										<!--自选包-->
+										<ul v-if="selfMeal.length" :class="{'active': (tabFlag=='choose')}">
+											<li v-if="selfMeal[0].obj.packageTextDesc">{{selfMeal[0].obj.packageTextDesc}}</li>
+											<li v-if="selfMeal[0].obj.packageImgDesc">
+												<img :src="selfMeal[0].obj.packageImgDesc">
+											</li>
 										</ul>
-									</li>
-									<li>
-										<p><span>推荐理由</span></p>
-										<ul>
-											<li>超低价格</li>
-											<li>卡槽通用，适合多种手机型号</li>
-											<li>卡槽通用，适合多种手机型号</li>
-											<li>卡槽通用，适合多种手机型号</li>
-										</ul>
-									</li>
-									<li>
-										<p><span>推荐理由</span></p>
-										<ul>
-											<li>超低价格</li>
-											<li>卡槽通用，适合多种手机型号</li>
-											<li>卡槽通用，适合多种手机型号</li>
-											<li>卡槽通用，适合多种手机型号</li>
-										</ul>
-									</li>
-									<li>
-										<p><span>推荐理由</span></p>
-										<ul>
-											<li>超低价格</li>
-											<li>卡槽通用，适合多种手机型号</li>
-											<li>卡槽通用，适合多种手机型号</li>
-											<li>卡槽通用，适合多种手机型号</li>
-											<li>超低价格</li>
-											<li>超低价格</li>
-											<li>卡槽通用，适合多种手机型号</li>
-											<li>卡槽通用，适合多种手机型号</li>
-											<li>卡槽通用，适合多种手机型号</li>
-											<li>超低价格</li>
-											<li>超低价格</li>
-											<li>卡槽通用，适合多种手机型号</li>
-											<li>卡槽通用，适合多种手机型号</li>
-											<li>卡槽通用，适合多种手机型号</li>
-											<li>超低价格</li>
-											<li>超低价格</li>
-											<li>卡槽通用，适合多种手机型号</li>
-											<li>卡槽通用，适合多种手机型号</li>
-											<li>卡槽通用，适合多种手机型号</li>
-											<li>超低价格</li>
-											<li>超低价格</li>
-											<li>卡槽通用，适合多种手机型号</li>
-											<li>卡槽通用，适合多种手机型号</li>
-											<li>卡槽通用，适合多种手机型号</li>
-											<li>超低价格</li>
+
+										<!--套餐包-->
+										<ul v-for="i in mealsList" :class="{'active': (tabFlag==i.obj.packageCode)}">
+											<li v-if="i.obj.packageTextDesc">{{i.obj.packageTextDesc}}</li>
+											<li v-if="i.obj.packageImgDesc">
+												<img :src="i.obj.packageImgDesc">
+											</li>
 										</ul>
 									</li>
 								</ul>
@@ -211,10 +124,12 @@
 					start: 0,
 					dir: 'v',
 					duration: 500,
-					der: 0.05,
-					afterChange: function(data) {},
+					der: 0.05
 				},
 				obj: {},
+				selfMeal: [],
+				mealsList: [],
+				judgeData: {},
 				contentHeight: 0,
 				tabFlag: this.$store.state.tabFlag,
 				option: {
@@ -224,7 +139,7 @@
 				checkedObj: {
 					checkedid1: true
 				},
-				price: 9.9,
+				price: '0.00',
 				finalNum: 1,
 				chooseFlag: 'id1',
 				scrollDown: true,
@@ -235,7 +150,44 @@
 		created() {
 			var that = this
 			that.obj = that.$store.state.routerData
-			console.log(that.obj)
+			that.$http.post("http://wx.lizhisim.com/weixin/detailsPackages", {
+				data: {
+					connSeqNo: that.$store.state.connSeqNo,
+					partnerCode: that.$store.state.partnerCode,
+					token: that.$store.state.token,
+					tradeData: {
+						mcc: that.$store.state.routerData.mcc
+					},
+					tradeTime: new Date(),
+					tradeType: "F014"
+				}
+			}).then((res) => {
+				console.log(res)
+				var result = res.data.data
+				for(var i = 0; i < result.tradeData.length; i++) {
+					if(result.tradeData[i].maxDays == result.tradeData[i].minDays) {
+						that.mealsList.push({
+							title: result.tradeData[i].maxDays + "天包",
+							obj: JSON.parse(JSON.stringify(result.tradeData[i]))
+						})
+					} else {
+						that.selfMeal.push({
+							title: "自选天数包",
+							obj: JSON.parse(JSON.stringify(result.tradeData[i]))
+						})
+					}
+				}
+
+				that.mealsList.sort(that.compare('maxDays'))
+
+				if(that.selfMeal.length) {
+					that.tabFunc(that.selfMeal[0])
+				} else {
+					that.tabFunc(that.mealsList[0])
+				}
+				//				console.log(that.mealsList)
+				console.log(that.selfMeal)
+			})
 		},
 		mounted() {
 			var that = this
@@ -247,9 +199,9 @@
 				el.addEventListener('touchstart', function(e) {
 					startY = e.touches[0].pageY;
 					startX = e.touches[0].pageX;
-					//					var top = el.scrollTop,
-					//						totalScroll = el.scrollHeight,
-					//						currentScroll = top + el.offsetHeight;
+					//var top = el.scrollTop,
+					//totalScroll = el.scrollHeight,
+					//currentScroll = top + el.offsetHeight;
 					//if(top === 0) {
 					//	el.scrollTop = 1;
 					//} else if(currentScroll === totalScroll) {
@@ -266,9 +218,9 @@
 						//console.log("向下");
 						evt.preventDefault();
 					}
-					//					if(Math.abs(Y) > Math.abs(X) && Y < 0) {
-					//						console.log("向上");
-					//					}
+					//if(Math.abs(Y) > Math.abs(X) && Y < 0) {
+					//console.log("向上");
+					//}
 					//if(el.offsetHeight < el.scrollHeight)
 					//evt._isScroller = true;
 				});
@@ -277,9 +229,16 @@
 
 		},
 		methods: {
-			tabFunc(str) {
-				this.tabFlag = str
-				this.$store.state.tabFlag = str
+			tabFunc(i) {
+				if(i.obj.maxDays == i.obj.minDays) {
+					this.tabFlag = i.obj.packageCode
+					this.$store.state.tabFlag = i.obj.packageCode
+				} else {
+					this.tabFlag = "choose"
+					this.$store.state.tabFlag = "choose"
+				}
+				this.judgeData = i
+				this.price = this.judgeData.obj.price ? this.judgeData.obj.price : this.judgeData.obj.strategy_desc
 			},
 			chooseFunc(id) {
 				this.chooseFlag = id
@@ -287,7 +246,10 @@
 				this.checkedObj['checked' + id] = true
 			},
 			addFunc() {
-				this.finalNum++
+				var that = this
+				if(that.finalNum < Number(that.judgeData.obj.maxDays)) {
+					that.finalNum++
+				}
 			},
 			delFunc() {
 				if(this.finalNum > 1) {
@@ -296,6 +258,14 @@
 			},
 			addCar() {
 				this.$router.push("/order")
+			},
+			compare(property) {
+				return function(a, b) {
+					var value1 = Number(a.obj[property]);
+					var value2 = Number(b.obj[property]);
+					console.log(a)
+					return value1 - value2;
+				}
 			}
 		}
 	}
@@ -614,14 +584,24 @@
 	}
 	
 	.detail-list ul ul {
+		display: none;
 		padding: 5px 0 8px 1.2rem;
+	}
+	
+	.detail-list ul ul.active {
+		display: block
+	}
+	
+	.detail-list ul ul img {
+		width: 100%;
 	}
 	
 	.detail-list ul ul li {
 		position: relative;
 		font-size: 0.6rem;
 		color: #3E3A39;
-		line-height: 18px;
+		line-height: 16px;
+		margin-top: 10px;
 	}
 	
 	.detail-list ul ul li:before {

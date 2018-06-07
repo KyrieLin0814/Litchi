@@ -9,7 +9,7 @@ const state = {
 	iccid:"89234185686475549864",
 	mealsData:[],
 	routerData: {},
-	tabFlag: 'choose'
+	tabFlag: ''
 }
 export default new Vuex.Store({
 	state
