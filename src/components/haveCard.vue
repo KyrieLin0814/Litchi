@@ -29,7 +29,7 @@
 		},
 		components: {},
 		created() {
-
+			this.cardID = this.$store.state.cardID
 		},
 		mounted() {},
 		methods: {
@@ -37,11 +37,9 @@
 
 			},
 			confirm() {
+				this.$store.state.cardID = this.cardID
 				this.$router.push({
 					name: "postWay",
-					params: {
-						cardID: this.cardID
-					}
 				})
 			},
 			cancel() {

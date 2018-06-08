@@ -10,7 +10,7 @@
 		<div class="btns">
 			<router-link to="/rules">查看境外上网设置办法</router-link>
 			<div></div>
-			<router-link class="done" to="/myOrder">返回</router-link>
+			<router-link class="done" to="/">返回</router-link>
 		</div>
 	</div>
 </template>

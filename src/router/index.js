@@ -16,6 +16,7 @@ import quit from '@/components/quit'
 import quitSuccess from '@/components/quitSuccess'
 import help from '@/components/help'
 import helpPage from '@/components/helpPage'
+import orderList from '@/components/orderList'
 
 Vue.use(Router)
 
@@ -102,6 +103,12 @@ const router = new Router({
 			path: '/helpPage',
 			name: 'helpPage',
 			component: helpPage,
+			props: true
+		},
+		{
+			path: '/orderList',
+			name: 'orderList',
+			component: orderList,
 			props: true
 		}
 	]

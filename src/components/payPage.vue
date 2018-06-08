@@ -23,6 +23,7 @@
 			<p>合计： <span>{{ finalPrice.toFixed(2) }}</span> 元</p>
 			<span class="slide" :class="{'active': slideFlage}" @click="slideFunc"></span>
 			<a @click="nextFunc">下一步</a>
+			<router-link to="/detail">返回</router-link>
 		</div>
 
 		<transition name="fade" mode="out-in">
@@ -32,11 +33,6 @@
 					<div>套餐费 ({{ mealCost }})</div>
 					<div class="flex-1"></div>
 					<div class="price"><span>{{ mealPrice.toFixed(2) }}</span>元</div>
-				</div>
-				<div class="flexBox">
-					<div>卡费 ({{ cardCost }})</div>
-					<div class="flex-1"></div>
-					<div class="price"><span>{{ cardPrice.toFixed(2) }}</span>元</div>
 				</div>
 			</div>
 		</transition>
@@ -53,16 +49,14 @@
 				judgeData: {},
 				mealName: "荔枝卡套餐",
 				day: 0,
-				page: 0,
+				page: 1,
 				finalNum: 1,
 				perPrice: 0.00,
 				finalPrice: 0.00,
-				checked: false,
+				checked: this.$store.state.agreeFlag,
 				slideFlage: true,
 				mealCost: '',
 				mealPrice: 0.00,
-				cardCost: '17元 x 1天 x 1张',
-				cardPrice: 17,
 				popupTxt: {}
 			}
 		},
@@ -80,11 +74,9 @@
 			that.mealName = that.judgeData.obj.packageName
 
 			if(that.judgeData.obj.maxDays == that.judgeData.obj.minDays) {
-				that.day = that.judgeData.obj.maxDays
-				that.page = that.finalNum
+				that.day = Number(that.judgeData.obj.maxDays) * Number(that.finalNum)
 			} else {
 				that.day = that.finalNum
-				that.page = 1
 			}
 
 			that.cost()
@@ -92,13 +84,13 @@
 		methods: {
 			cost() {
 				this.mealCost = this.perPrice + "元 x " + this.day + "天 x " + this.page + "张"
-				this.mealPrice = this.perPrice * this.day * this.page
+				this.mealPrice = this.perPrice * this.finalNum
 			},
 			addFunc() {
 				var that = this
 				if(that.judgeData.obj.maxDays == that.judgeData.obj.minDays) {
 					that.finalNum++
-						that.page = that.finalNum
+						that.day = Number(that.judgeData.obj.maxDays) * Number(that.finalNum)
 					that.cost()
 				} else {
 					if(that.judgeData.obj.maxDays == "-1") {
@@ -126,7 +118,7 @@
 				if(that.finalNum > 1) {
 					if(that.judgeData.obj.maxDays == that.judgeData.obj.minDays) {
 						that.finalNum--
-							that.page = that.finalNum
+							that.day = Number(that.judgeData.obj.maxDays) * Number(that.finalNum)
 						that.cost()
 					} else {
 						that.finalNum--
@@ -152,6 +144,10 @@
 			nextFunc() {
 				var that = this
 				if(that.checked) {
+					that.$store.state.perPrice = that.perPrice
+					that.$store.state.finalPrice = that.finalPrice
+					that.$store.state.finalNum = that.finalNum
+					that.$store.state.agreeFlag = that.checked
 					that.$router.push("/postWay")
 				} else {
 					that.popupTxt = "请同意用户协议再进行下一步操作"

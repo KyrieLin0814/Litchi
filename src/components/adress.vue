@@ -25,7 +25,7 @@
 				<p class="text-1">{{ area?area:'请选择' }}</p>
 			</div>
 			<div>
-				<input type="tel" maxlength="11" v-model="address" placeholder="详细地址">
+				<input type="text" maxlength="11" v-model="addressTxt" placeholder="详细地址">
 			</div>
 		</div>
 
@@ -45,25 +45,37 @@
 				name: '',
 				phone: '',
 				province: '',
-				provinceVal: '',
 				city: '',
-				cityVal: '',
 				area: '',
-				areaVal: '',
-				address: '',
-				popupTxt: ''
+				addressTxt: '',
+				popupTxt: '',
+				provinceVal: '',
+				cityVal: '',
+				defaultIndex:[0,0,0]
 			}
+
 		},
-		components: {},
-		created() {},
+		created() {
+			this.name = this.$store.state.address.name
+			this.phone = this.$store.state.address.phone
+			this.province = this.$store.state.address.province
+			this.city = this.$store.state.address.city
+			this.area = this.$store.state.address.area
+			this.addressTxt = this.$store.state.address.addressTxt
+			this.defaultIndex = this.$store.state.address.defaultIndex
+			this.provinceVal = this.$store.state.address.provinceVal
+			this.cityVal = this.$store.state.address.cityVal
+		},
 		mounted() {
 			var that = this
 			this.picker = this.$createPicker({
 				title: '请选择省份',
+				selectedIndex:[that.defaultIndex[0]],
 				data: [provinceList],
 				onSelect: (selectedVal, selectedIndex, selectedText) => {
 					that.province = selectedText[0]
 					that.provinceVal = selectedVal[0]
+					that.defaultIndex[0] = selectedIndex[0]
 				},
 				onCancel: () => {}
 			})
@@ -87,9 +99,11 @@
 					that.picker2 = that.$createPicker({
 						title: '请选择城市',
 						data: [cityArr],
+						selectedIndex:[that.defaultIndex[1]],
 						onSelect: (selectedVal, selectedIndex, selectedText) => {
 							that.city = selectedText[0]
 							that.cityVal = selectedVal[0]
+							that.defaultIndex[1] = selectedIndex[0]
 						},
 						onCancel: () => {}
 					})
@@ -117,9 +131,11 @@
 					that.picker3 = that.$createPicker({
 						title: '请选择地区',
 						data: [areaArr],
+						selectedIndex:[that.defaultIndex[2]],
 						onSelect: (selectedVal, selectedIndex, selectedText) => {
 							that.area = selectedText[0]
 							that.areaVal = selectedVal[0]
+							that.defaultIndex[2] = selectedIndex[0]
 						},
 						onCancel: () => {}
 					})
@@ -134,12 +150,17 @@
 				}
 			},
 			saveFunc() {
-				var addressTxt = this.province + this.city + this.area + this.address
+				this.$store.state.address.name = this.name
+				this.$store.state.address.phone = this.phone
+				this.$store.state.address.province = this.province
+				this.$store.state.address.city = this.city
+				this.$store.state.address.area = this.area
+				this.$store.state.address.addressTxt = this.addressTxt
+				this.$store.state.address.provinceVal = this.provinceVal
+				this.$store.state.address.cityVal = this.cityVal
+				
 				this.$router.push({
-					name: "postWay",
-					params: {
-						addressTxt: addressTxt
-					}
+					name: "postWay"
 				})
 			}
 		}

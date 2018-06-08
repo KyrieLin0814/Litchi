@@ -231,7 +231,7 @@ textarea {
 	left: 0;
 	right: 0;
 	height: 40px;
-	padding: 12px 1.2rem 0;
+	padding: 12px 1rem 0;
 	background-color: #FFFFFF;
 	z-index: 999;
 	border-top: 1px solid #D4D5D5;
@@ -247,11 +247,10 @@ textarea {
 	color: #F39800;
 	font-size: 1.1rem;
 }
-
 .buy-box a {
 	float: right;
-	margin-left: 10px;
-	padding: 8px 18px;
+	margin-left:10px;
+	padding: 8px 12px;
 	font-size: 0.7rem;
 	height: 16px;
 	line-height: 16px;
@@ -259,7 +258,9 @@ textarea {
 	background-color: #F39800;
 	border-radius: 3px;
 }
-
+.buy-box a:last-child{
+	margin-left:0;
+}
 
 /*下拉收回*/
 

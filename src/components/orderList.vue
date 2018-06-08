@@ -1,66 +1,39 @@
 <template>
 	<div class="body-container">
-		<div class="order-detail flexBox">
-			<div class="flex-1">
-				<p class="txt">{{cardTxt}}</p>
-				<p class="time">{{time}}</p>
-			</div>
-			<div class="price"><span>{{ price }}</span> 元</div>
-		</div>
+		<ul class="list-content">
+			<li @click="routerFunc()">
+				<div class="order-list flexBox">
+					<div class="flex-1">
+						<p class="txt">{{cardTxt}}</p>
+						<p class="time">{{time}}</p>
+					</div>
+					<div class="price"><span>{{ price }}</span> 元</div>
+				</div>
 
-		<!--无卡-->
-		<div class="card-num no-card flexBox" >
-			<p class="flex-1">卡号后8位：{{cardID}}</p>
-			<router-link class="status" to="/haveCard">未使用</router-link>
-		</div>
-		<div class="status-list">
-			<ul>
-				<li class="clearfix">
-					<span>当前状态</span>
-					<p>支付成功，等待发货</p>
-				</li>
-				<li class="clearfix">
-					<span>购买时间</span>
-					<p>{{time}}</p>
-				</li>
-				<li class="clearfix">
-					<span>订单号</span>
-					<p>{{orderId}}</p>
-				</li>
-				<li class="clearfix">
-					<span>取卡方式</span>
-					<p>{{postWay}}</p>
-				</li>
-				<li class="clearfix">
-					<span>快递单号</span>
-					<p>{{postId}}</p>
-				</li>
-			</ul>
-		</div>
+				<!--有卡-->
+				<div class="card-num have-card flexBox">
+					<p class="flex-1">卡号后8位：{{cardID}}</p>
+					<a class="status">未使用</a>
+				</div>
+			</li>
+		</ul>
 
 		<div class="btns">
-			<router-link to="/orderList">返回</router-link>
+			<router-link to="/haveCard">关联我的旅游卡</router-link>
 			<div></div>
-			<router-link class="done" to="/quit">立即退订</router-link>
+			<router-link class="done" to="/rules">查看境外上网设置办法</router-link>
 		</div>
 	</div>
 </template>
 
 <script>
 	export default {
-		name: 'status',
+		name: 'orderList',
 		data() {
 			return {
-				orderId: '10000560275003096',
-				cardID: '12345678',
-				cardTxt: '香港单天定额流量卡x1张',
-				time: '2018.05.05 18:21:56',
-				price: 19.90,
-				postWay: '顺风快递',
-				postId: '7956456445556125'
+				result:[]
 			}
 		},
-		components: {},
 		created() {
 			var that = this
 			that.$http.post("/travelSimGW/busiService", {
@@ -68,8 +41,8 @@
 					connSeqNo: that.$store.state.connSeqNo,
 					partnerCode: that.$store.state.partnerCode,
 					token: that.$store.state.token,
-					tradeData:{
-						iccid:that.$store.state.iccid
+					tradeData: {
+						iccid: that.$store.state.iccid
 					},
 					tradeTime: new Date(),
 					tradeType: "F011"
@@ -80,35 +53,45 @@
 		},
 		mounted() {},
 		methods: {
-
+			routerFunc(){
+				this.$router.push("/status")
+			}
 		}
 	}
 </script>
 
 <style scoped>
-	.order-detail {
+	.list-content li{
+		border-bottom:1px solid #eaeaea;
+		margin-bottom:5px;
+		box-shadow: 0px 3px 10px  rgba(0,0,0,0.1);
+	}
+	.order-list {
 		padding: 0.8rem 1.2rem 0;
 		border-bottom: 1px solid #E4E4E4
 	}
 	
-	.order-detail div .txt {
+	.order-list div .txt {
 		font-size: 0.7rem;
 		color: #3E3A39;
 		line-height: 14px;
 	}
 	
-	.order-detail div .time {
+	.order-list div .time {
 		font-size: 0.7rem;
 		line-height: 30px;
 		color: #9FA0A0;
 	}
 	
-	.order-detail .price {
+	.order-list .price {
 		font-size: 0.8rem;
 		line-height: 30px;
+		padding-right:1rem;
+		background:url(../assets/common/more.png)no-repeat right 8px;
+		background-size:8px 14px;
 	}
 	
-	.order-detail .price span {
+	.order-list .price span {
 		color: #F39800
 	}
 	
