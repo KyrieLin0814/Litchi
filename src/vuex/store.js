@@ -27,7 +27,8 @@ const state = {
 		cityVal: '',
 	},
 	cardID: '',
-	expressType: 1
+	expressType: 1,
+	orderId:"11111",
 }
 export default new Vuex.Store({
 	state

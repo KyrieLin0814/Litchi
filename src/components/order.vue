@@ -2,7 +2,7 @@
 	<div class="body-container">
 		<div class="common-title">
 			<i></i>
-			<span>确认订单</span>
+			<span>支付</span>
 		</div>
 		<div class="detail">商品详情</div>
 		<div class="detail">SIM卡 ICCID：{{ ICCID }}</div>
@@ -16,9 +16,9 @@
 		</div>
 
 		<div class="buy-box clearfix">
-			<p>需支付： <span>{{ price }}</span> 元</p>
+			<p>需支付： <span>{{ price.toFixed(2) }}</span> 元</p>
 			<a @click="pay">支付</a>
-			<router-link to="/detail">返回</router-link>
+			<router-link to="/postWay">返回</router-link>
 		</div>
 	</div>
 </template>
@@ -28,21 +28,38 @@
 		name: 'order',
 		data() {
 			return {
-				ICCID: '166332523211',
-				img: "https://ss0.bdstatic.com/94oJfD_bAAcT8t7mm9GUKT-xh_/timg?image&quality=100&size=b4000_4000&sec=1527415413&di=55737d7218d13d20479b651b73e41719&src=http://img.taopic.com/uploads/allimg/140628/235110-14062PJ11541.jpg",
-				areaTxt: '新加坡',
-				detailTxt: '新加坡五日固定套餐,新加坡五日固定套餐',
-				price: 9.9
+				ICCID: this.$store.state.iccid,
+				img: this.$store.state.finalMeal.obj.pictureDetails,
+				areaTxt: this.$store.state.routerData.countryName,
+				detailTxt: this.$store.state.finalMeal.obj.packageName,
+				price: this.$store.state.finalPrice
 			}
 		},
-		components: {},
-		created() {
-
-		},
-		mounted() {},
 		methods: {
 			pay() {
-				this.$router.push('/postWay')
+				//wx pay
+				this.paySuccess()
+			},
+			paySuccess() {
+				//支付结果通知
+				var that = this
+				that.$http.post("/travelSimGW/busiService", {
+					data: {
+						connSeqNo: that.$store.state.connSeqNo,
+						partnerCode: that.$store.state.partnerCode,
+						token: that.$store.state.token,
+						tradeData: {
+							orderId: that.$store.state.orderId,
+							payAmount: that.price.toString(),
+							payRst: "1",  //0成功  1 失败
+							payType: "0", //微信支付
+						},
+						tradeTime: new Date(),
+						tradeType: "F010",
+					}
+				}).then((res) => {
+					console.log(res)
+				})
 			}
 		}
 	}
@@ -90,13 +107,14 @@
 	.img-content>div.text {
 		text-align: center;
 		line-height: 100px;
+		font-size: 0;
+		vertical-align: middle;
 	}
 	
 	.img-content>div.text span {
-		padding: 5px 15px 0;
 		display: inline-block;
 		line-height: 18px;
-		font-size: 0.6rem;
+		font-size: 0.7rem;
 		text-align: left;
 	}
 	

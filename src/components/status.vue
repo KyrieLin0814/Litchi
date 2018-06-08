@@ -2,38 +2,30 @@
 	<div class="body-container">
 		<div class="order-detail flexBox">
 			<div class="flex-1">
-				<p class="txt">{{cardTxt}}</p>
-				<p class="time">{{time}}</p>
+				<p class="txt">{{obj.packageName}}</p>
+				<p class="time" v-if="obj.orderStartDate">{{obj.orderStartDate}}</p>
 			</div>
 			<div class="price"><span>{{ price }}</span> 元</div>
 		</div>
 
 		<!--无卡-->
 		<div class="card-num no-card flexBox" >
-			<p class="flex-1">卡号后8位：{{cardID}}</p>
-			<router-link class="status" to="/haveCard">未使用</router-link>
+			<p class="flex-1">卡号：{{obj.channelOrderID}}</p>
+			<router-link class="status" to="/haveCard">{{obj.statusTxt}}</router-link>
 		</div>
 		<div class="status-list">
 			<ul>
 				<li class="clearfix">
-					<span>当前状态</span>
-					<p>支付成功，等待发货</p>
-				</li>
-				<li class="clearfix">
-					<span>购买时间</span>
-					<p>{{time}}</p>
-				</li>
-				<li class="clearfix">
 					<span>订单号</span>
-					<p>{{orderId}}</p>
+					<p>{{obj.orderId}}</p>
+				</li>
+				<li class="clearfix" v-if="obj.orderStartDate">
+					<span>购买时间</span>
+					<p>{{obj.orderStartDate}}</p>
 				</li>
 				<li class="clearfix">
-					<span>取卡方式</span>
-					<p>{{postWay}}</p>
-				</li>
-				<li class="clearfix">
-					<span>快递单号</span>
-					<p>{{postId}}</p>
+					<span>当前状态</span>
+					<p>{{obj.statusTxt}}</p>
 				</li>
 			</ul>
 		</div>
@@ -51,34 +43,18 @@
 		name: 'status',
 		data() {
 			return {
-				orderId: '10000560275003096',
-				cardID: '12345678',
-				cardTxt: '香港单天定额流量卡x1张',
-				time: '2018.05.05 18:21:56',
 				price: 19.90,
-				postWay: '顺风快递',
-				postId: '7956456445556125'
 			}
 		},
-		components: {},
-		created() {
-			var that = this
-			that.$http.post("/travelSimGW/busiService", {
-				data: {
-					connSeqNo: that.$store.state.connSeqNo,
-					partnerCode: that.$store.state.partnerCode,
-					token: that.$store.state.token,
-					tradeData:{
-						iccid:that.$store.state.iccid
-					},
-					tradeTime: new Date(),
-					tradeType: "F011"
-				}
-			}).then((res) => {
-				console.log(res)
-			})
+		props: {
+			obj:{
+				type:Object,
+				default: {}
+			}
 		},
-		mounted() {},
+		mounted() {
+			console.log(this.obj)
+		},
 		methods: {
 
 		}

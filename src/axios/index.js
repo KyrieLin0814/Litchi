@@ -11,6 +11,7 @@ const Axios = axios.create({
 	transformRequest: [function(data) {
 		//data = Qs.stringify(data);
 		data.data.tradeTime = getNowFormatDate()
+		
 		var sign = md5(JSON.stringify(data.data))
 		data.sign = sign
 		console.log(JSON.stringify(data.data))

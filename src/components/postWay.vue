@@ -122,8 +122,10 @@
 				this.expressType = id
 				if(id == 2) {
 					this.finalPrice = this.mealPrice + this.SFPost
+					this.$store.state.finalPrice = this.finalPrice
 				} else {
 					this.finalPrice = this.mealPrice
+					this.$store.state.finalPrice = this.finalPrice
 				}
 			},
 			setAddress() {
@@ -163,9 +165,9 @@
 							expressType: that.$store.state.expressType.toString(),
 							iccid: that.$store.state.iccid,
 							openid: that.$store.state.openId,
-							receiveAddress: that.addressGet,
+							receiveAddress: encodeURI(encodeURI(that.addressGet)),
 							receivePhoneNumber: that.$store.state.address.phone,
-							receiveUserName: that.$store.state.address.name,
+							receiveUserName: encodeURI(encodeURI(that.$store.state.address.name)),
 						},
 						tradeTime: new Date(),
 						tradeType: "F013",
@@ -179,20 +181,23 @@
 								connSeqNo: that.$store.state.connSeqNo,
 								partnerCode: that.$store.state.partnerCode,
 								token: that.$store.state.token,
-								tradeTime: new Date(),
-								tradeType: "F010",
 								tradeData: {
-									iccid:that.$store.state.cardID,
+									iccid:that.$store.state.iccid,
 									orderList :{
 										channelOrderID :'',
-										orderPeriod :that.finalNum,
+										orderPeriod :that.finalNum.toString(),
 										packageCode :that.$store.state.finalMeal.obj.packageCode,
 									}
-								}
+								},
+								tradeTime: new Date(),
+								tradeType: "F002",
 							}
 						}).then((res) => {
-
-							that.$router.push("/paySuccess")
+							toast.hide()
+							console.log(res)
+							//that.$store.state.orderId = res.data.data.tradeData.orderId
+							
+							that.$router.push("/order")
 						})
 					} else {
 						toast.hide()

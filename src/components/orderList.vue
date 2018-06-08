@@ -1,20 +1,22 @@
 <template>
 	<div class="body-container">
 		<ul class="list-content">
-			<li @click="routerFunc()">
-				<div class="order-list flexBox">
-					<div class="flex-1">
-						<p class="txt">{{cardTxt}}</p>
-						<p class="time">{{time}}</p>
+			<li v-for="i in result">
+				<a  @click="routerFunc(i)">
+					<div class="order-list flexBox">
+						<div class="flex-1">
+							<p class="txt">{{i.packageName}}</p>
+							<p class="time" v-if="i.orderStartDate">{{i.orderStartDate}}</p>
+						</div>
+						<div class="price"><span>{{ price }}</span> 元</div>
 					</div>
-					<div class="price"><span>{{ price }}</span> 元</div>
-				</div>
 
-				<!--有卡-->
-				<div class="card-num have-card flexBox">
-					<p class="flex-1">卡号后8位：{{cardID}}</p>
-					<a class="status">未使用</a>
-				</div>
+					<!--有卡-->
+					<div class="card-num have-card flexBox">
+						<p class="flex-1">卡号：{{ i.channelOrderID }}</p>
+						<a class="status">{{i.statusTxt}}</a>
+					</div>
+				</a>
 			</li>
 		</ul>
 
@@ -31,7 +33,9 @@
 		name: 'orderList',
 		data() {
 			return {
-				result:[]
+				time: "2018.6.8 12:12:11",
+				price: "19.9",
+				result: []
 			}
 		},
 		created() {
@@ -49,23 +53,51 @@
 				}
 			}).then((res) => {
 				console.log(res)
+				that.result = res.data.data.tradeData
+				that.result.map(function(val, idx){
+					if(val.orderStatus == "0"){
+						res.data.data.tradeData[idx].statusTxt = "未支付"
+					}
+					if(val.orderStatus == "1"){
+						res.data.data.tradeData[idx].statusTxt = "未启用"
+					}
+					if(val.orderStatus == "2"){
+						res.data.data.tradeData[idx].statusTxt = "已开始使用"
+					}
+					if(val.orderStatus == "3"){
+						res.data.data.tradeData[idx].statusTxt = "已结束"
+					}
+					if(val.orderStatus == "4"){
+						res.data.data.tradeData[idx].statusTxt = "已取消"
+					}
+				})
 			})
 		},
 		mounted() {},
 		methods: {
-			routerFunc(){
-				this.$router.push("/status")
+			routerFunc(i) {
+				this.$router.push({
+					name: "status",
+					params: {
+						obj: i
+					}
+				})
+			},
+			substring(str) {
+				var str_after = str.substring(str.length - 7, str.length)
+				return str_after
 			}
 		}
 	}
 </script>
 
 <style scoped>
-	.list-content li{
-		border-bottom:1px solid #eaeaea;
-		margin-bottom:5px;
-		box-shadow: 0px 3px 10px  rgba(0,0,0,0.1);
+	.list-content li {
+		border-bottom: 1px solid #eaeaea;
+		margin-bottom: 5px;
+		box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
 	}
+	
 	.order-list {
 		padding: 0.8rem 1.2rem 0;
 		border-bottom: 1px solid #E4E4E4
@@ -86,9 +118,9 @@
 	.order-list .price {
 		font-size: 0.8rem;
 		line-height: 30px;
-		padding-right:1rem;
-		background:url(../assets/common/more.png)no-repeat right 8px;
-		background-size:8px 14px;
+		padding-right: 1rem;
+		background: url(../assets/common/more.png)no-repeat right 8px;
+		background-size: 8px 14px;
 	}
 	
 	.order-list .price span {
@@ -113,11 +145,13 @@
 	}
 	
 	.btns {
-		position: absolute;
-		bottom: 15px;
+		position: fixed;
+		bottom: 0;
 		left: 0;
 		right: 0;
+		padding: 15px;
 		text-align: center;
+		background: #fff;
 	}
 	
 	.status-list {
