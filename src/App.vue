@@ -15,6 +15,7 @@
 			}
 		},
 		mounted() {
+			
 		},
 		methods: {
 			refreash() {

@@ -38,7 +38,45 @@
 		methods: {
 			pay() {
 				//wx pay
-				this.paySuccess()
+				var that = this
+				var url = "http://wx.lizhisim.com/weixin/weixinpay?orderId=" + that.$store.state.orderId + "&openId=:" + that.$store.state.openId + "&amount=" + that.price.toString()
+				that.$http.get(url).then((res) => {
+					var appIdVal = res.data.appId;　　　　　　
+					var timeStampVal = res.data.timeStamp;
+					var nonceStrVal = res.data.nonceStr;　　　　　　
+					var packageVal = res.data.package;　　　　　　
+					var signTypeVal = res.data.signType;　　　　　　
+					var paySignVal = res.data.paySign;　　
+					onBridgeReady();　　　　　　
+					function onBridgeReady() {　　　　　　　　
+						WeixinJSBridge.invoke('getBrandWCPayRequest', {　　　　　　　　　　
+							appId: appIdVal, //公众号名称，由商户传入 
+			　　　　　　　　　	timeStamp: timeStampVal, //时间戳，自1970年以来的秒数 
+			　　　　　　　　　　	nonceStr: nonceStrVal, //随机串 
+			　　　　　　　　　　	package: packageVal, //订单详情扩展字符串
+			　　　　　　　　　　	signType: signTypeVal, //微信签名方式： 
+			　　　　　　　　　　	paySign: paySignVal //微信签名 
+						},function(res) {
+							alert(res.err_msg)　　　　　　　
+							if(res.err_msg == "get_brand_wcpay_request:ok") {// 表示已经支付,res.err_msg将在用户支付成功后返回 ok。 
+								that.$router.push("/paySuccess")　　　　　　　
+							}else{
+								that.$router.push("/payError")　　　
+							}　　　　
+						});　　　　
+					}　
+					if(typeof WeixinJSBridge == "undefined") {　　　　　　　　
+						if(document.addEventListener) {　　　　　　　　　　
+							document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);　　　　　　　　
+						} else if(document.attachEvent) {　　　　　　　　　　
+							document.attachEvent('WeixinJSBridgeReady', onBridgeReady);　　　　　　　　　　
+							document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);　　　　　　　　
+						}　　　　
+					} else {　　　　　　
+						onBridgeReady();　　　　
+					}
+				})
+				//this.paySuccess()
 			},
 			paySuccess() {
 				//支付结果通知
@@ -51,7 +89,7 @@
 						tradeData: {
 							orderId: that.$store.state.orderId,
 							payAmount: that.price.toString(),
-							payRst: "1",  //0成功  1 失败
+							payRst: "1", //0成功  1 失败
 							payType: "0", //微信支付
 						},
 						tradeTime: new Date(),

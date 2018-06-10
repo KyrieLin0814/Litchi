@@ -29,6 +29,7 @@ const state = {
 	cardID: '',
 	expressType: 1,
 	orderId:"11111",
+	routerBack:{}
 }
 export default new Vuex.Store({
 	state

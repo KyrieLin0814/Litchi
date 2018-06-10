@@ -115,11 +115,6 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-	
-	if(from.path=="/detail"){
-		window.removeEventListener("scroll",store.state.listenerDom, false);
-	}
-	
 	next();
 	
 	//	if(localStorage.getItem("tokenStorage")) {
