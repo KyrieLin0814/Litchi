@@ -132,7 +132,9 @@ textarea {
 .car-list .cube-checkbox-hollow i:before {
 	border-radius: 50%;
 }
-
+.car-list .cube-checkbox-input{
+	z-index:-1
+}
 .car-list .car-list .cube-checkbox-wrap {
 	padding: 5px 3px;
 }
@@ -156,6 +158,13 @@ textarea {
 	color: #F39800;
 	-webkit-transform: scale(0.8);
 	transform: scale(0.8);
+}
+
+/*没有数据*/
+.no-data{
+  padding-top:40px;
+  text-align: center;
+  font-size:0.8rem;
 }
 
 

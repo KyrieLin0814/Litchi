@@ -116,7 +116,20 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
 	next();
-	
+
+	if(from.path == '/haveCard') {
+		if(store.state.routerBack.haveCard) {
+			console.log(store.state.routerBack.haveCard)
+			next({
+				name: store.state.routerBack.haveCard
+			})
+		} else {
+			next();
+		}
+	} else {
+		next();
+	}
+
 	//	if(localStorage.getItem("tokenStorage")) {
 	//		store.state.token = localStorage.getItem("tokenStorage")
 	//		store.state.role = localStorage.getItem("role")

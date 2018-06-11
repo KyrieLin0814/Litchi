@@ -18,10 +18,11 @@
 						<div class="car-list" :style="{height: contentHeight + 'px'}">
 
 							<!--选项卡切换  暂不开启-->
-							<ul class="list-1" :class="{'active': (tabFlag=='choose')}" v-if="0">
+							<ul class="list-1" :class="{'active': (tabFlag=='choose')}" v-if="selfMeal.length">
 								<li @click="chooseFunc('id1')" :class="{'active': (chooseFlag=='id1')}">
 									<cube-checkbox v-model="checkedObj.checkedid1" :option="option" :hollow-style="true" shape="circle" />
-									<p>
+									<p class="title">{{selfMeal[0].obj.packageName}}</p>
+									<!--<p>
 										100M 4G高速流量</br>
 										+流量用完自动关闭网络</br>
 										+新用户含套餐卡仅9.9元/张
@@ -34,12 +35,12 @@
 										<div class="old">
 											<span>15元</span>
 										</div>
-									</div>
+									</div>-->
 								</li>
 							</ul>
 
 							<!--自选包-->
-							<ul class="list-2" :class="{'active': (tabFlag=='choose')}" v-if="selfMeal.length">
+							<ul class="list-2" :class="{'active': (tabFlag=='choose')}" v-if="0">
 								<li>
 									<p>
 										<span class="title">{{selfMeal[0].obj.packageName}}</span>
@@ -377,7 +378,7 @@
 	
 	.car-list .cube-checkbox {
 		position: absolute;
-		top: 11px;
+		top: 14px;
 	}
 	
 	.car-list li p {
@@ -393,6 +394,7 @@
 		color: #F39800;
 	}
 	
+	
 	.sale {
 		position: absolute;
 		top: 0;
@@ -405,7 +407,6 @@
 		color: #fff;
 		vertical-align: middle;
 	}
-	
 	.list-2 span.title {
 		position: relative;
 		display: block;

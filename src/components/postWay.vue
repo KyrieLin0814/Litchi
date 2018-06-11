@@ -29,7 +29,7 @@
 		</div>
 		<div class="more-info" @click="haveCard">
 			<p>已有旅游卡信息</p>
-			<div>{{ cardID ? cardID : '编辑' }}</div>
+			<div>{{ iccid ? iccid : '编辑' }}</div>
 		</div>
 
 		<div class="buy-box clearfix">
@@ -85,7 +85,7 @@
 				mealPrice: 0,
 				address: {},
 				addressGet: '',
-				cardID: ''
+				iccid: ''
 			}
 		},
 		created() {
@@ -104,7 +104,7 @@
 			that.mealPrice = that.perPrice * that.finalNum
 
 			that.address = that.$store.state.address
-			that.cardID = that.$store.state.cardID
+			that.iccid = that.$store.state.iccid
 			that.addressGet = that.address.province + that.address.city + that.address.area + that.address.addressTxt
 		},
 		methods: {

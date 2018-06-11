@@ -19,6 +19,7 @@
 				</a>
 			</li>
 		</ul>
+		<p v-if="!result.length" class="no-data">暂无订单</p>
 
 		<div class="btns">
 			<router-link to="/haveCard">关联我的旅游卡</router-link>
@@ -73,7 +74,9 @@
 				})
 			})
 		},
-		mounted() {},
+		mounted() {
+			this.$store.state.routerBack.haveCard = "orderList"
+		},
 		methods: {
 			routerFunc(i) {
 				this.$router.push({

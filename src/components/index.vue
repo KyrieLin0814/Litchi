@@ -21,9 +21,9 @@
 					<li v-for="i in item.list.slice(0,4)">
 						<a @click="routerFunc(i)">
 							<div class="img" :style="{backgroundImage: 'url(' + i.pictureIndex + ')', backgroundSize: '100% 100%'}"></div>
-							<div class="txt">
-								<span>{{i.countryName}}</span>
-								<a v-if="i.strategyCode == '2'">低至{{i.strategy_desc}}元/天</a>
+							<div class="txt flexBox">
+								<span class="text-1 flex-1">{{i.countryName}}</span>
+								<a class="flex-1" v-if="i.strategyCode == '2'">低至{{i.strategy_desc}}元/天</a>
 							</div>
 						</a>
 					</li>
@@ -33,9 +33,9 @@
 					<li v-for="i in item.list">
 						<a @click="routerFunc(i)">
 							<div class="img" :style="{backgroundImage: 'url(' + i.pictureIndex + ')', backgroundSize: '100% 100%'}"></div>
-							<div class="txt">
-								<span>{{i.countryName}}</span>
-								<a v-if="i.strategyCode == '2'">低至{{i.strategy_desc}}元/天</a>
+							<div class="txt flexBox">
+								<span class="text-1 flex-1">{{i.countryName}}</span>
+								<a class="flex-1" v-if="i.strategyCode == '2'">低至{{i.strategy_desc}}元/天</a>
 							</div>
 						</a>
 					</li>
@@ -79,6 +79,8 @@
 			}).then((res) => {
 				console.log(res)
 				var result = res.data.data
+				that.$store.state.openId = res.data.data.tradeData[0].openID
+				
 				var typeArr = []
 				for(var i = 0; i < result.tradeData.length; i++) {
 					for(var j = 0; j < result.tradeData[i].coverCountry.length; j++) {
@@ -272,13 +274,13 @@
 	}
 	
 	.txt span {
-		width: 55%;
 		font-size: 0.6rem;
-		text-indent: 0.5em;
+		padding-left:0.2rem;
 	}
 	
 	.txt a {
-		width: 45%;
+		padding:0 0.3rem;
+		text-align: right;
 		font-size: 0.5rem;
 		color: #fff;
 	}
