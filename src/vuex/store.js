@@ -10,6 +10,7 @@ const state = {
 	mealsData: [],
 	routerData: {},
 	tabFlag: '',
+	wayFlag:'',
 	agreeFlag: false,
 	finalMeal: {},
 	perPrice: 0,
@@ -24,7 +25,7 @@ const state = {
 		addressTxt: '',
 		defaultIndex: [0, 0, 0],
 		provinceVal: '',
-		cityVal: '',
+		cityVal: ''
 	},
 	expressType: 1,
 	orderId:"",

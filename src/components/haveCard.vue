@@ -70,7 +70,8 @@
 			},
 			cancel() {
 				var that = this
-				this.$router.push({name:that.backRouter})
+				console.log(that.backRouter)
+				that.$router.push({name:that.backRouter})
 			}
 		}
 	}

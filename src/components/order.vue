@@ -5,7 +5,7 @@
 			<span>支付</span>
 		</div>
 		<div class="detail">商品详情</div>
-		<div class="detail">SIM卡 ICCID：{{ ICCID }}</div>
+		<div class="detail">SIM卡 ICCID：{{ iccid }}</div>
 		<div class="img-content clearfix">
 			<div class="img" :style="{backgroundImage: 'url(' + img + ')', backgroundSize: '100% auto', backgroundPosition:'center'}">
 				<p>{{ areaTxt }}</p>
@@ -28,7 +28,7 @@
 		name: 'order',
 		data() {
 			return {
-				ICCID: this.$store.state.iccid,
+				iccid: this.$store.state.iccid,
 				img: this.$store.state.finalMeal.obj.pictureDetails,
 				areaTxt: this.$store.state.routerData.countryName,
 				detailTxt: this.$store.state.finalMeal.obj.packageName,
@@ -39,7 +39,8 @@
 			pay() {
 				//wx pay
 				var that = this
-				var url = "http://wx.lizhisim.com/weixin/weixinpay?orderId=" + that.$store.state.orderId + "&openId=:" + that.$store.state.openId + "&amount=" + that.price.toString()
+				var params = encodeURI(encodeURI(document.location.href))
+				var url = "http://wx.lizhisim.com/weixin/weixinpay?orderId=" + that.$store.state.orderId + "&openId=:" + that.$store.state.openId + "&amount=" + that.price.toString() + "&reqUrl=" + params
 				that.$http.get(url).then((res) => {
 					var appIdVal = res.data.appId;　　　　　　
 					var timeStampVal = res.data.timeStamp;

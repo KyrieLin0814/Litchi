@@ -55,6 +55,7 @@
 			}).then((res) => {
 				console.log(res)
 				that.result = res.data.data.tradeData
+				console.log(that.result)
 				that.result.map(function(val, idx){
 					if(val.orderStatus == "0"){
 						res.data.data.tradeData[idx].statusTxt = "未支付"

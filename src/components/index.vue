@@ -79,8 +79,7 @@
 			}).then((res) => {
 				console.log(res)
 				var result = res.data.data
-				that.$store.state.openId = res.data.data.tradeData[0].openID
-				
+				that.$store.state.openId = res.data.data.tradeData[0].openId
 				var typeArr = []
 				for(var i = 0; i < result.tradeData.length; i++) {
 					for(var j = 0; j < result.tradeData[i].coverCountry.length; j++) {

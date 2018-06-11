@@ -4,7 +4,7 @@
 			<div class="fullpage-wp" v-fullpage="opts">
 				<div class="page-1 page">
 					<div class="banner" :style="{backgroundImage: 'url(' + obj.pictureDetails + ')', backgroundSize: '100% auto', backgroundPosition:'center'}">
-						<p>{{obj.countryName}}</p>
+						<p class="text-1">{{obj.countryName}}</p>
 					</div>
 					<div class="common-title">
 						<i></i>
@@ -36,16 +36,6 @@
 											<span>15元</span>
 										</div>
 									</div>-->
-								</li>
-							</ul>
-
-							<!--自选包-->
-							<ul class="list-2" :class="{'active': (tabFlag=='choose')}" v-if="0">
-								<li>
-									<p>
-										<span class="title">{{selfMeal[0].obj.packageName}}</span>
-										<!--<span class="txt">当地3G/4G网络，不限流量，超出300MB/天，限速128kbps</span>-->
-									</p>
 								</li>
 							</ul>
 
@@ -112,6 +102,7 @@
 		<div class="buy-box clearfix">
 			<p>总价： <span>{{ price.toFixed(2) }}</span> 元</p>
 			<a @click="addCar">加入购物车</a>
+			<router-link to="/">返回</router-link>
 		</div>
 
 		<cube-popup type="my-popup" :mask="false" ref="myPopup">{{popupTxt}}</cube-popup>
@@ -256,6 +247,7 @@
 				this.checkedObj['checked' + id] = true
 			},
 			addFunc() {
+				console.log(this.$store.state.openId)
 				var that = this
 				if(that.judgeData.obj.maxDays == that.judgeData.obj.minDays) {
 					that.finalNum++
@@ -295,7 +287,7 @@
 				that.$store.state.perPrice = Number(this.judgeData.obj.price ? this.judgeData.obj.price : this.judgeData.obj.strategy_desc)
 				that.$store.state.finalNum = that.finalNum
 				that.$store.state.finalPrice = that.finalPrice
-				this.$router.push("/payPage")
+				that.$router.push("/payPage")
 			},
 			compare(property) {
 				return function(a, b) {
@@ -319,6 +311,8 @@
 		color: #fff;
 		text-align: center;
 		line-height: 110px;
+		width:80%;
+		margin:0 auto;
 	}
 	
 	.common-title i {
@@ -424,7 +418,7 @@
 		width: 8px;
 		height: 8px;
 		border-radius: 4px;
-		background-color: #C9CACA;
+		background-color: #F39800;
 	}
 	
 	.list-2 span.txt {
