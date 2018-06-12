@@ -7,6 +7,9 @@ import router from './router'
 import Axios from './axios'
 import store from '@/vuex/store'
 import md5 from 'js-md5'
+import VueI18n from 'vue-i18n'
+import langEn from '@/lang/en'
+import langCn from '@/lang/cn'
 
 import {
 	Style,
@@ -34,8 +37,19 @@ import '@/assets/common.css'
 
 //fullpage滚动
 import 'vue-fullpage/vue-fullpage.css'
-import VueFullpage  from  'vue-fullpage'
+import VueFullpage from 'vue-fullpage'
 Vue.use(VueFullpage)
+
+//语言切换
+Vue.use(VueI18n)
+
+const i18n = new VueI18n({
+	locale: store.state.langType,
+	messages: {	
+		'en': langEn,
+		'cn': langCn,
+	}
+})
 
 Vue.config.productionTip = false
 Vue.prototype.$http = Axios
@@ -68,6 +82,7 @@ new Vue({
 	el: '#app',
 	router,
 	store,
+	i18n,
 	components: {
 		App
 	},

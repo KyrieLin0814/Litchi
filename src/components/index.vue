@@ -2,8 +2,8 @@
 	<div class="body-container">
 		<div class="banner">
 			<div class="language">
-				<a class="CN active">中文</a>
-				<a class="EN">English</a>
+				<a class="CN" :class="{'active': (langType == 'cn')}" @click="langCn">中文</a>
+				<a class="EN" :class="{'active': (langType == 'en')}" @click="langEn">English</a>
 			</div>
 			<img src="../assets/common/banner.png" />
 		</div>
@@ -11,7 +11,7 @@
 			<div class="item" v-for="(item,index) in result">
 				<div class="title">
 					<span class="area">{{item.continentName}}</span>
-					<span class="num">已覆盖{{ item.list.length }}个地区</span>
+					<span class="num">{{$t('message.covered')}} {{ item.list.length }} {{$t('message.regions')}}</span>
 					<div class="btn" v-if="item.canMore">
 						<a v-if="item.more" class="more" @click="moreFunc(index)">更多</a>
 						<a v-else class="less" @click="lessFunc(index)">收起</a>
@@ -45,11 +45,11 @@
 
 		<div class="footer flexBox">
 			<div class="flex-1 help">
-				<router-link to="/help"><span>帮助中心</span></router-link>
+				<router-link to="/help"><span>{{$t("message.help")}}</span></router-link>
 			</div>
 			<div class="flex-1 order">
 				<router-link to="/orderList">
-					<span>我的订单</span>
+					<span>{{$t("message.myOrder")}}</span>
 				</router-link>
 			</div>
 		</div>
@@ -61,6 +61,7 @@
 		name: 'index',
 		data() {
 			return {
+				langType: this.$store.state.langType,
 				meals: [],
 				resArr: [],
 				result: []
@@ -129,6 +130,16 @@
 
 		},
 		methods: {
+			langCn(){
+				this.$i18n.locale = "cn"
+				this.$store.state.langType = "cn"
+				this.langType = "cn"
+			},
+			langEn(){
+				this.$i18n.locale = "en"
+				this.$store.state.langType = "en"
+				this.langType = "en"
+			},
 			moreFunc(idx) {
 				this.result[idx].more = false
 				this.$forceUpdate()
@@ -193,7 +204,7 @@
 		font-size: 0.8rem;
 		line-height: 30px;
 		color: #F39800;
-		margin-right: .45rem;
+		margin-right: .6rem;
 		vertical-align: middle;
 		font-weight: bold;
 	}
