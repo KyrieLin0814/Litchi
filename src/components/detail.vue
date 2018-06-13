@@ -8,7 +8,7 @@
 					</div>
 					<div class="common-title">
 						<i></i>
-						<span>选择套餐</span>
+						<span>{{$t('message.chooseMeal')}}</span>
 					</div>
 					<div class="car-content">
 						<div class="car-tab flexBox">
@@ -52,11 +52,11 @@
 						</div>
 						<div class="scroll-btn">
 							<div>
-								<i></i><span>上拉展开产品详情</span>
+								<i></i><span>{{$t('message.pullup')}}</span>
 							</div>
 
 							<div class="num-box">
-								<p>天数</p>
+								<p>{{$t('message.days')}}</p>
 								<div>
 									<a class="del" @click="delFunc">-</a>
 									<a class="number">{{ finalNum }}</a>
@@ -73,7 +73,7 @@
 							<div class="detail-list">
 								<ul>
 									<li>
-										<p><span>套餐详情</span></p>
+										<p><span>{{$t('message.detailsMeal')}}</span></p>
 
 										<!--自选包-->
 										<ul v-if="selfMeal.length" :class="{'active': (tabFlag=='choose')}">
@@ -100,9 +100,9 @@
 		</div>
 
 		<div class="buy-box clearfix">
-			<p>总价： <span>{{ price.toFixed(2) }}</span> 元</p>
-			<a @click="addCar">加入购物车</a>
-			<router-link to="/">返回</router-link>
+			<p>{{$t('message.total')}}: <span>{{ price.toFixed(2) }}</span> {{$t('message.yuan')}}</p>
+			<a @click="addCar">{{$t('message.addCart')}}</a>
+			<router-link to="/">{{$t('message.back')}}</router-link>
 		</div>
 
 		<cube-popup type="my-popup" :mask="false" ref="myPopup">{{popupTxt}}</cube-popup>
@@ -479,7 +479,7 @@
 		right: 0;
 		height: 40px;
 		border-top: 1px solid #D4D5D5;
-		padding: 12px 1.2rem 0;
+		padding: 12px 1rem 0;
 		background-color: #FFFFFF;
 		z-index: 999;
 	}
@@ -609,8 +609,10 @@
 	}
 	
 	.detail-list ul p span {
+		display: inline-block;
 		font-size: 0.7rem;
-		padding: 2px 2.5rem 0 0.5rem;
+		padding: 2px 0.5rem 0 0.5rem;
+		min-width:85px;
 		background-color: #F39800;
 		color: #fff;
 	}
