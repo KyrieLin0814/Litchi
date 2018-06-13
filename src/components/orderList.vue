@@ -23,8 +23,8 @@
 
 		<div class="btns">
 			<router-link to="/haveCard">关联我的旅游卡</router-link>
-			<div></div>
 			<router-link class="done" to="/text">查看境外上网设置办法</router-link>
+			<router-link class="done" to="/">返回</router-link>
 		</div>
 	</div>
 </template>
@@ -156,6 +156,9 @@
 		padding: 15px;
 		text-align: center;
 		background: #fff;
+	}
+	.btns a{
+		margin-bottom:8px;
 	}
 	
 	.status-list {

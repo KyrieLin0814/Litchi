@@ -9,9 +9,10 @@ const state = {
 	iccid: "", //旅游卡ICCID ,当无卡用户购买时首次为空
 	mealsData: [],
 	routerData: {},
-	langType:'en',
+	langType:'cn',
 	tabFlag: '',
 	wayFlag:'',
+	firstFlag:true,
 	agreeFlag: false,
 	finalMeal: {},
 	perPrice: 0,
