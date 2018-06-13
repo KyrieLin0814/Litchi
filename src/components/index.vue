@@ -69,6 +69,7 @@
 		},
 		created() {
 			var that = this
+			//获取套餐
 			that.$http.post("http://wx.lizhisim.com/weixin/packageServer", {
 				data: {
 					connSeqNo: that.$store.state.connSeqNo,
@@ -80,7 +81,7 @@
 			}).then((res) => {
 				console.log(res)
 				var result = res.data.data
-				if(res.data.data.tradeData[0].openId){
+				if(res.data.data.tradeData[0].openId) {
 					that.$store.state.openId = res.data.data.tradeData[0].openId
 				}
 				var typeArr = []
@@ -121,23 +122,35 @@
 						val.more = true
 					}
 				})
-				
+
 				that.$store.state.mealsData = that.result
 				console.log(that.$store.state.mealsData)
 				that.$forceUpdate()
 			})
 
-		},
-		mounted() {
-
+			//查询iccid
+			that.$http.post("http://wx.lizhisim.com/weixin/getIccId", {
+				data: {
+					connSeqNo: that.$store.state.connSeqNo,
+					partnerCode: that.$store.state.partnerCode,
+					token: that.$store.state.token,
+					tradeData: {
+						openid: that.$store.state.openId
+					},
+					tradeTime: new Date(),
+					tradeType: "F012",
+				}
+			}).then((res) => {
+				that.$store.state.iccid = res.data.data.tradeData[res.data.data.tradeData.length-1].iccid
+			})
 		},
 		methods: {
-			langCn(){
+			langCn() {
 				this.$i18n.locale = "cn"
 				this.$store.state.langType = "cn"
 				this.langType = "cn"
 			},
-			langEn(){
+			langEn() {
 				this.$i18n.locale = "en"
 				this.$store.state.langType = "en"
 				this.langType = "en"
@@ -287,11 +300,11 @@
 	
 	.txt span {
 		font-size: 0.6rem;
-		padding-left:0.2rem;
+		padding-left: 0.2rem;
 	}
 	
 	.txt a {
-		padding:0 0.3rem;
+		padding: 0 0.3rem;
 		text-align: right;
 		font-size: 0.5rem;
 		color: #fff;

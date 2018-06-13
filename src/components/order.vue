@@ -17,7 +17,7 @@
 
 		<div class="buy-box clearfix">
 			<p>需支付： <span>{{ price.toFixed(2) }}</span> 元</p>
-			<a @click="pay">支付</a>
+			<a @click="payFunc">支付</a>
 			<router-link to="/postWay">返回</router-link>
 		</div>
 	</div>
@@ -36,7 +36,7 @@
 			}
 		},
 		methods: {
-			pay() {
+			payFunc() {
 				//wx pay
 				var that = this
 				var params = encodeURI(encodeURI(document.location.href))
@@ -52,17 +52,16 @@
 					function onBridgeReady() {　　　　　　　　
 						WeixinJSBridge.invoke('getBrandWCPayRequest', {　　　　　　　　　　
 							appId: appIdVal, //公众号名称，由商户传入 
-			　　　　　　　　　	timeStamp: timeStampVal, //时间戳，自1970年以来的秒数 
-			　　　　　　　　　　	nonceStr: nonceStrVal, //随机串 
-			　　　　　　　　　　	package: packageVal, //订单详情扩展字符串
-			　　　　　　　　　　	signType: signTypeVal, //微信签名方式： 
-			　　　　　　　　　　	paySign: paySignVal //微信签名 
-						},function(res) {
-							alert(res.err_msg)　　　　　　　
-							if(res.err_msg == "get_brand_wcpay_request:ok") {// 表示已经支付,res.err_msg将在用户支付成功后返回 ok。 
-								that.$router.push("/paySuccess")　　　　　　　
-							}else{
-								that.$router.push("/payError")　　　
+		　　　　　　　　　     timeStamp: timeStampVal, //时间戳，自1970年以来的秒数 
+		　　　　　　　　　　  nonceStr: nonceStrVal, //随机串 
+		　　　　　　　　　　  package: packageVal, //订单详情扩展字符串
+		　　　　　　　　　　  signType: signTypeVal, //微信签名方式： 
+		　　　　　　　　　　  paySign: paySignVal //微信签名 
+						}, function(res) {
+							if(res.err_msg == "get_brand_wcpay_request:ok") { // 表示已经支付,res.err_msg将在用户支付成功后返回 ok。 
+								that.payResult()　　　　
+							} else {
+								
 							}　　　　
 						});　　　　
 					}　
@@ -77,9 +76,8 @@
 						onBridgeReady();　　　　
 					}
 				})
-				//this.paySuccess()
 			},
-			paySuccess() {
+			payResult() {
 				//支付结果通知
 				var that = this
 				that.$http.post("/travelSimGW/busiService", {
@@ -98,6 +96,11 @@
 					}
 				}).then((res) => {
 					console.log(res)
+					if(res.data.data.tradeRstCode == "1000") {
+						that.$router.push("/paySuccess")
+					} else {
+						that.$router.push("/payError")
+					}
 				})
 			}
 		}

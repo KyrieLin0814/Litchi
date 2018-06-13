@@ -12,7 +12,7 @@ const state = {
 	langType:'cn',
 	tabFlag: '',
 	wayFlag:'',
-	firstFlag:true,
+	alertCard:true,
 	agreeFlag: false,
 	finalMeal: {},
 	perPrice: 0,

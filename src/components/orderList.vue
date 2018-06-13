@@ -2,7 +2,7 @@
 	<div class="body-container">
 		<ul class="list-content">
 			<li v-for="i in result">
-				<a  @click="routerFunc(i)">
+				<a @click="routerFunc(i)">
 					<div class="order-list flexBox">
 						<div class="flex-1">
 							<p class="txt">{{i.packageName}}</p>
@@ -26,6 +26,8 @@
 			<router-link class="done" to="/text">查看境外上网设置办法</router-link>
 			<router-link class="done" to="/">返回</router-link>
 		</div>
+
+		<cube-popup type="my-popup" :mask="false" ref="myPopup">{{ popupTxt }}</cube-popup>
 	</div>
 </template>
 
@@ -36,7 +38,8 @@
 			return {
 				time: "2018.6.8 12:12:11",
 				price: "19.9",
-				result: []
+				result: [],
+				popupTxt: ''
 			}
 		},
 		created() {
@@ -53,26 +56,36 @@
 					tradeType: "F011"
 				}
 			}).then((res) => {
-				console.log(res)
-				that.result = res.data.data.tradeData
-				console.log(that.result)
-				that.result.map(function(val, idx){
-					if(val.orderStatus == "0"){
-						res.data.data.tradeData[idx].statusTxt = "未支付"
-					}
-					if(val.orderStatus == "1"){
-						res.data.data.tradeData[idx].statusTxt = "未启用"
-					}
-					if(val.orderStatus == "2"){
-						res.data.data.tradeData[idx].statusTxt = "已开始使用"
-					}
-					if(val.orderStatus == "3"){
-						res.data.data.tradeData[idx].statusTxt = "已结束"
-					}
-					if(val.orderStatus == "4"){
-						res.data.data.tradeData[idx].statusTxt = "已取消"
-					}
-				})
+				console.log(res.data)
+				if(res.data.data.tradeData){
+					that.result = res.data.data.tradeData
+				}
+				if(res.data.data.tradeRstCode == "1000") {
+					that.result.map(function(val, idx) {
+						if(val.orderStatus == "0") {
+							res.data.data.tradeData[idx].statusTxt = "未支付"
+						}
+						if(val.orderStatus == "1") {
+							res.data.data.tradeData[idx].statusTxt = "未启用"
+						}
+						if(val.orderStatus == "2") {
+							res.data.data.tradeData[idx].statusTxt = "已开始使用"
+						}
+						if(val.orderStatus == "3") {
+							res.data.data.tradeData[idx].statusTxt = "已结束"
+						}
+						if(val.orderStatus == "4") {
+							res.data.data.tradeData[idx].statusTxt = "已取消"
+						}
+					})
+				} else {
+					that.popupTxt = res.data.data.tradeRstMessage + "，请关联你的旅游卡"
+					const component = that.$refs['myPopup']
+					component.show()
+					setTimeout(() => {
+						component.hide()
+					}, 1000)
+				}
 			})
 		},
 		mounted() {
@@ -157,8 +170,9 @@
 		text-align: center;
 		background: #fff;
 	}
-	.btns a{
-		margin-bottom:8px;
+	
+	.btns a {
+		margin-bottom: 8px;
 	}
 	
 	.status-list {

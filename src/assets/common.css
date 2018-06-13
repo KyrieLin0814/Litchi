@@ -195,7 +195,9 @@ textarea {
 /*弹框提示  popup*/
 
 .cube-my-popup .cube-popup-content {
+	max-width:80%;
 	font-size: 0.7rem;
+	line-height:20px;
 	padding: 0.8rem;
 	border-radius: 5px;
 	color: #fff;
@@ -354,6 +356,9 @@ textarea {
 
 .cube-dialog-title-def {
 	color: #F39800;
+}
+.cube-dialog-content-def{
+	text-align: center;
 }
 
 .cube-dialog-btn {
