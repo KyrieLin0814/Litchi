@@ -4,11 +4,11 @@
 			<i></i>
 			<span>充值到已有旅游卡</span>
 		</div>
-		
+
 		<a class="save" @click="scanQRCode">扫描卡片背面</a>
-		
+
 		<div class="content">
-			<input type="text" v-model="iccid" placeholder="(输入文本框)">
+			<input type="number" v-model="iccid" placeholder="(输入文本框)">
 			<span>或您手动输入旅游卡背面的ICCID编号</span>
 		</div>
 
@@ -16,6 +16,8 @@
 			<a @click="confirm">确定</a>
 			<a @click="cancel">取消</a>
 		</div>
+
+		<cube-popup type="my-popup" :mask="false" ref="myPopup">{{ popupTxt }}</cube-popup>
 	</div>
 </template>
 
@@ -25,13 +27,14 @@
 		data() {
 			return {
 				iccid: this.$store.state.iccid,
-				backRouter:this.$store.state.routerBack.haveCard
+				backRouter: this.$store.state.routerBack.haveCard,
+				popupTxt: ''
 			}
 		},
 		components: {},
 		created() {
 			var params = encodeURI(encodeURI(document.location.href))
-			
+
 			this.$http.get("http://wx.lizhisim.com/weixin/weixinsao?reqUrl=" + params).then((res) => {
 				wx.config({
 					debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。  
@@ -57,21 +60,64 @@
 						that.$store.state.iccid = iccid
 						// code 在这里面写上扫描二维码之后需要做的内容 
 					},
-					error:function(err){
+					error: function(err) {
 						//alert(JSON.stringify(err))
 					}
 				})
 			},
 			confirm() {
-				this.$store.state.iccid = this.iccid
-				this.$router.push({
-					name: "postWay",
-				})
+				var that = this
+				//绑定iccid
+				if(that.iccid) {
+					that.$http.post("http://wx.lizhisim.com/weixin/userBound", {
+						data: {
+							connSeqNo: that.$store.state.connSeqNo,
+							partnerCode: that.$store.state.partnerCode,
+							token: that.$store.state.token,
+							tradeData: {
+								iccid: that.iccid,
+								openid: that.$store.state.openId
+							},
+							tradeTime: new Date(),
+							tradeType: "F013",
+						}
+					}).then((res) => {
+						if(res.data.data.tradeRstCode == "1000") {
+							that.$store.state.iccid = that.iccid
+
+							that.popupTxt = res.data.data.tradeRstMessage
+							const component = that.$refs['myPopup']
+							component.show()
+							setTimeout(() => {
+								component.hide()
+								that.$router.push({
+									name: "postWay",
+								})
+							}, 1000)
+						} else {
+							that.popupTxt = res.data.data.tradeRstMessage
+							const component = that.$refs['myPopup']
+							component.show()
+							setTimeout(() => {
+								component.hide()
+							}, 1000)
+						}
+					})
+				} else {
+					that.popupTxt = "ICCID不能为空"
+					const component = that.$refs['myPopup']
+					component.show()
+					setTimeout(() => {
+						component.hide()
+					}, 1000)
+				}
+
 			},
 			cancel() {
 				var that = this
-				console.log(that.backRouter)
-				that.$router.push({name:that.backRouter})
+				that.$router.push({
+					name: that.backRouter
+				})
 			}
 		}
 	}

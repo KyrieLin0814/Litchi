@@ -106,32 +106,15 @@
 			that.address = that.$store.state.address
 			that.iccid = that.$store.state.iccid
 			that.addressGet = that.address.province + that.address.city + that.address.area + that.address.addressTxt
-			
-			//查询iccid
-			that.$http.post("http://wx.lizhisim.com/weixin/getIccId", {
-				data: {
-					connSeqNo: that.$store.state.connSeqNo,
-					partnerCode: that.$store.state.partnerCode,
-					token: that.$store.state.token,
-					tradeData: {
-						openid: that.$store.state.openId
-					},
-					tradeTime: new Date(),
-					tradeType: "F012",
-				}
-			}).then((res) => {
-				console.log(res.data.data.tradeData[1].iccid)
-				that.iccid = res.data.data.tradeData[1].iccid
-				that.$store.state.iccid = res.data.data.tradeData[1].iccid
-			})
+
 		},
-		mounted(){
+		mounted() {
 			var that = this
 			//返回路由
 			that.$store.state.routerBack.haveCard = "postWay"
-			
+
 			//默认选中
-			if(that.$store.state.wayFlag){
+			if(that.$store.state.wayFlag) {
 				that.checkedObj = {}
 				that.checkedObj['type' + that.$store.state.wayFlag] = true
 			}
@@ -150,7 +133,7 @@
 				this.$store.state.expressType = id
 				this.expressType = id
 				this.$store.state.wayFlag = id
-				
+
 				if(id == 2) {
 					this.finalPrice = this.mealPrice + this.SFPost
 					this.$store.state.finalPrice = this.finalPrice
@@ -158,12 +141,55 @@
 					this.finalPrice = this.mealPrice
 					this.$store.state.finalPrice = this.finalPrice
 				}
+
+				var that = this
+				if(id == 3) {
+					//查询iccid
+					that.$http.post("http://wx.lizhisim.com/weixin/getIccId", {
+						data: {
+							connSeqNo: that.$store.state.connSeqNo,
+							partnerCode: that.$store.state.partnerCode,
+							token: that.$store.state.token,
+							tradeData: {
+								openid: that.$store.state.openId
+							},
+							tradeTime: new Date(),
+							tradeType: "F012",
+						}
+					}).then((res) => {
+						console.log(res.data.data)
+						var Num = res.data.data.tradeData.length
+						if(Num) {
+							if(Num > 1) {
+								that.popupTxt = "检测到您有多张旅游卡，请重新选择或绑定"
+								const component = that.$refs['myPopup']
+								component.show()
+								setTimeout(() => {
+									component.hide()
+									that.$router.push("/haveCard")
+								}, 1500)
+							} else {
+								that.iccid = res.data.data.tradeData[0].iccid
+								that.$store.state.iccid = res.data.data.tradeData[0].iccid
+							}
+						} else {
+							that.popupTxt = "检测到您还没有旅游卡，请填写收货地址购卡"
+							const component = that.$refs['myPopup']
+							component.show()
+							setTimeout(() => {
+								component.hide()
+								that.$router.push("/adress")
+							}, 1500)
+						}
+					})
+				}
+
 			},
 			setAddress() {
 				if(!this.checkedObj.type3) {
 					this.$router.push("/adress")
 				} else {
-					this.popupTxt = "若选择快递方式，请填写快递信息"
+					this.popupTxt = "若选择您已有旅游卡，请编辑、确认旅游卡信息"
 					const component = this.$refs['myPopup']
 					component.show()
 					setTimeout(() => {
@@ -174,8 +200,8 @@
 			haveCard() {
 				if(this.checkedObj.type3) {
 					this.$router.push("/haveCard")
-				}else{
-					this.popupTxt = "若选择您已有旅游卡，请填写旅游卡信息"
+				} else {
+					this.popupTxt = "若需购卡，请填写快递信息"
 					const component = this.$refs['myPopup']
 					component.show()
 					setTimeout(() => {

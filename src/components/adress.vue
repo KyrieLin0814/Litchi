@@ -29,7 +29,12 @@
 			</div>
 		</div>
 
-		<a class="save" @click="saveFunc">保存</a>
+		<div class="btns">
+			<a class="save" @click="saveFunc">保存</a>
+			<div></div>
+			<router-link class="done" to="/postWay">返回</router-link>
+		</div>
+		
 
 		<cube-popup type="my-popup" :mask="false" ref="myPopup">{{ popupTxt }}</cube-popup>
 	</div>
@@ -203,15 +208,8 @@
 		background-size: 6px 10px;
 	}
 	
-	.save {
-		display: block;
+	.btns{
+		margin-top:40px;
 		text-align: center;
-		font-size: 0.7rem;
-		color: #fff;
-		border-radius: 5px;
-		width: 60%;
-		margin: 60px auto 0;
-		line-height: 32px;
-		background-color: #F39800;
 	}
 </style>

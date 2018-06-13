@@ -4,7 +4,7 @@
 			<div class="fullpage-wp" v-fullpage="opts">
 				<div class="page-1 page">
 					<div class="banner" :style="{backgroundImage: 'url(' + obj.pictureDetails + ')', backgroundSize: '100% auto', backgroundPosition:'center'}">
-						<p class="text-1">{{obj.countryName}}</p>
+						<p class="text-1">{{obj.packageDesc}}</p>
 					</div>
 					<div class="common-title">
 						<i></i>

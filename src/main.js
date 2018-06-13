@@ -33,9 +33,9 @@ import {
 import '@/assets/common.css'
 
 //fullpage滚动
-import 'vue-fullpage/vue-fullpage.css'
-import VueFullpage  from  'vue-fullpage'
-Vue.use(VueFullpage)
+//import 'vue-fullpage/vue-fullpage.css'
+//import VueFullpage  from  'vue-fullpage'
+//Vue.use(VueFullpage)
 
 Vue.config.productionTip = false
 Vue.prototype.$http = Axios
