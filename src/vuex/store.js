@@ -19,6 +19,7 @@ const state = {
 	perPrice: 0,
 	finalNum: 0,
 	finalPrice: 0,
+	totalPrice:0,
 	address: {
 		name: '',
 		phone: '',

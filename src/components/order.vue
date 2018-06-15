@@ -21,12 +21,15 @@
 				</div>
 			</li>
 		</ul>
+		<p v-if="!carData.length" class="no-data">购物车为空</p>
 
 		<div class="buy-box clearfix">
 			<p>需支付： <span>{{ price.toFixed(2) }}</span> 元</p>
-			<a @click="payFunc">下一步</a>
-			<router-link to="/payPage">返回</router-link>
+			<a @click="payFunc">结算</a>
+			<router-link to="/">返回</router-link>
 		</div>
+
+		<cube-popup type="my-popup" :mask="false" ref="myPopup">{{ popupTxt }}</cube-popup>
 	</div>
 </template>
 
@@ -40,86 +43,67 @@
 				img: this.$store.state.finalMeal.obj.pictureDetails,
 				areaTxt: this.$store.state.routerData.countryName,
 				detailTxt: this.$store.state.finalMeal.obj.packageName,
-				price: this.$store.state.finalPrice
+				price: 0,
+				popupTxt: ''
+			}
+		},
+		props: {
+			addFlag: {
+				type: Boolean,
+				default: false
 			}
 		},
 		created() {
 			var that = this
-			that.carData = that.$store.state.shopCar
+			that.carData = JSON.parse(JSON.stringify(that.$store.state.shopCar))
 			console.log(that.carData)
+			if(that.addFlag) {
+				that.price = that.$store.state.totalPrice + that.$store.state.finalPrice
+				that.$store.state.totalPrice = that.price
+			} else {
+				that.price = that.$store.state.totalPrice
+			}
 		},
 		methods: {
 			payFunc() {
-				this.$router.push("/postWay")
-
-				//wx pay
 				var that = this
-				var params = encodeURI(encodeURI(document.location.href))
-				var url = "http://wx.lizhisim.com/weixin/weixinpay?orderId=" + that.$store.state.orderId + "&openId=:" + that.$store.state.openId + "&amount=" + that.price.toString() + "&reqUrl=" + params
-				that.$http.get(url).then((res) => {
-					var appIdVal = res.data.appId;　　　　　　
-					var timeStampVal = res.data.timeStamp;
-					var nonceStrVal = res.data.nonceStr;　　　　　　
-					var packageVal = res.data.package;　　　　　　
-					var signTypeVal = res.data.signType;　　　　　　
-					var paySignVal = res.data.paySign;　　
-					onBridgeReady();　　　　　　
-					function onBridgeReady() {　　　　　　　　
-						WeixinJSBridge.invoke('getBrandWCPayRequest', {　　　　　　　　　　
-							appId: appIdVal, //公众号名称，由商户传入 
-							　　　　　　　　　timeStamp: timeStampVal, //时间戳，自1970年以来的秒数 
-							　　　　　　　　　　nonceStr: nonceStrVal, //随机串 
-							　　　　　　　　　　package: packageVal, //订单详情扩展字符串
-							　　　　　　　　　　signType: signTypeVal, //微信签名方式： 
-							　　　　　　　　　　paySign: paySignVal //微信签名 
-						}, function(res) {
-							if(res.err_msg == "get_brand_wcpay_request:ok") { // 表示已经支付,res.err_msg将在用户支付成功后返回 ok。 
-								that.payResult()　　　　
-							} else {
-
-							}　　　　
-						});　　　　
-					}　
-					if(typeof WeixinJSBridge == "undefined") {　　　　　　　　
-						if(document.addEventListener) {　　　　　　　　　　
-							document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);　　　　　　　　
-						} else if(document.attachEvent) {　　　　　　　　　　
-							document.attachEvent('WeixinJSBridgeReady', onBridgeReady);　　　　　　　　　　
-							document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);　　　　　　　　
-						}　　　　
-					} else {　　　　　　
-						onBridgeReady();　　　　
-					}
-				})
+				if(that.carData.length) {
+					that.$router.push("/postWay")
+				} else {
+					that.popupTxt = "请选择套餐后再进行下单"
+					const component = that.$refs['myPopup']
+					component.show()
+					setTimeout(() => {
+						component.hide()
+					}, 1500)
+				}
 			},
-			payResult() {
-				//支付结果通知
+			delFunc(idx) {
 				var that = this
-				that.$http.post("/travelSimGW/busiService", {
-					data: {
-						connSeqNo: that.$store.state.connSeqNo,
-						partnerCode: that.$store.state.partnerCode,
-						token: that.$store.state.token,
-						tradeData: {
-							orderId: that.$store.state.orderId,
-							payAmount: that.price.toString(),
-							payRst: "1", //0成功  1 失败
-							payType: "0", //微信支付
-						},
-						tradeTime: new Date(),
-						tradeType: "F010",
-					}
-				}).then((res) => {
-					console.log(res)
-					if(res.data.data.tradeRstCode == "1000") {
-						that.$router.push("/paySuccess")
-					} else {
-						that.$router.push("/payError")
-					}
-				})
-			},
-			delFunc(idx){
-				
+				var alert = that.$createDialog({
+					type: 'confirm',
+					content: '是否要删除该套餐？',
+					confirmBtn: {
+						text: '确认',
+						active: false,
+						disabled: false,
+						href: 'javascript:;'
+					},
+					cancelBtn: {
+						text: '取消',
+						active: false,
+						disabled: false,
+						href: 'javascript:;'
+					},
+					onConfirm: () => {
+						that.price = that.price - that.carData[idx].finalPrice
+						that.$store.state.totalPrice = that.price
+
+						that.carData.splice(idx, 1)
+						that.$store.state.shopCar = that.carData
+					},
+					onCancel: () => {}
+				}).show()
 			}
 		}
 	}
@@ -157,8 +141,8 @@
 		color: #fff;
 		font-size: 0.8rem;
 		line-height: 90px;
-		width:calc(100% - 10px);
-		margin:0 5px;
+		width: calc(100% - 10px);
+		margin: 0 5px;
 	}
 	
 	.img-content>div.text {
@@ -178,16 +162,18 @@
 		font-size: 0.7rem;
 		text-align: left;
 	}
-	.del{
-		width:20px;
+	
+	.del {
+		width: 20px;
 	}
-	.del a{
-		width:20px;
-		height:20px;
-		margin-top:5px;
+	
+	.del a {
+		width: 20px;
+		height: 20px;
+		margin-top: 5px;
 		display: block;
-		font-size:0.8rem;
-		color:#CCCCCC;
+		font-size: 0.8rem;
+		color: #CCCCCC;
 	}
 	
 	.buy-box {

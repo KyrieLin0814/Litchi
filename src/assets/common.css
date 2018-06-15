@@ -164,6 +164,7 @@ textarea {
   padding-top:40px;
   text-align: center;
   font-size:0.8rem;
+  color:#cccccc
 }
 
 
@@ -325,6 +326,9 @@ textarea {
 	font-weight: bold;
 }
 
+.cost-box ul li{
+	line-height:30px;
+}
 
 /*按钮*/
 

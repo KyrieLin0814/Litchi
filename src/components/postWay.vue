@@ -10,17 +10,22 @@
 			<p>合计： <span>{{ finalPrice.toFixed(2) }}</span> 元</p>
 			<span class="slide" :class="{'active': slideFlage}" @click="slideFunc"></span>
 			<a @click="payFunc">支付</a>
-			<router-link to="/payPage">返回</router-link>
+			<router-link to="/order">返回</router-link>
 		</div>
 
 		<transition name="fade" mode="out-in">
 			<div class="cost-box" :class="{'active': slideFlage}">
 				<p>费用详情</p>
-				<div class="flexBox">
-					<div>套餐费 ({{ mealCost }})</div>
-					<div class="flex-1"></div>
-					<div class="price"><span>{{ mealPrice.toFixed(2) }}</span>元</div>
-				</div>
+				<ul>
+					<li v-for="i in shopCarData">
+						<div class="flexBox">
+							<div>套餐费 ({{ i.text }})</div>
+							<div class="flex-1"></div>
+							<div class="price"><span>{{ i.finalPrice.toFixed(2) }}</span>元</div>
+						</div>
+					</li>
+				</ul>
+
 			</div>
 		</transition>
 
@@ -33,6 +38,7 @@
 		name: 'name',
 		data() {
 			return {
+				shopCarData: [],
 				slideFlage: true,
 				finalPrice: 0.00,
 				finalNum: 0,
@@ -47,20 +53,24 @@
 		},
 		created() {
 			var that = this
-			that.judgeData = that.$store.state.finalMeal
-			that.perPrice = that.$store.state.perPrice
-			that.finalPrice = that.$store.state.finalPrice
-			that.finalNum = that.$store.state.finalNum
-			if(that.judgeData.obj.maxDays == that.judgeData.obj.minDays) {
-				that.day = Number(that.judgeData.obj.maxDays) * Number(that.finalNum)
-			} else {
-				that.day = that.finalNum
-			}
 
-			that.mealCost = that.perPrice + "元 x " + that.day + "天 x " + that.page + "张"
-			that.mealPrice = that.perPrice * that.finalNum
+			that.shopCarData = JSON.parse(JSON.stringify(that.$store.state.shopCar))
+			//console.log(that.shopCarData)
+			that.shopCarData.map(function(val, idx) {
+				var day;
+				if(val.meal.obj.maxDays == val.meal.obj.minDays) {
+					day = Number(val.meal.obj.maxDays) * val.finalNum
+				} else {
+					day = val.finalNum
+				}
+
+				val.text = val.perPrice + "元 x " + day + "天 x " + "1张"
+			})
+
+			//console.log(that.shopCarData)
 
 			that.iccid = that.$store.state.iccid
+			that.finalPrice = that.$store.state.totalPrice
 		},
 		mounted() {
 			var that = this
@@ -93,8 +103,8 @@
 								component.hide()
 							}, 1500)
 						} else {
-							that.iccid = res.data.data.tradeData[res.data.data.tradeData.length-1].iccid
-							that.$store.state.iccid = res.data.data.tradeData[res.data.data.tradeData.length-1].iccid
+							that.iccid = res.data.data.tradeData[res.data.data.tradeData.length - 1].iccid
+							that.$store.state.iccid = res.data.data.tradeData[res.data.data.tradeData.length - 1].iccid
 
 							that.popupTxt = "检测到您已有一张旅游卡，请确认旅游卡ICCID"
 							const component = that.$refs['myPopup']
@@ -118,7 +128,7 @@
 
 			that.alert = that.$createDialog({
 				type: 'confirm',
-				content: '请您务必确认旅游卡ICCID后，再进行下单操作',
+				content: '请您务必确认旅游卡ICCID后，再进行支付',
 				confirmBtn: {
 					text: '确认',
 					active: false,
@@ -187,6 +197,17 @@
 				}).then((res) => {
 					console.log(res)
 					if(res.data.data.tradeRstCode == "1000") {
+						//整理订单请求参数
+						var orderList = []
+						that.shopCarData.map(function(val, idx) {
+							orderList[idx] = {
+								channelOrderID: (new Date().getTime() + Math.floor(Math.random()*9999)).toString(),
+								orderPeriod: val.finalNum.toString(),
+								packageCode: val.meal.obj.packageCode
+							}
+						})
+						//console.log(orderList)
+
 						//订单接口
 						that.$http.post("http://wx.lizhisim.com/SimGW/travelSimGW/busiService", {
 							data: {
@@ -194,13 +215,9 @@
 								partnerCode: that.$store.state.partnerCode,
 								token: that.$store.state.token,
 								tradeData: {
-//									iccid: that.$store.state.iccid.toString(),
-									iccid:"89234185686475549864",
-									orderList: [{
-										channelOrderID: new Date().getTime().toString(),
-										orderPeriod: that.finalNum.toString(),
-										packageCode: that.$store.state.finalMeal.obj.packageCode,
-									}]
+									//iccid: that.$store.state.iccid.toString(),
+									iccid: "89234185686475549864",
+									orderList: orderList
 								},
 								tradeTime: new Date(),
 								tradeType: "F002",
@@ -217,7 +234,8 @@
 								component.show()
 								setTimeout(() => {
 									component.hide()
-									that.$router.push("/order")
+									//调微信支付
+									that.wxPay()
 								}, 1000)
 							} else {
 								toast.hide()
@@ -228,8 +246,8 @@
 									component.hide()
 								}, 1000)
 							}
-						}).catch((err)=>{
-							
+						}).catch((err) => {
+
 						})
 					} else {
 						toast.hide()
@@ -239,6 +257,73 @@
 						setTimeout(() => {
 							component.hide()
 						}, 1000)
+					}
+				})
+			},
+			wxPay() {
+				//wx pay
+				var that = this
+				var params = encodeURI(encodeURI(document.location.href))
+				var url = "http://wx.lizhisim.com/weixin/weixinpay?orderId=" + that.$store.state.orderId + "&openId=:" + that.$store.state.openId + "&amount=" + that.finalPrice.toString() + "&reqUrl=" + params
+				that.$http.get(url).then((res) => {
+					var appIdVal = res.data.appId;　　　　　　
+					var timeStampVal = res.data.timeStamp;
+					var nonceStrVal = res.data.nonceStr;　　　　　　
+					var packageVal = res.data.package;　　　　　　
+					var signTypeVal = res.data.signType;　　　　　　
+					var paySignVal = res.data.paySign;　　
+					onBridgeReady();　　　　　　
+					function onBridgeReady() {　　　　　　　　
+						WeixinJSBridge.invoke('getBrandWCPayRequest', {　　　　　　　　　　
+							appId: appIdVal, //公众号名称，由商户传入 
+							　　　　　　　　timeStamp: timeStampVal, //时间戳，自1970年以来的秒数 
+							　　　　　　　　nonceStr: nonceStrVal, //随机串 
+							　　　　　　　　package: packageVal, //订单详情扩展字符串
+							　　　　　　　　signType: signTypeVal, //微信签名方式： 
+							　　　　　　　　paySign: paySignVal //微信签名 
+						}, function(res) {
+							if(res.err_msg == "get_brand_wcpay_request:ok") { // 表示已经支付,res.err_msg将在用户支付成功后返回 ok。 
+								that.payResult()　　　　
+							} else {
+
+							}　　　　
+						});　　　　
+					}　
+					if(typeof WeixinJSBridge == "undefined") {　　　　　　　　
+						if(document.addEventListener) {　　　　　　　　　　
+							document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);　　　　　　　　
+						} else if(document.attachEvent) {　　　　　　　　　　
+							document.attachEvent('WeixinJSBridgeReady', onBridgeReady);　　　　　　　　　　
+							document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);　　　　　　　　
+						}　　　　
+					} else {　　　　　　
+						onBridgeReady();　　　　
+					}
+				})
+			},
+			payResult() {
+				//支付结果通知
+				var that = this
+				that.$http.post("/travelSimGW/busiService", {
+					data: {
+						connSeqNo: that.$store.state.connSeqNo,
+						partnerCode: that.$store.state.partnerCode,
+						token: that.$store.state.token,
+						tradeData: {
+							orderId: that.$store.state.orderId,
+							payAmount: that.finalPrice.toString(),
+							payRst: "1", //0成功  1 失败
+							payType: "0", //微信支付
+						},
+						tradeTime: new Date(),
+						tradeType: "F010",
+					}
+				}).then((res) => {
+					console.log(res)
+					if(res.data.data.tradeRstCode == "1000") {
+						that.$router.push("/paySuccess")
+					} else {
+						that.$router.push("/payError")
 					}
 				})
 			}

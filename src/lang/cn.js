@@ -5,11 +5,10 @@ module.exports = {
 		covered:'已覆盖',
 		regions: '个地区',
 		chooseMeal:'选择套餐',
-		days:'天数',
 		pullup:'上拉展开产品详情',
 		total:'总价',
 		yuan:'元',
-		addCart:'加入购物车',
+		addCart:'下一步',
 		back:'返回',
 		detailsMeal:'套餐详情'
 	}

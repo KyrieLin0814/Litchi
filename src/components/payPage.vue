@@ -22,7 +22,7 @@
 		<div class="buy-box clearfix">
 			<p>合计： <span>{{ finalPrice.toFixed(2) }}</span> 元</p>
 			<span class="slide" :class="{'active': slideFlage}" @click="slideFunc"></span>
-			<a @click="nextFunc">下一步</a>
+			<a @click="nextFunc">加入购物车</a>
 			<router-link to="/detail">返回</router-link>
 		</div>
 
@@ -144,16 +144,15 @@
 			nextFunc() {
 				var that = this
 				if(that.checked) {
-					that.$store.state.perPrice = that.perPrice
-					that.$store.state.finalPrice = that.finalPrice
-					that.$store.state.finalNum = that.finalNum
+					//加入到购物车
 					that.$store.state.agreeFlag = that.checked
 					that.$store.state.shopCar.push({
 						meal:that.$store.state.finalMeal,
-						finalPrice : that.finalNum
+						finalNum: that.finalNum,
+						perPrice: that.perPrice,
+						finalPrice : that.finalPrice
 					})
-					
-					that.$router.push("/order")
+					that.$router.push({name:"order",params:{addFlag:true}})
 				} else {
 					that.popupTxt = "请同意用户协议再进行下一步操作"
 					const component = this.$refs['myPopup']

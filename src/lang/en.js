@@ -5,7 +5,6 @@ module.exports = {
 		covered:'Covered',
 		regions: 'regions',
 		chooseMeal:'Choose a set meal',
-		days:'Number of days',
 		pullup:'Pull up the details of the product',
 		total:'Totals',
 		yuan:'yuan',

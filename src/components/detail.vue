@@ -62,7 +62,7 @@
 							</div>
 
 							<div class="num-box">
-								<p>{{$t('message.days')}}</p>
+								<p>{{number}}</p>
 								<div>
 									<a class="del" @click="delFunc">-</a>
 									<a class="number">{{ finalNum }}</a>
@@ -144,7 +144,8 @@
 				chooseFlag: 'id1',
 				scrollDown: true,
 				scrollUp: true,
-				popupTxt: ''
+				popupTxt: '',
+				number:'天数'
 			}
 		},
 		watch: {
@@ -189,8 +190,10 @@
 
 				if(that.selfMeal.length) {
 					that.tabFunc(that.selfMeal[0])
+					that.number = "天数"
 				} else {
 					that.tabFunc(that.mealsList[0])
+					that.number = "个数"
 				}
 				//console.log(that.mealsList)
 				//console.log(that.selfMeal)
@@ -240,9 +243,11 @@
 				if(i.obj.maxDays == i.obj.minDays) {
 					this.tabFlag = i.obj.packageCode
 					this.$store.state.tabFlag = i.obj.packageCode
+					this.number = "个数"
 				} else {
 					this.tabFlag = "choose"
 					this.$store.state.tabFlag = "choose"
+					this.number = "天数"
 				}
 				this.finalNum = 1
 				this.judgeData = i

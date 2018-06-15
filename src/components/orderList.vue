@@ -44,6 +44,13 @@
 		},
 		created() {
 			var that = this
+			const toast = that.$createToast({
+				type: 'loading',
+				time: 0,
+				txt: 'Loading'
+			})
+			toast.show()
+
 			that.$http.post("/travelSimGW/busiService", {
 				data: {
 					connSeqNo: that.$store.state.connSeqNo,
@@ -56,9 +63,10 @@
 					tradeType: "F011"
 				}
 			}).then((res) => {
-				console.log(res.data)
-				if(res.data.data.tradeData){
-					that.result = res.data.data.tradeData
+				toast.hide()
+				//console.log(res.data)
+				if(res.data.data.tradeData) {
+					that.result = JSON.parse(JSON.stringify(res.data.data.tradeData))
 				}
 				if(res.data.data.tradeRstCode == "1000") {
 					that.result.map(function(val, idx) {
@@ -79,7 +87,7 @@
 						}
 					})
 				} else {
-					that.popupTxt = res.data.data.tradeRstMessage + "，请关联你的旅游卡"
+					that.popupTxt = res.data.data.tradeRstMessage
 					const component = that.$refs['myPopup']
 					component.show()
 					setTimeout(() => {
