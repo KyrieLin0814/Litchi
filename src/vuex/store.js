@@ -15,6 +15,7 @@ const state = {
 	alertCard:true,
 	agreeFlag: false,
 	finalMeal: {},
+	shopCar:[],
 	perPrice: 0,
 	finalNum: 0,
 	finalPrice: 0,

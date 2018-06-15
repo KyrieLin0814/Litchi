@@ -2,23 +2,30 @@
 	<div class="body-container">
 		<div class="common-title">
 			<i></i>
-			<span>支付</span>
+			<span>购物车</span>
 		</div>
 		<div class="detail">商品详情</div>
-		<div class="detail">SIM卡 ICCID：{{ iccid }}</div>
-		<div class="img-content clearfix">
-			<div class="img" :style="{backgroundImage: 'url(' + img + ')', backgroundSize: '100% auto', backgroundPosition:'center'}">
-				<p>{{ areaTxt }}</p>
-			</div>
-			<div class="text">
-				<span>{{ detailTxt }}</span>
-			</div>
-		</div>
+		<!--<div class="detail">SIM卡 ICCID：{{ iccid }}</div>-->
+		<ul>
+			<li v-for="(i,index) in carData">
+				<div class="img-content flexBox">
+					<div class="img" :style="{backgroundImage: 'url(' + i.meal.obj.pictureDetails + ')', backgroundSize: '100% auto', backgroundPosition:'center'}">
+						<p class="text-1">{{ i.meal.name }}</p>
+					</div>
+					<div class="text">
+						<span>{{ i.meal.obj.packageName }}</span>
+					</div>
+					<div class="del">
+						<a @click="delFunc(index)">x</a>
+					</div>
+				</div>
+			</li>
+		</ul>
 
 		<div class="buy-box clearfix">
 			<p>需支付： <span>{{ price.toFixed(2) }}</span> 元</p>
-			<a @click="payFunc">支付</a>
-			<router-link to="/postWay">返回</router-link>
+			<a @click="payFunc">下一步</a>
+			<router-link to="/payPage">返回</router-link>
 		</div>
 	</div>
 </template>
@@ -29,14 +36,22 @@
 		data() {
 			return {
 				iccid: this.$store.state.iccid,
+				carData: [],
 				img: this.$store.state.finalMeal.obj.pictureDetails,
 				areaTxt: this.$store.state.routerData.countryName,
 				detailTxt: this.$store.state.finalMeal.obj.packageName,
 				price: this.$store.state.finalPrice
 			}
 		},
+		created() {
+			var that = this
+			that.carData = that.$store.state.shopCar
+			console.log(that.carData)
+		},
 		methods: {
 			payFunc() {
+				this.$router.push("/postWay")
+
 				//wx pay
 				var that = this
 				var params = encodeURI(encodeURI(document.location.href))
@@ -52,16 +67,16 @@
 					function onBridgeReady() {　　　　　　　　
 						WeixinJSBridge.invoke('getBrandWCPayRequest', {　　　　　　　　　　
 							appId: appIdVal, //公众号名称，由商户传入 
-		　　　　　　　　　     timeStamp: timeStampVal, //时间戳，自1970年以来的秒数 
-		　　　　　　　　　　  nonceStr: nonceStrVal, //随机串 
-		　　　　　　　　　　  package: packageVal, //订单详情扩展字符串
-		　　　　　　　　　　  signType: signTypeVal, //微信签名方式： 
-		　　　　　　　　　　  paySign: paySignVal //微信签名 
+							　　　　　　　　　timeStamp: timeStampVal, //时间戳，自1970年以来的秒数 
+							　　　　　　　　　　nonceStr: nonceStrVal, //随机串 
+							　　　　　　　　　　package: packageVal, //订单详情扩展字符串
+							　　　　　　　　　　signType: signTypeVal, //微信签名方式： 
+							　　　　　　　　　　paySign: paySignVal //微信签名 
 						}, function(res) {
 							if(res.err_msg == "get_brand_wcpay_request:ok") { // 表示已经支付,res.err_msg将在用户支付成功后返回 ok。 
 								that.payResult()　　　　
 							} else {
-								
+
 							}　　　　
 						});　　　　
 					}　
@@ -102,6 +117,9 @@
 						that.$router.push("/payError")
 					}
 				})
+			},
+			delFunc(idx){
+				
 			}
 		}
 	}
@@ -126,7 +144,6 @@
 	}
 	
 	.img-content>div {
-		float: left;
 		overflow: hidden;
 		height: 90px;
 	}
@@ -138,8 +155,10 @@
 	.img-content>div.img p {
 		text-align: center;
 		color: #fff;
-		font-size: 1.2rem;
-		line-height: 100px;
+		font-size: 0.8rem;
+		line-height: 90px;
+		width:calc(100% - 10px);
+		margin:0 5px;
 	}
 	
 	.img-content>div.text {
@@ -158,6 +177,17 @@
 		line-height: 18px;
 		font-size: 0.7rem;
 		text-align: left;
+	}
+	.del{
+		width:20px;
+	}
+	.del a{
+		width:20px;
+		height:20px;
+		margin-top:5px;
+		display: block;
+		font-size:0.8rem;
+		color:#CCCCCC;
 	}
 	
 	.buy-box {

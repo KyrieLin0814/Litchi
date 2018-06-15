@@ -85,19 +85,29 @@
 					that.$store.state.openId = res.data.data.tradeData[0].openId
 				}
 				var typeArr = []
+				var mccArr = []
 				for(var i = 0; i < result.tradeData.length; i++) {
 					for(var j = 0; j < result.tradeData[i].coverCountry.length; j++) {
 						if(typeArr.indexOf(result.tradeData[i].coverCountry[j].continentName) < 0) {
 							typeArr.push(result.tradeData[i].coverCountry[j].continentName)
 						}
 
-						that.meals.push(JSON.parse(JSON.stringify(result.tradeData[i])))
-						that.meals[that.meals.length - 1].continentName = result.tradeData[i].coverCountry[j].continentName
-						that.meals[that.meals.length - 1].countryName = result.tradeData[i].coverCountry[j].countryName
-						that.meals[that.meals.length - 1].mcc = result.tradeData[i].coverCountry[j].mcc
+						if(mccArr.indexOf(result.tradeData[i].coverCountry[j].mcc) < 0) {
+							mccArr.push(result.tradeData[i].coverCountry[j].mcc)
+							that.meals.push(JSON.parse(JSON.stringify(result.tradeData[i])))
+							that.meals[that.meals.length - 1].continentName = result.tradeData[i].coverCountry[j].continentName
+							that.meals[that.meals.length - 1].countryName = result.tradeData[i].coverCountry[j].countryName
+							that.meals[that.meals.length - 1].mcc = result.tradeData[i].coverCountry[j].mcc
+						}
+						//同一个mcc只显示一个
+//						that.meals.push(JSON.parse(JSON.stringify(result.tradeData[i])))
+//						that.meals[that.meals.length - 1].continentName = result.tradeData[i].coverCountry[j].continentName
+//						that.meals[that.meals.length - 1].countryName = result.tradeData[i].coverCountry[j].countryName
+//						that.meals[that.meals.length - 1].mcc = result.tradeData[i].coverCountry[j].mcc
 					}
 				}
-				//console.log(typeArr)
+				console.log(typeArr)
+				console.log(mccArr)
 				//console.log(that.meals)
 				for(var x = 0; x < typeArr.length; x++) {
 					that.result[x] = {
@@ -141,7 +151,7 @@
 					tradeType: "F012",
 				}
 			}).then((res) => {
-				that.$store.state.iccid = res.data.data.tradeData[res.data.data.tradeData.length-1].iccid
+				that.$store.state.iccid = res.data.data.tradeData[res.data.data.tradeData.length - 1].iccid
 			})
 		},
 		methods: {

@@ -9,7 +9,7 @@
 		<div class="buy-box clearfix">
 			<p>合计： <span>{{ finalPrice.toFixed(2) }}</span> 元</p>
 			<span class="slide" :class="{'active': slideFlage}" @click="slideFunc"></span>
-			<a @click="payFunc">下单</a>
+			<a @click="payFunc">支付</a>
 			<router-link to="/payPage">返回</router-link>
 		</div>
 
@@ -178,7 +178,7 @@
 						partnerCode: that.$store.state.partnerCode,
 						token: that.$store.state.token,
 						tradeData: {
-							iccid: that.$store.state.iccid,
+							iccid: that.$store.state.iccid.toString(),
 							openid: that.$store.state.openId,
 						},
 						tradeTime: new Date(),
@@ -188,18 +188,19 @@
 					console.log(res)
 					if(res.data.data.tradeRstCode == "1000") {
 						//订单接口
-						that.$http.post("/travelSimGW/busiService", {
+						that.$http.post("http://wx.lizhisim.com/SimGW/travelSimGW/busiService", {
 							data: {
 								connSeqNo: that.$store.state.connSeqNo,
 								partnerCode: that.$store.state.partnerCode,
 								token: that.$store.state.token,
 								tradeData: {
-									iccid: that.$store.state.iccid,
-									orderList: {
-										channelOrderID: '',
+//									iccid: that.$store.state.iccid.toString(),
+									iccid:"89234185686475549864",
+									orderList: [{
+										channelOrderID: new Date().getTime().toString(),
 										orderPeriod: that.finalNum.toString(),
 										packageCode: that.$store.state.finalMeal.obj.packageCode,
-									}
+									}]
 								},
 								tradeTime: new Date(),
 								tradeType: "F002",
@@ -227,6 +228,8 @@
 									component.hide()
 								}, 1000)
 							}
+						}).catch((err)=>{
+							
 						})
 					} else {
 						toast.hide()

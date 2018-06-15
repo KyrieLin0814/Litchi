@@ -148,7 +148,12 @@
 					that.$store.state.finalPrice = that.finalPrice
 					that.$store.state.finalNum = that.finalNum
 					that.$store.state.agreeFlag = that.checked
-					that.$router.push("/postWay")
+					that.$store.state.shopCar.push({
+						meal:that.$store.state.finalMeal,
+						finalPrice : that.finalNum
+					})
+					
+					that.$router.push("/order")
 				} else {
 					that.popupTxt = "请同意用户协议再进行下一步操作"
 					const component = this.$refs['myPopup']

@@ -22,6 +22,7 @@
 								<li @click="chooseFunc('id1')" :class="{'active': (chooseFlag=='id1')}">
 									<cube-checkbox v-model="checkedObj.checkedid1" :option="option" :hollow-style="true" shape="circle" />
 									<p class="title">{{selfMeal[0].obj.packageName}}</p>
+									<p class="title">{{selfMeal[0].obj.packageDesc}}</p>
 									<!--<p>
 										100M 4G高速流量</br>
 										+流量用完自动关闭网络</br>
@@ -45,6 +46,11 @@
 									<p>
 										<span class="title">{{i.obj.packageName}}</span>
 										<!--<span class="txt">当地3G/4G网络，不限流量，超出300MB/天，限速128kbps</span>-->
+									</p>
+								</li>
+								<li>
+									<p>
+										<span class="title">{{i.obj.packageDesc}}</span>
 									</p>
 								</li>
 							</ul>
@@ -167,11 +173,13 @@
 					if(result.tradeData[i].maxDays == result.tradeData[i].minDays) {
 						that.mealsList.push({
 							title: result.tradeData[i].maxDays + "天包",
+							name: result.tradeData[i].packageName,
 							obj: JSON.parse(JSON.stringify(result.tradeData[i]))
 						})
 					} else {
 						that.selfMeal.push({
 							title: "自选天数包",
+							name: result.tradeData[i].packageName,
 							obj: JSON.parse(JSON.stringify(result.tradeData[i]))
 						})
 					}
