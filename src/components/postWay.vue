@@ -5,6 +5,7 @@
 			<p>旅游卡信息：</p>
 			<div class="flex-1">{{ iccid ? iccid : '编辑' }}</div>
 		</div>
+		<p>{{dddd}}</p>
 
 		<div class="buy-box clearfix">
 			<p>合计： <span>{{ finalPrice.toFixed(2) }}</span> 元</p>
@@ -19,7 +20,7 @@
 				<ul>
 					<li v-for="i in shopCarData">
 						<div class="flexBox">
-							<div>套餐费 ({{ i.text }})</div>
+							<div>{{i.meal.name}}  ({{ i.text }})</div>
 							<div class="flex-1"></div>
 							<div class="price"><span>{{ i.finalPrice.toFixed(2) }}</span>元</div>
 						</div>
@@ -48,14 +49,15 @@
 				mealPrice: 0,
 				iccid: '',
 				popupTxt: '',
-				alert: null
+				alert: null,
+				dddd: ''
 			}
 		},
 		created() {
 			var that = this
 
 			that.shopCarData = JSON.parse(JSON.stringify(that.$store.state.shopCar))
-			//console.log(that.shopCarData)
+			console.log(that.shopCarData)
 			that.shopCarData.map(function(val, idx) {
 				var day;
 				if(val.meal.obj.maxDays == val.meal.obj.minDays) {
@@ -92,7 +94,7 @@
 						tradeType: "F012",
 					}
 				}).then((res) => {
-					console.log(res.data.data)
+					//console.log(res.data.data)
 					var Num = res.data.data.tradeData.length
 					if(Num) {
 						if(Num > 1) {
@@ -201,7 +203,7 @@
 						var orderList = []
 						that.shopCarData.map(function(val, idx) {
 							orderList[idx] = {
-								channelOrderID: (new Date().getTime() + Math.floor(Math.random()*9999)).toString(),
+								channelOrderID: (new Date().getTime() + Math.floor(Math.random() * 9999)).toString(),
 								orderPeriod: val.finalNum.toString(),
 								packageCode: val.meal.obj.packageCode
 							}
@@ -228,7 +230,12 @@
 							if(res.data.data.tradeRstCode == "1000") {
 								toast.hide()
 								//记录订单号
-								that.$store.state.orderId = res.data.data.tradeData.orderId
+								var orderId = []
+								for(var j = 0; j < res.data.data.tradeData.length; j++) {
+									orderId.push(res.data.data.tradeData[j].orderId)
+								}
+
+								that.$store.state.orderId = orderId.join(",")
 								that.popupTxt = res.data.data.tradeRstMessage
 								const component = that.$refs['myPopup']
 								component.show()
@@ -263,8 +270,12 @@
 			wxPay() {
 				//wx pay
 				var that = this
-				var params = encodeURI(encodeURI(document.location.href))
-				var url = "http://wx.lizhisim.com/weixin/weixinpay?orderId=" + that.$store.state.orderId + "&openId=:" + that.$store.state.openId + "&amount=" + that.finalPrice.toString() + "&reqUrl=" + params
+				//var params = encodeURI(encodeURI(document.location.href))
+				var date = new Date();
+				var paymentOrderId = date.getFullYear().toString() + (date.getMonth() + 1).toString() + date.getDate().toString() + date.getHours().toString() + date.getMinutes().toString() + Math.floor(Math.random() * 999).toString()
+				var url = "http://wx.lizhisim.com/weixin/weixinpay?orderId=" + that.$store.state.orderId + "&openId=" + that.$store.state.openId + "&amount=" + that.finalPrice.toString() + "&paymentOrderId=" + paymentOrderId
+				console.log(url)
+				return false
 				that.$http.get(url).then((res) => {
 					var appIdVal = res.data.appId;　　　　　　
 					var timeStampVal = res.data.timeStamp;
@@ -273,7 +284,8 @@
 					var signTypeVal = res.data.signType;　　　　　　
 					var paySignVal = res.data.paySign;　　
 					onBridgeReady();　　　　　　
-					function onBridgeReady() {　　　　　　　　
+					function onBridgeReady() {　　
+						that.dddd = 1　　　　　　
 						WeixinJSBridge.invoke('getBrandWCPayRequest', {　　　　　　　　　　
 							appId: appIdVal, //公众号名称，由商户传入 
 							　　　　　　　　timeStamp: timeStampVal, //时间戳，自1970年以来的秒数 
@@ -285,7 +297,7 @@
 							if(res.err_msg == "get_brand_wcpay_request:ok") { // 表示已经支付,res.err_msg将在用户支付成功后返回 ok。 
 								that.payResult()　　　　
 							} else {
-
+								that.dddd = JSON.stringify(res)
 							}　　　　
 						});　　　　
 					}　
@@ -301,8 +313,12 @@
 					}
 				})
 			},
-			payResult() {
-				//支付结果通知
+			////支付结果通知
+			payNotice(){
+				
+			},
+			payResult(oId) {
+				//支付结果通知方法
 				var that = this
 				that.$http.post("/travelSimGW/busiService", {
 					data: {
@@ -310,21 +326,20 @@
 						partnerCode: that.$store.state.partnerCode,
 						token: that.$store.state.token,
 						tradeData: {
-							orderId: that.$store.state.orderId,
+							orderId: oId,
 							payAmount: that.finalPrice.toString(),
-							payRst: "1", //0成功  1 失败
+							payRst: "0", //0成功  1 失败
 							payType: "0", //微信支付
 						},
 						tradeTime: new Date(),
 						tradeType: "F010",
 					}
 				}).then((res) => {
-					console.log(res)
-					if(res.data.data.tradeRstCode == "1000") {
-						that.$router.push("/paySuccess")
-					} else {
-						that.$router.push("/payError")
-					}
+//					if(res.data.data.tradeRstCode == "1000") {
+//						that.$router.push("/paySuccess")
+//					} else {
+//						that.$router.push("/payError")
+//					}
 				})
 			}
 		}

@@ -71,21 +71,22 @@
 				if(res.data.data.tradeRstCode == "1000") {
 					that.result.map(function(val, idx) {
 						if(val.orderStatus == "0") {
-							res.data.data.tradeData[idx].statusTxt = "未支付"
+							val.statusTxt = "未支付"
 						}
 						if(val.orderStatus == "1") {
-							res.data.data.tradeData[idx].statusTxt = "未启用"
+							val.statusTxt = "未启用"
 						}
 						if(val.orderStatus == "2") {
-							res.data.data.tradeData[idx].statusTxt = "已开始使用"
+							val.statusTxt = "已开始使用"
 						}
 						if(val.orderStatus == "3") {
-							res.data.data.tradeData[idx].statusTxt = "已结束"
+							val.statusTxt = "已结束"
 						}
 						if(val.orderStatus == "4") {
-							res.data.data.tradeData[idx].statusTxt = "已取消"
+							val.statusTxt = "已取消"
 						}
 					})
+					console.log()
 				} else {
 					that.popupTxt = res.data.data.tradeRstMessage
 					const component = that.$refs['myPopup']

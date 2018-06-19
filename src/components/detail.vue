@@ -22,7 +22,7 @@
 								<li @click="chooseFunc('id1')" :class="{'active': (chooseFlag=='id1')}">
 									<cube-checkbox v-model="checkedObj.checkedid1" :option="option" :hollow-style="true" shape="circle" />
 									<p class="title">{{selfMeal[0].obj.packageName}}</p>
-									<p class="title">{{selfMeal[0].obj.packageDesc}}</p>
+									<!--<p class="title">{{selfMeal[0].obj.packageDesc}}</p>-->
 									<!--<p>
 										100M 4G高速流量</br>
 										+流量用完自动关闭网络</br>
@@ -48,11 +48,11 @@
 										<!--<span class="txt">当地3G/4G网络，不限流量，超出300MB/天，限速128kbps</span>-->
 									</p>
 								</li>
-								<li>
+								<!--<li>
 									<p>
 										<span class="title">{{i.obj.packageDesc}}</span>
 									</p>
-								</li>
+								</li>-->
 							</ul>
 
 						</div>
@@ -609,7 +609,7 @@
 	}
 	
 	.detail-list {
-		padding: 15px 1.2rem 60px;
+		padding: 15px 0.8rem 60px;
 	}
 	
 	.detail-list>ul {
@@ -624,7 +624,7 @@
 	.detail-list ul p span {
 		display: inline-block;
 		font-size: 0.7rem;
-		padding: 2px 0.5rem 0 0.5rem;
+		padding: 4px 0.5rem 2px 0.5rem;
 		min-width:85px;
 		background-color: #F39800;
 		color: #fff;
@@ -632,7 +632,7 @@
 	
 	.detail-list ul ul {
 		display: none;
-		padding: 5px 0 8px 1.2rem;
+		padding: 5px 0 8px 0;
 	}
 	
 	.detail-list ul ul.active {
@@ -645,13 +645,13 @@
 	
 	.detail-list ul ul li {
 		position: relative;
-		font-size: 0.6rem;
+		font-size: 0.7rem;
 		color: #3E3A39;
 		line-height: 16px;
 		margin-top: 10px;
 	}
 	
-	.detail-list ul ul li:before {
+	/*.detail-list ul ul li:before {
 		content: "";
 		position: absolute;
 		width: 8px;
@@ -660,5 +660,5 @@
 		border-radius: 4px;
 		top: 4px;
 		left: -15px;
-	}
+	}*/
 </style>

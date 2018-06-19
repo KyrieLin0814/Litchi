@@ -31,8 +31,8 @@
 		</div>
 
 		<div class="btns">
+			<!--<a @click="toPay">去支付</a>-->
 			<router-link to="/orderList">返回</router-link>
-			<div></div>
 			<router-link class="done" to="/quit">立即退订</router-link>
 		</div>
 	</div>
@@ -56,7 +56,9 @@
 			console.log(this.obj)
 		},
 		methods: {
-
+			toPay(){
+				this.$router.push("/order")
+			}
 		}
 	}
 </script>

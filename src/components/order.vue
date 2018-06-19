@@ -6,6 +6,7 @@
 		</div>
 		<div class="detail">商品详情</div>
 		<!--<div class="detail">SIM卡 ICCID：{{ iccid }}</div>-->
+		<p v-if="!carData.length" class="no-data">购物车为空</p>
 		<ul>
 			<li v-for="(i,index) in carData">
 				<div class="img-content flexBox">
@@ -13,7 +14,7 @@
 						<p class="text-1">{{ i.meal.name }}</p>
 					</div>
 					<div class="text">
-						<span>{{ i.meal.obj.packageName }}</span>
+						<span>{{ i.meal.obj.packageName }}<i>x {{i.finalNum}}</i></span>
 					</div>
 					<div class="del">
 						<a @click="delFunc(index)">x</a>
@@ -21,7 +22,6 @@
 				</div>
 			</li>
 		</ul>
-		<p v-if="!carData.length" class="no-data">购物车为空</p>
 
 		<div class="buy-box clearfix">
 			<p>需支付： <span>{{ price.toFixed(2) }}</span> 元</p>
@@ -57,9 +57,11 @@
 			var that = this
 			that.carData = JSON.parse(JSON.stringify(that.$store.state.shopCar))
 			console.log(that.carData)
+			//console.log(that.$store.state.totalPrice)
 			if(that.addFlag) {
-				that.price = that.$store.state.totalPrice + that.$store.state.finalPrice
+				that.price = that.$store.state.totalPrice + that.carData[that.carData.length - 1].finalPrice
 				that.$store.state.totalPrice = that.price
+				console.log(that.price)
 			} else {
 				that.price = that.$store.state.totalPrice
 			}
@@ -208,5 +210,14 @@
 		color: #fff;
 		background-color: #F39800;
 		border-radius: 3px;
+	}
+	
+	ul{
+		padding-bottom:52px;
+	}
+	.text span i{
+		margin-left:10px;
+		color:#999;
+		font-style: normal;
 	}
 </style>

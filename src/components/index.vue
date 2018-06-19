@@ -11,7 +11,7 @@
 			<div class="item" v-for="(item,index) in result">
 				<div class="title">
 					<span class="area">{{item.continentName}}</span>
-					<span class="num">{{$t('message.covered')}} {{ item.list.length }} {{$t('message.regions')}}</span>
+					<!--<span class="num">{{$t('message.covered')}} {{ item.list.length }} {{$t('message.regions')}}</span>-->
 					<div class="btn" v-if="item.canMore">
 						<a v-if="item.more" class="more" @click="moreFunc(index)">更多</a>
 						<a v-else class="less" @click="lessFunc(index)">收起</a>
@@ -295,7 +295,6 @@
 	}
 	
 	.txt {
-		height: 20px;
 		background-color: #F39800;
 		color: #fff;
 	}
@@ -303,13 +302,12 @@
 	.txt span,
 	.txt a {
 		display: inline-block;
-		height: 20px;
-		line-height: 21px;
+		line-height: 20px;
 		vertical-align: middle;
 	}
 	
 	.txt span {
-		font-size: 0.6rem;
+		font-size: 0.7rem;
 		padding-left: 0.2rem;
 	}
 	
