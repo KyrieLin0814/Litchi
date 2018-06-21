@@ -26,7 +26,7 @@
 		<div class="buy-box clearfix">
 			<p>需支付： <span>{{ price.toFixed(2) }}</span> 元</p>
 			<a @click="payFunc">结算</a>
-			<router-link to="/">返回</router-link>
+			<router-link to="/">继续购买</router-link>
 		</div>
 
 		<cube-popup type="my-popup" :mask="false" ref="myPopup">{{ popupTxt }}</cube-popup>
@@ -184,7 +184,7 @@
 		left: 0;
 		right: 0;
 		height: 40px;
-		padding: 12px 1.2rem 0;
+		padding: 12px 1rem 0;
 		background-color: #FFFFFF;
 		z-index: 999;
 	}

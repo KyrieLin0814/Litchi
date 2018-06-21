@@ -10,6 +10,7 @@
 		<div class="content">
 			<input type="number" v-model="iccid" placeholder="(输入文本框)">
 			<span>或您手动输入旅游卡背面的ICCID编号</span>
+			<span style="margin-top:60px;">注意：请您扫描您要绑定套餐的荔枝全球电话卡背面的ICCID条形码或输入这个ICCID编号，扫描不同的电话卡将以最后一次扫描为准。</span>
 		</div>
 
 		<div class="buy-box clearfix">
@@ -35,7 +36,7 @@
 		created() {
 			var params = encodeURI(encodeURI(document.location.href))
 
-			this.$http.get("http://wx.lizhisim.com/weixin/weixinsao?reqUrl=" + params).then((res) => {
+			this.$http.get("/weixin/weixinsao?reqUrl=" + params).then((res) => {
 				wx.config({
 					debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。  
 					appId: res.data.appId, // 必填，公众号的唯一标识  

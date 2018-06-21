@@ -8,12 +8,12 @@
 							<p class="txt">{{i.packageName}}</p>
 							<p class="time" v-if="i.orderStartDate">{{i.orderStartDate}}</p>
 						</div>
-						<div class="price"><span>{{ price }}</span> 元</div>
+						<!--<div class="price"><span>{{ price }}</span> 元</div>-->
 					</div>
 
 					<!--有卡-->
 					<div class="card-num have-card flexBox">
-						<p class="flex-1">卡号：{{ i.channelOrderID }}</p>
+						<p class="flex-1">卡号：{{ iccid }}</p>
 						<a class="status">{{i.statusTxt}}</a>
 					</div>
 				</a>
@@ -39,7 +39,8 @@
 				time: "2018.6.8 12:12:11",
 				price: "19.9",
 				result: [],
-				popupTxt: ''
+				popupTxt: '',
+				iccid: this.$store.state.iccid
 			}
 		},
 		created() {
@@ -51,7 +52,7 @@
 			})
 			toast.show()
 
-			that.$http.post("/travelSimGW/busiService", {
+			that.$http.post("/SimGW/travelSimGW/busiService", {
 				data: {
 					connSeqNo: that.$store.state.connSeqNo,
 					partnerCode: that.$store.state.partnerCode,
@@ -64,41 +65,44 @@
 				}
 			}).then((res) => {
 				toast.hide()
-				//console.log(res.data)
-				if(res.data.data.tradeData) {
-					that.result = JSON.parse(JSON.stringify(res.data.data.tradeData))
-				}
+				console.log(res.data)
 				if(res.data.data.tradeRstCode == "1000") {
-					that.result.map(function(val, idx) {
-						if(val.orderStatus == "0") {
-							val.statusTxt = "未支付"
-						}
-						if(val.orderStatus == "1") {
-							val.statusTxt = "未启用"
-						}
-						if(val.orderStatus == "2") {
-							val.statusTxt = "已开始使用"
-						}
-						if(val.orderStatus == "3") {
-							val.statusTxt = "已结束"
-						}
-						if(val.orderStatus == "4") {
-							val.statusTxt = "已取消"
-						}
-					})
-					console.log()
-				} else {
-					that.popupTxt = res.data.data.tradeRstMessage
-					const component = that.$refs['myPopup']
-					component.show()
-					setTimeout(() => {
-						component.hide()
-					}, 1000)
+					if(res.data.data.tradeData) {
+						that.result= []
+						res.data.data.tradeData.map(function(val, idx) {
+//							if(val.orderStatus == "0") {
+//								val.statusTxt = "未支付"
+//							}
+							if(val.orderStatus == "1") {
+								val.statusTxt = "未启用"
+								that.result.push(val)
+							}
+							if(val.orderStatus == "2") {
+								val.statusTxt = "已开始使用"
+								that.result.push(val)
+							}
+							if(val.orderStatus == "3") {
+								val.statusTxt = "已结束"
+								that.result.push(val)
+							}
+//							if(val.orderStatus == "4") {
+//								val.statusTxt = "已取消"
+//							}
+						})
+					} else {
+						that.popupTxt = res.data.data.tradeRstMessage
+						const component = that.$refs['myPopup']
+						component.show()
+						setTimeout(() => {
+							component.hide()
+						}, 1000)
+					}
 				}
 			})
 		},
 		mounted() {
 			this.$store.state.routerBack.haveCard = "orderList"
+			this.$store.state.routerBack.text = "orderList"
 		},
 		methods: {
 			routerFunc(i) {
@@ -125,14 +129,14 @@
 	}
 	
 	.order-list {
-		padding: 0.8rem 1.2rem 0;
+		padding: 0.8rem 1.2rem 10px;
 		border-bottom: 1px solid #E4E4E4
 	}
 	
 	.order-list div .txt {
 		font-size: 0.7rem;
 		color: #3E3A39;
-		line-height: 14px;
+		line-height: 20px;
 	}
 	
 	.order-list div .time {
@@ -188,7 +192,9 @@
 		border-top: 1px solid #E4E4E4;
 		padding: 10px 1.2rem;
 	}
-	
+	.list-content{
+		padding-bottom: 160px;
+	}
 	.status-list ul li {
 		font-size: 0.7rem;
 		color: #9FA0A0;

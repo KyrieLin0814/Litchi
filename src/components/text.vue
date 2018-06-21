@@ -4,7 +4,7 @@
 		<p>在【荔枝全球电话卡】微信公众号里，您点击【设置卡】菜单，然后可以看到不同国家或地区的设置办法，点击您套餐对应的国家或地区，就能看到对应该国家或地区的详细设置方法了。</p>
 	
 		<div class="btns">
-			<router-link class="done" to="/orderList">返回</router-link>
+			<router-link class="done" :to="back">返回</router-link>
 		</div>
 	</div>
 </template>
@@ -14,7 +14,7 @@
 		name: 'name',
 		data() {
 			return {
-				
+				back:this.$store.state.routerBack.text
 			}
 		},
 		components: {},

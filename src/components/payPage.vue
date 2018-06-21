@@ -22,7 +22,7 @@
 		<div class="buy-box clearfix">
 			<p>合计： <span>{{ finalPrice.toFixed(2) }}</span> 元</p>
 			<span class="slide" :class="{'active': slideFlage}" @click="slideFunc"></span>
-			<a @click="nextFunc">结算</a>
+			<a @click="nextFunc">加入购物车</a>
 			<router-link to="/detail">返回</router-link>
 		</div>
 

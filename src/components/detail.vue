@@ -156,7 +156,7 @@
 		created() {
 			var that = this
 			that.obj = that.$store.state.routerData
-			that.$http.post("http://wx.lizhisim.com/weixin/detailsPackages", {
+			that.$http.post("/weixin/detailsPackages", {
 				data: {
 					connSeqNo: that.$store.state.connSeqNo,
 					partnerCode: that.$store.state.partnerCode,

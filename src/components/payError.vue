@@ -8,7 +8,7 @@
 			 我们不会扣除您的费用，请您稍后再试试看。
 		</p>
 		<div class="btns">
-			<router-link class="done" to="/myOrder">完成</router-link>
+			<router-link class="done" to="/">确认</router-link>
 		</div>
 	</div>
 </template>

@@ -5,13 +5,13 @@
 				<p class="txt">{{obj.packageName}}</p>
 				<p class="time" v-if="obj.orderStartDate">{{obj.orderStartDate}}</p>
 			</div>
-			<div class="price"><span>{{ price }}</span> 元</div>
+			<!--<div class="price"><span>{{ price }}</span> 元</div>-->
 		</div>
 
 		<!--无卡-->
 		<div class="card-num no-card flexBox" >
-			<p class="flex-1">卡号：{{obj.channelOrderID}}</p>
-			<router-link class="status" to="/haveCard">{{obj.statusTxt}}</router-link>
+			<p class="flex-1">卡号：</p>
+			<a class="status" >{{iccid?iccid:"暂无旅游卡" }}</a>
 		</div>
 		<div class="status-list">
 			<ul>
@@ -32,8 +32,8 @@
 
 		<div class="btns">
 			<!--<a @click="toPay">去支付</a>-->
-			<router-link to="/orderList">返回</router-link>
-			<router-link class="done" to="/quit">立即退订</router-link>
+			<router-link class="done" to="/orderList">返回</router-link>
+			<!--<router-link class="done" to="/quit">立即退订</router-link>-->
 		</div>
 	</div>
 </template>
@@ -43,7 +43,7 @@
 		name: 'status',
 		data() {
 			return {
-				price: 19.90,
+				iccid: this.$store.state.iccid
 			}
 		},
 		props: {
@@ -65,14 +65,14 @@
 
 <style scoped>
 	.order-detail {
-		padding: 0.8rem 1.2rem 0;
+		padding: 0.8rem 1.2rem 10px;
 		border-bottom: 1px solid #E4E4E4
 	}
 	
 	.order-detail div .txt {
 		font-size: 0.7rem;
 		color: #3E3A39;
-		line-height: 14px;
+		line-height: 20px;
 	}
 	
 	.order-detail div .time {
