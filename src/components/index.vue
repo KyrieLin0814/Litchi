@@ -23,7 +23,7 @@
 							<div class="img" :style="{backgroundImage: 'url(' + i.pictureIndex + ')', backgroundSize: '100% 100%'}"></div>
 							<div class="txt flexBox">
 								<span class="text-1 flex-1">{{i.countryName}}</span>
-								<a class="flex-1 text-1" v-if="i.strategyCode == '2'">{{i.strategy_desc}}元/天</a>
+								<!--<a class="flex-1 text-1" v-if="i.strategyCode == '2'">{{i.strategy_desc}}元/天</a>-->
 							</div>
 						</a>
 					</li>
@@ -35,7 +35,7 @@
 							<div class="img" :style="{backgroundImage: 'url(' + i.pictureIndex + ')', backgroundSize: '100% 100%'}"></div>
 							<div class="txt flexBox">
 								<span class="text-1 flex-1">{{i.countryName}}</span>
-								<a class="flex-1 text-1" v-if="i.strategyCode == '2'">{{i.strategy_desc}}元/天</a>
+								<!--<a class="flex-1 text-1" v-if="i.strategyCode == '2'">{{i.strategy_desc}}元/天</a>-->
 							</div>
 						</a>
 					</li>

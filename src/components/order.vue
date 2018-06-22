@@ -61,7 +61,6 @@
 			if(that.addFlag) {
 				that.price = that.$store.state.totalPrice + that.carData[that.carData.length - 1].finalPrice
 				that.$store.state.totalPrice = that.price
-				console.log(that.price)
 			} else {
 				that.price = that.$store.state.totalPrice
 			}
@@ -100,7 +99,6 @@
 					onConfirm: () => {
 						that.price = that.price - that.carData[idx].finalPrice
 						that.$store.state.totalPrice = that.price
-
 						that.carData.splice(idx, 1)
 						that.$store.state.shopCar = that.carData
 					},

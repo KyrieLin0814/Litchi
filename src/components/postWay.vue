@@ -107,8 +107,8 @@
 								component.hide()
 							}, 1500)
 						} else {
-							that.iccid = res.data.data.tradeData[res.data.data.tradeData.length - 1].iccid
-							that.$store.state.iccid = res.data.data.tradeData[res.data.data.tradeData.length - 1].iccid
+							that.iccid = res.data.data.tradeData[0].iccid
+							that.$store.state.iccid = res.data.data.tradeData[0].iccid
 
 							that.popupTxt = "检测到您已有一张旅游卡，请确认旅游卡ICCID"
 							const component = that.$refs['myPopup']
@@ -191,14 +191,14 @@
 						partnerCode: that.$store.state.partnerCode,
 						token: that.$store.state.token,
 						tradeData: {
-							iccid: that.$store.state.iccid.toString(),
+							iccid: that.iccid.toString(),
 							openid: that.$store.state.openId,
 						},
 						tradeTime: new Date(),
 						tradeType: "F013",
 					}
 				}).then((res) => {
-					console.log(res)
+					//console.log(res)
 					if(res.data.data.tradeRstCode == "1000") {
 						//整理订单请求参数
 						var orderList = []
@@ -218,8 +218,8 @@
 								partnerCode: that.$store.state.partnerCode,
 								token: that.$store.state.token,
 								tradeData: {
-									//iccid: that.$store.state.iccid.toString(),
-									iccid: "89234185686475549864",
+									iccid: that.iccid.toString(),
+//									iccid: "89234185686475549864",
 									orderList: orderList
 								},
 								tradeTime: new Date(),
@@ -227,7 +227,7 @@
 							}
 						}).then((res) => {
 							toast.hide()
-							console.log(res)
+							//console.log(res)
 							if(res.data.data.tradeRstCode == "1000") {
 								toast.hide()
 								//记录订单号
@@ -331,7 +331,7 @@
 									component.hide()
 								}, 1000)
 							} else if(res.err_msg === 'get_brand_wcpay_request:fail') {
-								that.$router.push("/payError")
+								that.$router.replace("/payError")
 							}
 
 						});　　　　
@@ -386,7 +386,7 @@
 					}
 				}).then((res) => {
 					if(idx == idxLast) {
-						that.$router.push("/paySuccess")
+						that.$router.replace("/paySuccess")
 						//that.gggg = 'Hey girl! Succeed!'
 					}
 				})
