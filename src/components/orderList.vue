@@ -59,13 +59,14 @@
 					token: that.$store.state.token,
 					tradeData: {
 						iccid: that.$store.state.iccid
+//						iccid: "89852000363106059861"
 					},
 					tradeTime: new Date(),
 					tradeType: "F011"
 				}
 			}).then((res) => {
 				toast.hide()
-				console.log(res.data)
+				console.log(res)
 				if(res.data.data.tradeRstCode == "1000") {
 					if(res.data.data.tradeData) {
 						that.result= []
@@ -89,6 +90,7 @@
 //								val.statusTxt = "已取消"
 //							}
 						})
+						that.result.reverse()
 					} else {
 						that.popupTxt = res.data.data.tradeRstMessage
 						const component = that.$refs['myPopup']
@@ -194,6 +196,7 @@
 	}
 	.list-content{
 		padding-bottom: 160px;
+		background: #fff;
 	}
 	.status-list ul li {
 		font-size: 0.7rem;

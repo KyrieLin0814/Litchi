@@ -155,18 +155,28 @@
 				}
 			},
 			saveFunc() {
-				this.$store.state.address.name = this.name
-				this.$store.state.address.phone = this.phone
-				this.$store.state.address.province = this.province
-				this.$store.state.address.city = this.city
-				this.$store.state.address.area = this.area
-				this.$store.state.address.addressTxt = this.addressTxt
-				this.$store.state.address.provinceVal = this.provinceVal
-				this.$store.state.address.cityVal = this.cityVal
-				
-				this.$router.push({
-					name: "postWay"
-				})
+				var that = this
+				if(this.name && this.phone && this.province && this.city && this.area && this.addressTxt){
+					this.$store.state.address.name = this.name
+					this.$store.state.address.phone = this.phone
+					this.$store.state.address.province = this.province
+					this.$store.state.address.city = this.city
+					this.$store.state.address.area = this.area
+					this.$store.state.address.addressTxt = this.addressTxt
+					this.$store.state.address.provinceVal = this.provinceVal
+					this.$store.state.address.cityVal = this.cityVal
+					
+					this.$router.push({
+						name: "postWay"
+					})
+				}else{
+					that.popupTxt = '请将收货地址填写完整'
+					const component = that.$refs['myPopup']
+					component.show()
+					setTimeout(() => {
+						component.hide()
+					}, 1000)
+				}
 			}
 		}
 	}
@@ -190,6 +200,7 @@
 		display: block;
 		outline: none;
 		line-height: 40px;
+		width:100%;
 	}
 	
 	.adress-list>div.picker-btn span {

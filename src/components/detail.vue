@@ -12,49 +12,24 @@
 					</div>
 					<div class="car-content">
 						<div class="car-tab flexBox">
-							<div class="flex-1" @click="tabFunc(selfMeal[0])" :class="{'active': (tabFlag=='choose')}" v-if="selfMeal.length"><span>{{selfMeal[0].title}}</span></div>
-							<div class="flex-1" @click="tabFunc(i)" :class="{'active': (tabFlag==i.obj.packageCode)}" v-for="i in mealsList"><span>{{i.title}}</span></div>
+							<div class="flex-1" @click="tabFunc(i)" :class="{'active': (tabFlag==i.nameId)}" v-for="i in mealsList"><span>{{i.nameType}}</span></div>
 						</div>
 						<div class="car-list" :style="{height: contentHeight + 'px'}">
 
-							<!--选项卡切换  暂不开启-->
-							<ul class="list-1" :class="{'active': (tabFlag=='choose')}" v-if="selfMeal.length">
-								<li @click="chooseFunc('id1')" :class="{'active': (chooseFlag=='id1')}">
-									<cube-checkbox v-model="checkedObj.checkedid1" :option="option" :hollow-style="true" shape="circle" />
-									<p class="title">{{selfMeal[0].obj.packageName}}</p>
-									<!--<p class="title">{{selfMeal[0].obj.packageDesc}}</p>-->
-									<!--<p>
-										100M 4G高速流量</br>
-										+流量用完自动关闭网络</br>
-										+新用户含套餐卡仅9.9元/张
-										<span class="sale">限时免费</span>
-									</p>
+							<!--选项卡切换 开启-->
+							<ul class="list-1" :class="{'active': (tabFlag==item.nameId)}" v-for="item in mealsList">
+								<li @click="chooseFunc(meal)" class="flexBox" :class="{'active': (chooseFlag == meal.obj.packageCode)}" v-for="meal in item.list">
+									<cube-checkbox v-model="checkedObj['checked' + meal.obj.packageCode]" :option="option" :hollow-style="true" shape="circle" />
+									<p class="title flex-1">{{meal.obj.packageName}}</p>
 									<div class="price-box">
 										<div class="now">
-											2.9<span>元/天</span>
+											<!--单价-->
+											{{Number(meal.obj.price ? meal.obj.price : meal.obj.strategy_desc).toFixed(2)}}
+											<span>元<i v-if="item.nameId == '0'">/天</i></span>
 										</div>
-										<div class="old">
-											<span>15元</span>
-										</div>
-									</div>-->
+									</div>
 								</li>
 							</ul>
-
-							<!--套餐包-->
-							<ul class="list-2" :class="{'active': (tabFlag==i.obj.packageCode)}" v-for="i in mealsList">
-								<li>
-									<p>
-										<span class="title">{{i.obj.packageName}}</span>
-										<!--<span class="txt">当地3G/4G网络，不限流量，超出300MB/天，限速128kbps</span>-->
-									</p>
-								</li>
-								<!--<li>
-									<p>
-										<span class="title">{{i.obj.packageDesc}}</span>
-									</p>
-								</li>-->
-							</ul>
-
 						</div>
 						<div class="scroll-btn">
 							<div>
@@ -80,20 +55,14 @@
 								<ul>
 									<li>
 										<p><span>{{$t('message.detailsMeal')}}</span></p>
-
-										<!--自选包-->
-										<ul v-if="selfMeal.length" :class="{'active': (tabFlag=='choose')}">
-											<li v-if="selfMeal[0].obj.packageTextDesc">{{selfMeal[0].obj.packageTextDesc}}</li>
-											<li v-if="selfMeal[0].obj.packageImgDesc">
-												<img :src="selfMeal[0].obj.packageImgDesc">
-											</li>
-										</ul>
-
-										<!--套餐包-->
-										<ul v-for="i in mealsList" :class="{'active': (tabFlag==i.obj.packageCode)}">
-											<li v-if="i.obj.packageTextDesc">{{i.obj.packageTextDesc}}</li>
-											<li v-if="i.obj.packageImgDesc">
-												<img :src="i.obj.packageImgDesc">
+										
+										<!--下拉详情列表-->
+										<ul v-for="i in mealsList" :class="{'active': (tabFlag==i.nameId)}">
+											<li v-for="j in i.list" :class="{'active': (chooseFlag == j.obj.packageCode)}">
+												<div v-if="j.obj.packageTextDesc">{{j.obj.packageTextDesc}}</div>
+												<div v-if="j.obj.packageImgDesc">
+													<img :src="j.obj.packageImgDesc">
+												</div>
 											</li>
 										</ul>
 									</li>
@@ -124,10 +93,9 @@
 					start: 0,
 					dir: 'v',
 					duration: 500,
-					der: 0.05
+					der: 0.4
 				},
 				obj: {},
-				selfMeal: [],
 				mealsList: [],
 				judgeData: {},
 				contentHeight: 0,
@@ -137,11 +105,11 @@
 					value: ''
 				},
 				checkedObj: {
-					checkedid1: true
+//					checkedid1: true
 				},
 				price: 0.00,
 				finalNum: 1,
-				chooseFlag: 'id1',
+				chooseFlag: '',
 				scrollDown: true,
 				scrollUp: true,
 				popupTxt: '',
@@ -170,38 +138,75 @@
 			}).then((res) => {
 				console.log(res)
 				var result = res.data.data
+				//定义类型  mcc数组
+				var typeArr = [];
 				for(var i = 0; i < result.tradeData.length; i++) {
 					if(result.tradeData[i].maxDays == result.tradeData[i].minDays) {
-						that.mealsList.push({
-							title: result.tradeData[i].maxDays + "天包",
-							name: result.tradeData[i].packageName,
-							obj: JSON.parse(JSON.stringify(result.tradeData[i]))
-						})
+						//插入天数包类别
+						if(typeArr.indexOf(result.tradeData[i].maxDays) < 0){
+							typeArr.push(result.tradeData[i].maxDays)
+						}
 					} else {
-						that.selfMeal.push({
-							title: "自选天数包",
-							name: result.tradeData[i].packageName,
-							obj: JSON.parse(JSON.stringify(result.tradeData[i]))
+						//插入自选包类别
+						typeArr.push("0")
+					}
+				}
+				//从小到大排序
+				typeArr.sort(that.compare())
+				
+				//创建基于类别数据结构
+				for(var p = 0; p < typeArr.length; p++){
+					if(typeArr[p] == "0"){
+						that.mealsList.push({
+							nameType: "自选天数包",
+							nameId: typeArr[p],
+							list:[]
+						})
+					}else{
+						that.mealsList.push({
+							nameType: typeArr[p] + "天包",
+							nameId: typeArr[p],
+							list:[]
 						})
 					}
 				}
-
-				that.mealsList.sort(that.compare('maxDays'))
-
-				if(that.selfMeal.length) {
-					that.tabFunc(that.selfMeal[0])
+				
+				//遍历填充分类
+				for(var t = 0; t < result.tradeData.length; t++) {
+					if(result.tradeData[t].maxDays == result.tradeData[t].minDays) {
+						for(var e = 0; e < that.mealsList.length; e++){
+							if(that.mealsList[e].nameId == result.tradeData[t].maxDays){
+								that.mealsList[e].list.push({
+									name: result.tradeData[t].packageName,
+									obj: JSON.parse(JSON.stringify(result.tradeData[t]))
+								})
+							}
+						}
+					}else{
+						for(var u = 0; u < that.mealsList.length; u++){
+							if(that.mealsList[u].nameId == "0"){
+								that.mealsList[u].list.push({
+									name: result.tradeData[t].packageName,
+									obj: JSON.parse(JSON.stringify(result.tradeData[t]))
+								})
+							}
+						}
+					}
+				}
+				console.log(that.mealsList)
+				
+				if(typeArr.indexOf("0") != -1) {
+					that.tabFunc(that.mealsList[0])
 					that.number = "天数"
 				} else {
 					that.tabFunc(that.mealsList[0])
 					that.number = "个数"
 				}
-				//console.log(that.mealsList)
-				//console.log(that.selfMeal)
 			})
 		},
 		mounted() {
 			var that = this
-			that.contentHeight = document.documentElement.clientHeight - 254
+			that.contentHeight = document.documentElement.clientHeight - 264
 
 			var startX, startY, moveEndX, moveEndY, X, Y;
 
@@ -240,27 +245,28 @@
 		},
 		methods: {
 			tabFunc(i) {
-				if(i.obj.maxDays == i.obj.minDays) {
-					this.tabFlag = i.obj.packageCode
-					this.$store.state.tabFlag = i.obj.packageCode
+				this.tabFlag = i.nameId
+				this.$store.state.tabFlag = i.nameId
+				if(i.nameId != "0") {
 					this.number = "个数"
 				} else {
-					this.tabFlag = "choose"
-					this.$store.state.tabFlag = "choose"
 					this.number = "天数"
 				}
 				this.finalNum = 1
-				this.judgeData = i
+				//默认选中第一个
+				this.chooseFunc(i.list[0])
+			},
+			chooseFunc(meal) {
+				//选中样式
+				this.chooseFlag = meal.obj.packageCode
+				this.checkedObj = {}
+				this.checkedObj['checked' + meal.obj.packageCode] = true
+				//当前套餐
+				this.judgeData = meal
 				this.price = Number(this.judgeData.obj.price ? this.judgeData.obj.price : this.judgeData.obj.strategy_desc)
 				this.finalPrice = this.finalNum * this.price
 			},
-			chooseFunc(id) {
-				this.chooseFlag = id
-				this.checkedObj = {}
-				this.checkedObj['checked' + id] = true
-			},
 			addFunc() {
-				console.log(this.$store.state.openId)
 				var that = this
 				if(that.judgeData.obj.maxDays == that.judgeData.obj.minDays) {
 					that.finalNum++
@@ -302,11 +308,10 @@
 				that.$store.state.finalPrice = that.finalPrice
 				that.$router.push("/payPage")
 			},
-			compare(property) {
+			compare() {
 				return function(a, b) {
-					var value1 = Number(a.obj[property]);
-					var value2 = Number(b.obj[property]);
-					console.log(a)
+					var value1 = Number(a);
+					var value2 = Number(b);
 					return value1 - value2;
 				}
 			}
@@ -352,8 +357,8 @@
 	.car-tab>div span {
 		display: block;
 		font-size: 0.7rem;
-		line-height: 20px;
-		height: 20px;
+		line-height: 30px;
+		height: 30px;
 		text-align: center;
 		color: #9FA0A0;
 		border-right: 1px solid #3E3A39;
@@ -367,10 +372,12 @@
 	.car-list {
 		position: relative;
 		overflow-y: scroll;
+		background: #f5f5f5;
 	}
 	
 	.car-list>ul {
 		display: none;
+		background: #fff;
 	}
 	
 	.car-list>ul.active {
@@ -385,13 +392,13 @@
 	
 	.car-list .cube-checkbox {
 		position: absolute;
-		top: 14px;
+		top: 12px;
 	}
 	
 	.car-list li p {
 		position: relative;
 		display: inline-block;
-		padding-left: 1.5rem;
+		padding:0 0.5rem 0  1.3rem;
 		font-size: 0.7rem;
 		line-height: 20px;
 		color: #9FA0A0;
@@ -441,15 +448,20 @@
 	}
 	
 	.price-box {
-		position: absolute;
+		/*position: absolute;
 		height: 40px;
 		top: 50%;
 		margin-top: -20px;
-		right: 1.2rem;
+		right: 1.2rem;*/
+		vertical-align: middle;
+		font-size:0;
+		height:20px;
 	}
 	
 	.price-box .now {
-		font-size: 0.8rem;
+		display: inline-block;
+		font-size: 0.7rem;
+		line-height:20px;
 		color: #F39800;
 		vertical-align: middle;
 	}
@@ -481,43 +493,11 @@
 		display: inline-block;
 		font-size: 0.6rem;
 		color: #C9CACA;
-		line-height: 16px;
-		height: 16px;
+		line-height: 20px;
+		height: 20px;
 	}
-	
-	.buy-box {
-		position: fixed;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		height: 40px;
-		border-top: 1px solid #D4D5D5;
-		padding: 12px 1rem 0;
-		background-color: #FFFFFF;
-		z-index: 999;
-	}
-	
-	.buy-box p {
-		float: left;
-		color: #3E3A39;
-		font-size: 0.7rem;
-	}
-	
-	.buy-box p span {
-		color: #F39800;
-		font-size: 1.1rem;
-	}
-	
-	.buy-box a {
-		float: right;
-		margin-top: -4px;
-		padding: 10px 10px;
-		font-size: 0.7rem;
-		height: 16px;
-		line-height: 16px;
-		color: #fff;
-		background-color: #F39800;
-		border-radius: 3px;
+	.price-box .now span i{
+		font-style: normal;
 	}
 	
 	.scroll-btn {
@@ -644,13 +624,16 @@
 	}
 	
 	.detail-list ul ul li {
+		display:none;
 		position: relative;
 		font-size: 0.7rem;
 		color: #3E3A39;
 		line-height: 16px;
 		margin-top: 10px;
 	}
-	
+	.detail-list ul ul li.active{
+		display: block;
+	}
 	/*.detail-list ul ul li:before {
 		content: "";
 		position: absolute;

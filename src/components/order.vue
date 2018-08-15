@@ -53,6 +53,15 @@
 				default: false
 			}
 		},
+		watch:{
+			price(){
+				console.log(this.price)
+				if(this.price < 0.001){
+					this.price = 0
+					this.$store.state.totalPrice = 0
+				}
+			}
+		},
 		created() {
 			var that = this
 			that.carData = JSON.parse(JSON.stringify(that.$store.state.shopCar))
@@ -174,40 +183,6 @@
 		display: block;
 		font-size: 0.8rem;
 		color: #CCCCCC;
-	}
-	
-	.buy-box {
-		position: fixed;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		height: 40px;
-		padding: 12px 1rem 0;
-		background-color: #FFFFFF;
-		z-index: 999;
-	}
-	
-	.buy-box p {
-		float: left;
-		color: #3E3A39;
-		font-size: 0.7rem;
-	}
-	
-	.buy-box p span {
-		color: #F39800;
-		font-size: 1.1rem;
-	}
-	
-	.buy-box a {
-		float: right;
-		margin-left: 10px;
-		padding: 8px 18px;
-		font-size: 0.7rem;
-		height: 16px;
-		line-height: 16px;
-		color: #fff;
-		background-color: #F39800;
-		border-radius: 3px;
 	}
 	
 	ul{

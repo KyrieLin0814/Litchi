@@ -21,8 +21,8 @@
 				<p>费用详情</p>
 				<ul>
 					<li v-for="i in shopCarData">
-						<div class="flexBox">
-							<div>{{i.meal.name}} ({{ i.text }})</div>
+						<div class="flexBox text-meal">
+							<div class="text-meaL-content">{{i.meal.name}} ({{ i.text }})</div>
 							<div class="flex-1"></div>
 							<div class="price"><span>{{ i.finalPrice.toFixed(2) }}</span>元</div>
 						</div>
@@ -47,15 +47,14 @@
 				finalNum: 0,
 				day: 1,
 				page: 1,
-				mealCost: "",
-				mealPrice: 0,
 				iccid: '',
 				popupTxt: '',
 				alert: null,
 				orderList: [],
-				//				dddd: '1',
-				//				ffff: '2',
-				//				gggg:'3'
+				codes: ""
+				//				dddd: '',
+				//				ffff: '',
+				//				gggg:''
 			}
 		},
 		created() {
@@ -69,7 +68,6 @@
 				} else {
 					day = val.finalNum
 				}
-
 				val.text = val.perPrice + "元 x " + day + "天 x " + "1张"
 			})
 			//console.log(that.shopCarData)
@@ -173,7 +171,6 @@
 					}, 1000)
 					return false
 				}
-
 				that.alert.show()
 			},
 			orderFunc() {
@@ -202,13 +199,30 @@
 					if(res.data.data.tradeRstCode == "1000") {
 						//整理订单请求参数
 						var orderList = []
+						var codeList = []
 						that.shopCarData.map(function(val, idx) {
-							orderList[idx] = {
-								channelOrderID: (new Date().getTime() + Math.floor(Math.random() * 9999)).toString(),
-								orderPeriod: val.finalNum.toString(),
-								packageCode: val.meal.obj.packageCode
+							//orderlist遍历生成
+							if(that.shopCarData[idx].meal.obj.maxDays == that.shopCarData[idx].meal.obj.minDays) {
+								var arrD = []
+								for(let b = 0; b < that.shopCarData[idx].finalNum; b++) {
+									arrD[b] = {
+										channelOrderID: (new Date().getTime() + Math.floor(Math.random() * 9999)).toString(),
+										orderPeriod: that.shopCarData[idx].meal.obj.maxDays,
+										packageCode: val.meal.obj.packageCode
+									}
+								}
+								orderList = orderList.concat(arrD)
+							} else {
+								orderList.push({
+									channelOrderID: (new Date().getTime() + Math.floor(Math.random() * 9999)).toString(),
+									orderPeriod: val.finalNum.toString(),
+									packageCode: val.meal.obj.packageCode
+								})
 							}
+							//code拼接
+							codeList.push(val.meal.obj.packageCode)
 						})
+						that.codes = codeList.join(",")
 						//console.log(orderList)
 
 						//订单接口
@@ -219,7 +233,7 @@
 								token: that.$store.state.token,
 								tradeData: {
 									iccid: that.iccid.toString(),
-//									iccid: "89234185686475549864",
+									//iccid: "89234185686475549864",
 									orderList: orderList
 								},
 								tradeTime: new Date(),
@@ -235,19 +249,9 @@
 								for(var j = 0; j < res.data.data.tradeData.length; j++) {
 									that.orderList.push(res.data.data.tradeData[j].orderId)
 								}
-
 								that.$store.state.orderId = that.orderList.join(",")
-
 								//调微信支付
 								that.wxPay()
-//								that.popupTxt = res.data.data.tradeRstMessage
-//								const component = that.$refs['myPopup']
-//								component.show()
-//								setTimeout(() => {
-//									component.hide()
-//									//调微信支付
-//									that.wxPay()
-//								}, 1000)
 							} else {
 								toast.hide()
 								that.popupTxt = res.data.data.tradeRstMessage
@@ -298,8 +302,8 @@
 				}
 
 				var paymentOrderId = date.getFullYear().toString() + month + strDate + hour + minute + sec + Math.floor(Math.random() * 999).toString()
-				var url = "/weixin/weixinpay?orderId=" + that.$store.state.orderId + "&openId=" + that.$store.state.openId + "&amount=" + that.finalPrice.toString() + "&paymentOrderId=" + paymentOrderId
-				console.log(url)
+				var url = "/weixin/weixinpay?orderId=" + that.$store.state.orderId + "&openId=" + that.$store.state.openId + "&amount=" + that.finalPrice.toString() + "&paymentOrderId=" + paymentOrderId + "&packageCode=" + that.codes + "&partnerCode=" + that.$store.state.partnerCode
+				//console.log(url)
 				//console.log(that.orderList)
 				that.$http.get(url).then((res) => {
 					var appIdVal = res.data.appId;　　　　　　
@@ -308,17 +312,15 @@
 					var packageVal = res.data.package;　　　　　　
 					var signTypeVal = res.data.signType;　　　　　　
 					var paySignVal = res.data.paySign;　　
-					onBridgeReady();　　　　　　
+					//onBridgeReady();　　　　　　
 					function onBridgeReady() {　　
-						//						that.dddd = '11'　　　
-						//						that.ffff = '22'　　
 						WeixinJSBridge.invoke('getBrandWCPayRequest', {　　　　　　　　　　
 							appId: appIdVal, //公众号名称，由商户传入 
-							　　　　　　　　timeStamp: timeStampVal, //时间戳，自1970年以来的秒数 
-							　　　　　　　　nonceStr: nonceStrVal, //随机串 
-							　　　　　　　　package: packageVal, //订单详情扩展字符串
-							　　　　　　　　signType: signTypeVal, //微信签名方式： 
-							　　　　　　　　paySign: paySignVal //微信签名 
+							timeStamp: timeStampVal, //时间戳，自1970年以来的秒数 
+							nonceStr: nonceStrVal, //随机串 
+							package: packageVal, //订单详情扩展字符串
+							signType: signTypeVal, //微信签名方式： 
+							paySign: paySignVal //微信签名 
 						}, function(res) {
 							//that.dddd = JSON.stringify(res)
 							if(res.err_msg === 'get_brand_wcpay_request:ok') {
@@ -362,10 +364,12 @@
 				that.$store.state.totalPrice = 0
 				that.$store.state.orderId = ""
 
-				for(var i = 0; i < that.shopCarData.length; i++) {
-					var j = that.shopCarData.length - 1
-					that.payResult(that.orderList[i], i, j)
-				}
+				that.$router.replace("/paySuccess")
+
+				//				for(var i = 0; i < that.orderList.length; i++) {
+				//					var j = that.orderList.length - 1
+				//					that.payResult(that.orderList[i], i, j)
+				//				}
 			},
 			payResult(oId, idx, idxLast) {
 				//支付结果通知方法
@@ -377,7 +381,7 @@
 						token: that.$store.state.token,
 						tradeData: {
 							orderId: oId,
-							payAmount: that.finalPrice.toString(),
+							//payAmount: that.finalPrice.toString(),
 							payRst: "0", //0成功  1 失败
 							payType: "0", //微信支付
 						},
@@ -385,6 +389,7 @@
 						tradeType: "F010",
 					}
 				}).then((res) => {
+					//that.gggg = that.gggg + "//" + idx + "," + idxLast
 					if(idx == idxLast) {
 						that.$router.replace("/paySuccess")
 						//that.gggg = 'Hey girl! Succeed!'
@@ -418,5 +423,19 @@
 		color: #9FA0A0;
 		background: url(../assets/common/more.png)no-repeat center right;
 		background-size: 6px 10px;
+	}
+	
+	.text-meal {
+		font-size: 14px;
+		line-height: 18px;
+	}
+	
+	.text-meaL-content {
+		max-width: 74%;
+		padding: 7px 0;
+	}
+	
+	.price {
+		line-height: 32px;
 	}
 </style>

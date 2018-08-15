@@ -85,16 +85,15 @@
 					}).then((res) => {
 						if(res.data.data.tradeRstCode == "1000") {
 							that.$store.state.iccid = that.iccid
-
-							that.popupTxt = res.data.data.tradeRstMessage
-							const component = that.$refs['myPopup']
-							component.show()
-							setTimeout(() => {
-								component.hide()
-								that.$router.push({
-									name: "postWay",
-								})
-							}, 1000)
+							that.$router.push({
+								name: "postWay",
+							})
+//							that.popupTxt = res.data.data.tradeRstMessage
+//							const component = that.$refs['myPopup']
+//							component.show()
+//							setTimeout(() => {
+//								component.hide()
+//							}, 1000)
 						} else {
 							that.popupTxt = res.data.data.tradeRstMessage
 							const component = that.$refs['myPopup']

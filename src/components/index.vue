@@ -1,5 +1,5 @@
 <template>
-	<div class="body-container">
+	<div class="body-container index">
 		<div class="banner">
 			<div class="language">
 				<a class="CN" :class="{'active': (langType == 'cn')}" @click="langCn">中文</a>
@@ -8,6 +8,7 @@
 			<img src="../assets/common/banner.png" />
 		</div>
 		<div class="content">
+			<p v-if="wxFlag" class="no-data">请从微信公众号打开商城</p>
 			<div class="item" v-for="(item,index) in result">
 				<div class="title">
 					<span class="area">{{item.continentName}}</span>
@@ -45,10 +46,10 @@
 
 		<div class="footer flexBox">
 			<div class="flex-1 help">
-				<router-link to="/help"><span>{{$t("message.help")}}</span></router-link>
+				<router-link :to="helpLink"><span>{{$t("message.help")}}</span></router-link>
 			</div>
 			<div class="flex-1 order">
-				<router-link to="/orderList">
+				<router-link :to="orderLink">
 					<span>{{$t("message.myOrder")}}</span>
 				</router-link>
 			</div>
@@ -63,12 +64,21 @@
 			return {
 				langType: this.$store.state.langType,
 				meals: [],
-				resArr: [],
-				result: []
+				result: [],
+				wxFlag: false,
+				helpLink: "/help",
+				orderLink: "/orderList"
 			}
 		},
 		created() {
 			var that = this
+			const toast = that.$createToast({
+				type: 'loading',
+				time: 0,
+				mask: true,
+				txt: 'Loading'
+			})
+			toast.show()
 			//获取套餐
 			that.$http.post("/weixin/packageServer", {
 				data: {
@@ -79,79 +89,97 @@
 					tradeType: "F001"
 				}
 			}).then((res) => {
-				console.log(res)
 				var result = res.data.data
-				if(res.data.data.tradeData[0].openId) {
+				//console.log(res.data.data)
+				if(res.data.data.tradeData[0].openId || true) {
+					//记录openId
 					that.$store.state.openId = res.data.data.tradeData[0].openId
-				}
-				var typeArr = []
-				var mccArr = []
-				for(var i = 0; i < result.tradeData.length; i++) {
-					for(var j = 0; j < result.tradeData[i].coverCountry.length; j++) {
-						if(typeArr.indexOf(result.tradeData[i].coverCountry[j].continentName) < 0) {
-							typeArr.push(result.tradeData[i].coverCountry[j].continentName)
-						}
+					//记录openid
+					that.$store.state.partnerCode = res.data.data.partnerCode
+					
+					//定义类型  mcc数组
+					var typeArr = []
+					var mccArr = []
+					for(var i = 0; i < result.tradeData.length; i++) {
+						for(var j = 0; j < result.tradeData[i].coverCountry.length; j++) {
+							if(typeArr.indexOf(result.tradeData[i].coverCountry[j].continentName) < 0) {
+								typeArr.push(result.tradeData[i].coverCountry[j].continentName)
+							}
 
-						if(mccArr.indexOf(result.tradeData[i].coverCountry[j].mcc) < 0) {
-							mccArr.push(result.tradeData[i].coverCountry[j].mcc)
-							that.meals.push(JSON.parse(JSON.stringify(result.tradeData[i])))
-							that.meals[that.meals.length - 1].continentName = result.tradeData[i].coverCountry[j].continentName
-							that.meals[that.meals.length - 1].countryName = result.tradeData[i].coverCountry[j].countryName
-							that.meals[that.meals.length - 1].mcc = result.tradeData[i].coverCountry[j].mcc
-						}
-						//同一个mcc只显示一个
-//						that.meals.push(JSON.parse(JSON.stringify(result.tradeData[i])))
-//						that.meals[that.meals.length - 1].continentName = result.tradeData[i].coverCountry[j].continentName
-//						that.meals[that.meals.length - 1].countryName = result.tradeData[i].coverCountry[j].countryName
-//						that.meals[that.meals.length - 1].mcc = result.tradeData[i].coverCountry[j].mcc
-					}
-				}
-				console.log(typeArr)
-				console.log(mccArr)
-				//console.log(that.meals)
-				for(var x = 0; x < typeArr.length; x++) {
-					that.result[x] = {
-						continentName: typeArr[x],
-						list: []
-					}
-				}
-				for(var x = 0; x < typeArr.length; x++) {
-					for(var y = 0; y < that.meals.length; y++) {
-						if(that.meals[y].continentName == typeArr[x]) {
-							that.result[x].list.push(that.meals[y])
+							if(mccArr.indexOf(result.tradeData[i].coverCountry[j].mcc) < 0) {
+								mccArr.push(result.tradeData[i].coverCountry[j].mcc)
+								that.meals.push(JSON.parse(JSON.stringify(result.tradeData[i])))
+								that.meals[that.meals.length - 1].continentName = result.tradeData[i].coverCountry[j].continentName
+								that.meals[that.meals.length - 1].countryName = result.tradeData[i].coverCountry[j].countryName
+								that.meals[that.meals.length - 1].mcc = result.tradeData[i].coverCountry[j].mcc
+							}
+							//同一个mcc只显示一个
+							//that.meals.push(JSON.parse(JSON.stringify(result.tradeData[i])))
+							//that.meals[that.meals.length - 1].continentName = result.tradeData[i].coverCountry[j].continentName
+							//that.meals[that.meals.length - 1].countryName = result.tradeData[i].coverCountry[j].countryName
+							//that.meals[that.meals.length - 1].mcc = result.tradeData[i].coverCountry[j].mcc
 						}
 					}
-				}
-
-				that.result.map(function(val, idx) {
-					if(val.list.length > 4) {
-						val.canMore = true
-						val.more = false
-					} else {
-						val.canMore = false
-						val.more = true
+					//console.log(typeArr)
+					//console.log(mccArr)
+					//console.log(that.meals)
+					for(var x = 0; x < typeArr.length; x++) {
+						that.result[x] = {
+							continentName: typeArr[x],
+							list: []
+						}
 					}
-				})
+					for(var x = 0; x < typeArr.length; x++) {
+						for(var y = 0; y < that.meals.length; y++) {
+							if(that.meals[y].continentName == typeArr[x]) {
+								that.result[x].list.push(that.meals[y])
+							}
+						}
+					}
 
-				that.$store.state.mealsData = that.result
-				console.log(that.$store.state.mealsData)
-				that.$forceUpdate()
-			})
+					that.result.map(function(val, idx) {
+						if(val.list.length > 4) {
+							val.canMore = true
+							val.more = false
+						} else {
+							val.canMore = false
+							val.more = true
+						}
+					})
+					
+					//从大到小排序
+					//console.log(that.result.sort(that.compare()))
+					that.result.sort(that.compare());
+					that.$store.state.mealsData = that.result
+					that.$forceUpdate()
 
-			//查询iccid
-			that.$http.post("/weixin/getIccId", {
-				data: {
-					connSeqNo: that.$store.state.connSeqNo,
-					partnerCode: that.$store.state.partnerCode,
-					token: that.$store.state.token,
-					tradeData: {
-						openid: that.$store.state.openId
-					},
-					tradeTime: new Date(),
-					tradeType: "F012",
+					//查询iccid
+					that.$http.post("/weixin/getIccId", {
+						data: {
+							connSeqNo: that.$store.state.connSeqNo,
+							partnerCode: that.$store.state.partnerCode,
+							token: that.$store.state.token,
+							tradeData: {
+								openid: that.$store.state.openId
+								//openid: "oQrFc1sfUYxsApu_KV70-TRrw9AA1"
+							},
+							tradeTime: new Date(),
+							tradeType: "F012",
+						}
+					}).then((res) => {
+						if(res.data.data.tradeRstCode == "1000") {
+							if(res.data.data.tradeData.length) {
+								that.$store.state.iccid = res.data.data.tradeData[res.data.data.tradeData.length - 1].iccid
+							}
+						}
+						toast.hide()
+					})
+				} else {
+					toast.hide()
+					that.wxFlag = true
+					that.helpLink = "/"
+					that.orderLink = "/"
 				}
-			}).then((res) => {
-				that.$store.state.iccid = res.data.data.tradeData[res.data.data.tradeData.length - 1].iccid
 			})
 		},
 		methods: {
@@ -176,6 +204,13 @@
 			routerFunc(obj) {
 				this.$store.state.routerData = obj
 				this.$router.push("/detail")
+			},
+			compare(){
+			    return function(a,b){
+			        var value1 = a.list.length;
+			        var value2 = b.list.length;
+			        return value2 - value1;
+			    }
 			}
 		}
 	}

@@ -16,8 +16,8 @@ const Axios = axios.create({
 			var sign = md5(JSON.stringify(data.data))
 			data.sign = sign
 			
-			console.log(data.data)
-			console.log(JSON.stringify(data.data))
+			//console.log(data.data)
+			//console.log(JSON.stringify(data.data))
 			console.log(data)
 			data = JSON.stringify(data)
 		}

@@ -2,9 +2,18 @@
 
 html,
 body {
-	font-size: 20px;
+	font-size: 22px;
 }
-
+@media screen and (max-width: 359px) {
+	html,body {
+		font-size: 20px;
+	}
+}
+@media screen and (min-width: 768px) {
+	html,body {
+		font-size: 26px;
+	}
+}
 * {
 	margin: 0px;
 	padding: 0;
@@ -159,6 +168,10 @@ textarea {
 	transform: scale(0.8);
 }
 
+.agree .cube-checkbox-label{
+	height:22px;
+}
+
 /*没有数据*/
 .no-data{
   padding-top:40px;
@@ -208,7 +221,13 @@ textarea {
 .cube-popup_mask{
 	z-index: 9999!important;
 }
-
+.cube-picker .cube-popup-mask,
+.cube-dialog .cube-popup-mask{
+	background-color: #25262d;
+}
+.cube-popup-mask{
+	background-color: transparent;
+}
 /*标题*/
 
 .common-title {
@@ -242,7 +261,7 @@ textarea {
 	left: 0;
 	right: 0;
 	height: 40px;
-	padding: 12px 1rem 0;
+	padding: 12px 0.8rem 0;
 	background-color: #FFFFFF;
 	z-index: 999;
 	border-top: 1px solid #D4D5D5;
@@ -260,8 +279,8 @@ textarea {
 }
 .buy-box a {
 	float: right;
-	margin-left:10px;
-	padding: 8px 12px;
+	margin-left:8px;
+	padding: 8px;
 	font-size: 0.7rem;
 	height: 16px;
 	line-height: 16px;

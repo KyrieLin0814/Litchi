@@ -5,8 +5,8 @@
 			<span>购买SIM卡</span>
 		</div>
 
-		<div class="num-box">
-			<p>荔枝卡 {{mealName}}</p>
+		<div class="num-box flexBox">
+			<p class="flex-1 text-1">{{mealName}}</p>
 			<div>
 				<a class="del" @click="delFunc">-</a>
 				<a class="number">{{ finalNum }}</a>
@@ -185,10 +185,10 @@
 	}
 	
 	.num-box p {
-		float: left;
 		font-size: 0.7rem;
 		color: #3E3A39;
 		line-height: 30px;
+		padding-right:10px;
 	}
 	
 	.num-box>div {
