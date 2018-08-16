@@ -31,8 +31,9 @@ const state = {
 		provinceVal: '',
 		cityVal: ''
 	},
-	expressType: 1,
+	expressType: "1",
 	orderId:"",
+	temOrderId:"",
 	routerBack:{}
 }
 export default new Vuex.Store({

@@ -91,7 +91,7 @@
 			}).then((res) => {
 				var result = res.data.data
 				//console.log(res.data.data)
-				if(res.data.data.tradeData[0].openId || true) {
+				if(res.data.data.tradeData[0].openId) {
 					//记录openId
 					that.$store.state.openId = res.data.data.tradeData[0].openId
 					//记录openid

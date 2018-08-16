@@ -70,7 +70,7 @@
 				var that = this
 				//绑定iccid
 				if(that.iccid) {
-					that.$http.post("http://wx.lizhisim.com/weixin/userBound", {
+					that.$http.post("/weixin/userBound", {
 						data: {
 							connSeqNo: that.$store.state.connSeqNo,
 							partnerCode: that.$store.state.partnerCode,

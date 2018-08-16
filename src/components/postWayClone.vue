@@ -86,10 +86,12 @@
 				mealPrice: 0,
 				iccid: '',
 				alert: null,
+				temOrderIdList:[],
 				orderList: [],
 				codes: "",
+				orderPeriods:"",
 				//快递信息
-				expressType: 0,
+				expressType: 1,
 				norPost: 0,
 				SFPost: 15,
 				address: {},
@@ -210,7 +212,7 @@
 			chooseWay(id) {
 				this.checkedObj = {}
 				this.checkedObj['type' + id] = true
-				this.$store.state.expressType = id
+				this.$store.state.expressType = (id == 3)? "" : id.toString();
 				this.expressType = id
 				this.$store.state.wayFlag = id
 
@@ -282,7 +284,8 @@
 				var expressPrice = 0
 				if(that.expressType == 1) {
 					expressPrice = that.norPost
-				} else {
+				} 
+				if(that.expressType == 2){
 					expressPrice = that.SFPost
 				}
 				//绑定接口
@@ -305,10 +308,10 @@
 					}
 				}).then((res) => {
 					if(res.data.data.tradeRstCode == "1000") {
-						
 						//整理订单请求参数
 						var orderList = []
 						var codeList = []
+						var orderPeriodList = []
 						that.shopCarData.map(function(val, idx) {
 							//orderlist遍历生成
 							if(that.shopCarData[idx].meal.obj.maxDays == that.shopCarData[idx].meal.obj.minDays) {
@@ -330,49 +333,95 @@
 							}
 							//code拼接
 							codeList.push(val.meal.obj.packageCode)
+							//orderPeriod拼接
+							orderPeriodList.push(val.finalNum.toString())
 						})
 						that.codes = codeList.join(",")
+						that.orderPeriods = orderPeriodList.join(",")
 						//console.log(orderList)
 						
 						//订单接口
-						that.$http.post("/SimGW/travelSimGW/busiService", {
-							data: {
-								connSeqNo: that.$store.state.connSeqNo,
-								partnerCode: that.$store.state.partnerCode,
-								token: that.$store.state.token,
-								tradeData: {
-									iccid: that.iccid.toString(),
-									//iccid: "89234185686475549864",
-									orderList: orderList
-								},
-								tradeTime: new Date(),
-								tradeType: "F002",
-							}
-						}).then((res) => {
-							toast.hide()
-							//console.log(res)
-							if(res.data.data.tradeRstCode == "1000") {
-								toast.hide()
-								//记录订单号
-								that.orderList = []
-								for(var j = 0; j < res.data.data.tradeData.length; j++) {
-									that.orderList.push(res.data.data.tradeData[j].orderId)
+						if(that.iccid){
+							//有卡情况
+							that.$http.post("/SimGW/travelSimGW/busiService", {
+								data: {
+									connSeqNo: that.$store.state.connSeqNo,
+									partnerCode: that.$store.state.partnerCode,
+									token: that.$store.state.token,
+									tradeData: {
+										iccid: that.iccid.toString(),
+										//iccid: "89234185686475549864",
+										orderList: orderList
+									},
+									tradeTime: new Date(),
+									tradeType: "F002",
 								}
-								that.$store.state.orderId = that.orderList.join(",")
-								//调微信支付
-								that.wxPay()
-							} else {
+							}).then((res) => {
 								toast.hide()
-								that.popupTxt = res.data.data.tradeRstMessage
-								const component = that.$refs['myPopup']
-								component.show()
-								setTimeout(() => {
-									component.hide()
-								}, 1000)
-							}
-						}).catch((err) => {
-							//alert("error 订单接口" + JSON.stringify(err))
-						})
+								//console.log(res)
+								if(res.data.data.tradeRstCode == "1000") {
+									toast.hide()
+									//记录订单号
+									that.orderList = []
+									for(var j = 0; j < res.data.data.tradeData.length; j++) {
+										that.orderList.push(res.data.data.tradeData[j].orderId)
+									}
+									that.$store.state.orderId = that.orderList.join(",")
+									//调微信支付
+									that.wxPay()
+								} else {
+									toast.hide()
+									that.popupTxt = res.data.data.tradeRstMessage
+									const component = that.$refs['myPopup']
+									component.show()
+									setTimeout(() => {
+										component.hide()
+									}, 1000)
+								}
+							}).catch((err) => {
+								//alert("error 订单接口" + JSON.stringify(err))
+							})
+						}else{
+							//无卡情况
+							that.$http.post("/weixin/orderNoCard", {
+								data: {
+									connSeqNo: that.$store.state.connSeqNo,
+									partnerCode: that.$store.state.partnerCode,
+									token: that.$store.state.token,
+									tradeData: {
+										orderList: orderList
+									},
+									tradeTime: new Date(),
+									tradeType: "F015",
+								}
+							}).then((res) => {
+								toast.hide()
+								//console.log(res)
+								if(res.data.data.tradeRstCode == "1000") {
+									toast.hide()
+									//记录订单号
+									that.temOrderIdList = []
+									for(var m = 0; m < res.data.data.tradeData.length; m++) {
+										that.temOrderIdList.push(res.data.data.tradeData[m].temOrderId)
+									}
+									that.$store.state.temOrderIdList = that.temOrderIdList.join(",")
+									//调微信支付
+									that.wxPay()
+								} else {
+									toast.hide()
+									that.popupTxt = res.data.data.tradeRstMessage
+									const component = that.$refs['myPopup']
+									component.show()
+									setTimeout(() => {
+										component.hide()
+									}, 1000)
+								}
+							}).catch((err) => {
+								//alert("error 无卡接口orderNoCard" + JSON.stringify(err))
+							})
+						}
+						
+						
 					} else {
 						toast.hide()
 						that.popupTxt = res.data.data.tradeRstMessage
@@ -413,7 +462,8 @@
 				}
 
 				var paymentOrderId = date.getFullYear().toString() + month + strDate + hour + minute + sec + Math.floor(Math.random() * 999).toString()
-				var url = "/weixin/weixinpay?orderId=" + that.$store.state.orderId + "&openId=" + that.$store.state.openId + "&amount=" + that.finalPrice.toString() + "&paymentOrderId=" + paymentOrderId + "&packageCode=" + that.codes + "&partnerCode=" + that.$store.state.partnerCode
+				var url = "/weixin/weixinpay?openId=" + that.$store.state.openId + "&partnerCode=" + that.$store.state.partnerCode + "&amount=" + that.finalPrice.toString() + "&paymentOrderId=" + paymentOrderId 
+						  + "&orderId=" + that.$store.state.orderId + "&temOrderId=" + that.$store.state.temOrderIdList +  "&packageCode=" + that.codes + "&orderPeriod=" + that.orderPeriods
 				//console.log(that.orderList)
 				that.$http.get(url).then((res) => {
 					var appIdVal = res.data.appId;　　　　　　
