@@ -18,9 +18,14 @@
 
 							<!--选项卡切换 开启-->
 							<ul class="list-1" :class="{'active': (tabFlag==item.nameId)}" v-for="item in mealsList">
-								<li @click="chooseFunc(meal)" class="flexBox" :class="{'active': (chooseFlag == meal.obj.packageCode)}" v-for="meal in item.list">
+								<li @click="chooseFunc(meal)" :class="{'active': (chooseFlag == meal.obj.packageCode)}" v-for="meal in item.list">
 									<cube-checkbox v-model="checkedObj['checked' + meal.obj.packageCode]" :option="option" :hollow-style="true" shape="circle" />
-									<p class="title flex-1">{{meal.obj.packageName}}</p>
+									<div class="title">
+										<p class="name">{{meal.obj.packageName}}</p>
+										<p v-if="meal.obj.packageDetailsDesc">{{meal.obj.packageDetailsDesc}}</p>
+										<p v-if="meal.obj.packageDetailsAdd">{{meal.obj.packageDetailsAdd}}</p>
+									</div>
+									
 									<div class="price-box">
 										<div class="now">
 											<!--单价-->
@@ -76,8 +81,8 @@
 
 		<div class="buy-box clearfix">
 			<p>{{$t('message.total')}}: <span>{{ price.toFixed(2) }}</span> {{$t('message.yuan')}}</p>
-			<a @click="addCar">{{$t('message.addCart')}}</a>
-			<router-link to="/">{{$t('message.back')}}</router-link>
+			<a class="addCar" @click="addCar">{{$t('message.buyNow')}}</a>
+			<!--<router-link to="/">{{$t('message.back')}}</router-link>-->
 		</div>
 
 		<cube-popup type="my-popup" :mask="false" ref="myPopup">{{popupTxt}}</cube-popup>
@@ -206,7 +211,7 @@
 		},
 		mounted() {
 			var that = this
-			that.contentHeight = document.documentElement.clientHeight - 264
+			that.contentHeight = document.documentElement.clientHeight - 282
 
 			var startX, startY, moveEndX, moveEndY, X, Y;
 
@@ -351,16 +356,16 @@
 	}
 	
 	.car-tab>div.active span {
-		color: #3E3A39;
+		color: #F39800;
 	}
 	
 	.car-tab>div span {
 		display: block;
 		font-size: 0.7rem;
-		line-height: 30px;
-		height: 30px;
+		line-height: 36px;
+		height: 36px;
 		text-align: center;
-		color: #9FA0A0;
+		color: #3E3A39;
 		border-right: 1px solid #3E3A39;
 		margin-bottom: 2px;
 	}
@@ -386,28 +391,50 @@
 	
 	.car-list li {
 		position: relative;
-		padding: 10px 1.2rem;
+		padding: 10px 0.8rem;
 		border-bottom: 1px solid #D4D5D5;
 	}
 	
 	.car-list .cube-checkbox {
 		position: absolute;
-		top: 12px;
+		top: 50%;
+		margin-top:-10px;
 	}
 	
-	.car-list li p {
+	.title{
+		margin-left: 2rem;
+		width:calc(100% - 140px);
+	}
+	.title p.name{
+		font-size:0.7rem;
+	}
+	.title p{
 		position: relative;
-		display: inline-block;
-		padding:0 0.5rem 0  1.3rem;
-		font-size: 0.7rem;
-		line-height: 20px;
+		width:100%;
 		color: #9FA0A0;
+		word-wrap:break-word;
+		font-size: 0.5rem;
+		line-height: 20px;
+		margin-bottom:1px;
+	}
+	.title p+p:before{
+		content:"";
+		width:4px;
+		height:4px;
+		border-radius:2px;
+		background: #C9CACA;
+		position: absolute;
+		left:-12px;
+		top:9px;
+		font-size:20px;
 	}
 	
 	.list-1 li.active p {
 		color: #F39800;
 	}
-	
+	.list-1 li.active p+p:before{
+		background: #F39800;
+	}
 	
 	.sale {
 		position: absolute;
@@ -421,49 +448,28 @@
 		color: #fff;
 		vertical-align: middle;
 	}
-	.list-2 span.title {
-		position: relative;
-		display: block;
-		font-size: 0.7rem;
-		color: #F39800;
-		line-height: 12px!important;
-	}
-	
-	.list-2 span.title:before {
-		content: '';
-		display: block;
-		position: absolute;
-		top: 2px;
-		left: -15px;
-		width: 8px;
-		height: 8px;
-		border-radius: 4px;
-		background-color: #F39800;
-	}
-	
-	.list-2 span.txt {
-		font-size: 0.5rem;
-		color: #3E3A39;
-		line-height: 12px!important;
-	}
 	
 	.price-box {
-		/*position: absolute;
+		position: absolute;
 		height: 40px;
 		top: 50%;
-		margin-top: -20px;
-		right: 1.2rem;*/
-		vertical-align: middle;
-		font-size:0;
+		margin-top: -14px;
+		right: 0.7rem;
+		/*vertical-align: middle;*/
+		/*font-size:0;*/
 		height:20px;
 	}
 	
 	.price-box .now {
 		display: inline-block;
-		font-size: 0.7rem;
+		font-size: 0.9rem;
+		font-weight: bold;
 		line-height:20px;
-		color: #F39800;
+		color: #9FA0A0;
 		vertical-align: middle;
+	}
+	li.active .price-box .now{
+		color:#F39800;
 	}
 	
 	.price-box .now span {
@@ -529,25 +535,28 @@
 	
 	.num-box {
 		position: absolute;
-		left: 0;
-		right: 0;
-		top: -36px;
-		padding: 0 1.2rem;
-		height: 34px;
-		border-top: 1px solid #D4D5D5;
-		background: #fff;
-		font-size: 0;
+	    left: 0;
+	    right: 0;
+	    top: -40px;
+	    padding: 0 1.2rem;
+	    height: 38px;
+	    border-top: 1px solid #D4D5D5;
+	    background: #fff;
+	    font-size: 0;
 	}
 	
 	.num-box p {
 		float: left;
 		font-size: 0.7rem;
 		color: #3E3A39;
-		line-height: 34px;
+		line-height: 38px;
 	}
 	
 	.num-box>div {
 		float: right;
+		font-size:0;
+		line-height:0;
+		margin-top:5px;
 	}
 	
 	.num-box>div>a {
@@ -560,19 +569,20 @@
 	}
 	
 	.num-box>div>a.number {
-		padding: 2px 12px;
+		padding: 4px 14px;
 		border-left: none;
 		border-right: none;
 	}
 	
 	.num-box>div>a.add,
 	.num-box>div>a.del {
-		padding: 2px 6px;
 		font-size: 0.8rem;
 	}
-	
+	.num-box>div>a.add{
+		padding: 4px 6px;
+	}
 	.num-box>div>a.del {
-		padding: 2px 7px;
+		padding: 4px 8px;
 	}
 	
 	.list-scroll-content {
@@ -644,4 +654,8 @@
 		top: 4px;
 		left: -15px;
 	}*/
+	.addCar{
+		margin-top:-2px;
+		padding:12px 24px;
+	}
 </style>

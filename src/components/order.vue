@@ -55,7 +55,6 @@
 		},
 		watch:{
 			price(){
-				console.log(this.price)
 				if(this.price < 0.001){
 					this.price = 0
 					this.$store.state.totalPrice = 0

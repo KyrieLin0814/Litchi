@@ -27,15 +27,15 @@
 		name: 'haveCard',
 		data() {
 			return {
-				iccid: this.$store.state.iccid,
+				iccid: '',
 				backRouter: this.$store.state.routerBack.haveCard,
 				popupTxt: ''
 			}
 		},
 		components: {},
 		created() {
+			this.iccid = this.$store.state.iccid
 			var params = encodeURI(encodeURI(document.location.href))
-
 			this.$http.get("/weixin/weixinsao?reqUrl=" + params).then((res) => {
 				wx.config({
 					debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。  
@@ -58,7 +58,6 @@
 						var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果  
 						var iccid = result.split(",")[1]
 						that.iccid = iccid
-						that.$store.state.iccid = iccid
 						// code 在这里面写上扫描二维码之后需要做的内容 
 					},
 					error: function(err) {
@@ -76,8 +75,13 @@
 							partnerCode: that.$store.state.partnerCode,
 							token: that.$store.state.token,
 							tradeData: {
+								expressPrice: "",
+								expressType: "",
 								iccid: that.iccid,
-								openid: that.$store.state.openId
+								openid: that.$store.state.openId ? that.$store.state.openId : "",
+								receiveAddress: "",
+								receivePhoneNumber: "",
+								receiveUserName: ""
 							},
 							tradeTime: new Date(),
 							tradeType: "F013",
@@ -86,7 +90,7 @@
 						if(res.data.data.tradeRstCode == "1000") {
 							that.$store.state.iccid = that.iccid
 							that.$router.push({
-								name: "postWay",
+								name: that.backRouter
 							})
 //							that.popupTxt = res.data.data.tradeRstMessage
 //							const component = that.$refs['myPopup']

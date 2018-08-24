@@ -8,6 +8,7 @@ module.exports = {
 		pullup:'上拉展开产品详情',
 		total:'总价',
 		yuan:'元',
+		buyNow:'立即购买',
 		addCart:'下一步',
 		back:'返回',
 		detailsMeal:'套餐详情'

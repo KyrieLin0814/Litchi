@@ -231,7 +231,7 @@ textarea {
 /*标题*/
 
 .common-title {
-	height: 24px;
+	height: 28px;
 	background-color: #E4E4E4;
 	font-size: 0;
 }
@@ -248,7 +248,7 @@ textarea {
 	display: inline-block;
 	font-size: .7rem;
 	color: #F39800;
-	line-height: 24px;
+	line-height: 28px;
 	vertical-align: middle;
 }
 
@@ -260,8 +260,8 @@ textarea {
 	bottom: 0;
 	left: 0;
 	right: 0;
-	height: 40px;
-	padding: 12px 0.8rem 0;
+	height: 48px;
+	padding: 12px 0.6rem 0;
 	background-color: #FFFFFF;
 	z-index: 999;
 	border-top: 1px solid #D4D5D5;
@@ -280,7 +280,7 @@ textarea {
 .buy-box a {
 	float: right;
 	margin-left:8px;
-	padding: 8px;
+	padding: 10px 8px;
 	font-size: 0.7rem;
 	height: 16px;
 	line-height: 16px;

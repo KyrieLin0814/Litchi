@@ -212,7 +212,7 @@
 			chooseWay(id) {
 				this.checkedObj = {}
 				this.checkedObj['type' + id] = true
-				this.$store.state.expressType = (id == 3)? "" : id.toString();
+				this.$store.state.expressType = ((id == 3)? "" : id.toString());
 				this.expressType = id
 				this.$store.state.wayFlag = id
 
@@ -249,6 +249,7 @@
 			},
 			payFunc() {
 				var that = this
+				
 				if(that.expressType == 3){
 					if(that.iccid == "") {
 						that.popupTxt = "您还未绑定旅游卡ICCID，无法下单"
@@ -297,11 +298,11 @@
 						tradeData: {
 							expressPrice: expressPrice.toString(),
 							expressType: that.$store.state.expressType.toString(),
-							iccid: that.$store.state.iccid,
-							openid: that.$store.state.openId,
+							iccid: that.$store.state.iccid ? that.$store.state.iccid : "",
+							openid: that.$store.state.openId ? that.$store.state.openId : "",
 							receiveAddress: encodeURI(encodeURI(that.addressGet)),
 							receivePhoneNumber: that.$store.state.address.phone,
-							receiveUserName: encodeURI(encodeURI(that.$store.state.address.name)),
+							receiveUserName: encodeURI(encodeURI(that.$store.state.address.name))
 						},
 						tradeTime: new Date(),
 						tradeType: "F013",
@@ -322,6 +323,10 @@
 										orderPeriod: that.shopCarData[idx].meal.obj.maxDays,
 										packageCode: val.meal.obj.packageCode
 									}
+									//orderPeriod拼接
+									orderPeriodList.push(that.shopCarData[idx].meal.obj.maxDays)
+									//code拼接
+									codeList.push(val.meal.obj.packageCode)
 								}
 								orderList = orderList.concat(arrD)
 							} else {
@@ -330,18 +335,20 @@
 									orderPeriod: val.finalNum.toString(),
 									packageCode: val.meal.obj.packageCode
 								})
+								//orderPeriod拼接
+								orderPeriodList.push(val.finalNum.toString())
+								//code拼接
+								codeList.push(val.meal.obj.packageCode)
 							}
-							//code拼接
-							codeList.push(val.meal.obj.packageCode)
-							//orderPeriod拼接
-							orderPeriodList.push(val.finalNum.toString())
 						})
 						that.codes = codeList.join(",")
 						that.orderPeriods = orderPeriodList.join(",")
 						//console.log(orderList)
+						//console.log(that.orderPeriods)
+						//console.log(that.codes)
 						
 						//订单接口
-						if(that.iccid){
+						if(that.expressType == 3){
 							//有卡情况
 							that.$http.post("/SimGW/travelSimGW/busiService", {
 								data: {
@@ -420,8 +427,6 @@
 								//alert("error 无卡接口orderNoCard" + JSON.stringify(err))
 							})
 						}
-						
-						
 					} else {
 						toast.hide()
 						that.popupTxt = res.data.data.tradeRstMessage
@@ -462,9 +467,9 @@
 				}
 
 				var paymentOrderId = date.getFullYear().toString() + month + strDate + hour + minute + sec + Math.floor(Math.random() * 999).toString()
-				var url = "/weixin/weixinpay?openId=" + that.$store.state.openId + "&partnerCode=" + that.$store.state.partnerCode + "&amount=" + that.finalPrice.toString() + "&paymentOrderId=" + paymentOrderId 
+				var url = "/weixin/weixinpay?openId=" + that.$store.state.openId + "&partnerCode=" + that.$store.state.partnerCode + "&amount=" + that.finalPrice.toFixed(2) + "&paymentOrderId=" + paymentOrderId 
 						  + "&orderId=" + that.$store.state.orderId + "&temOrderId=" + that.$store.state.temOrderIdList +  "&packageCode=" + that.codes + "&orderPeriod=" + that.orderPeriods
-				//console.log(that.orderList)
+				//console.log(url)
 				that.$http.get(url).then((res) => {
 					var appIdVal = res.data.appId;　　　　　　
 					var timeStampVal = res.data.timeStamp;
@@ -496,7 +501,7 @@
 								that.$router.replace("/payError")
 							}
 
-						});　　　　
+						})　
 					}　
 					if(typeof WeixinJSBridge == "undefined") {　　　　　　　　
 						if(document.addEventListener) {　　　　　　　　　　

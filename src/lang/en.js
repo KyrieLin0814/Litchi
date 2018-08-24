@@ -8,6 +8,7 @@ module.exports = {
 		pullup:'Pull up the details of the product',
 		total:'Totals',
 		yuan:'yuan',
+		buyNow:'Buy now',
 		addCart:'Add to cart',
 		back:'Back',
 		detailsMeal:'Details of the set meal'
