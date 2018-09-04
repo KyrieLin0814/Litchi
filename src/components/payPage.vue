@@ -20,22 +20,25 @@
 		</div>
 
 		<div class="buy-box clearfix">
-			<p>合计： <span>{{ finalPrice.toFixed(2) }}</span> 元</p>
+			<p>合计：<span>{{ finalPrice.toFixed(2) }}</span> 元</p>
 			<span class="slide" :class="{'active': slideFlage}" @click="slideFunc"></span>
 			<a @click="nextFunc">加入购物车</a>
 			<router-link to="/detail">返回</router-link>
+			
+			
+			<transition name="fade" mode="out-in">
+				<div class="cost-box" :class="{'active': slideFlage}">
+					<div class="tle">费用详情</div>
+					<div class="flexBox">
+						<div>套餐费 ({{ mealCost }})</div>
+						<div class="flex-1"></div>
+						<div class="price"><span>{{ mealPrice.toFixed(2) }}</span>元</div>
+					</div>
+				</div>
+			</transition>
 		</div>
 
-		<transition name="fade" mode="out-in">
-			<div class="cost-box" :class="{'active': slideFlage}">
-				<p>费用详情</p>
-				<div class="flexBox">
-					<div>套餐费 ({{ mealCost }})</div>
-					<div class="flex-1"></div>
-					<div class="price"><span>{{ mealPrice.toFixed(2) }}</span>元</div>
-				</div>
-			</div>
-		</transition>
+		
 
 		<cube-popup type="my-popup" :mask="false" ref="myPopup">{{popupTxt}}</cube-popup>
 	</div>

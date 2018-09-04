@@ -7,6 +7,12 @@ const state = {
 	partnerCode: "P000007", //旅游卡业务接入网关提供给合作伙伴的编码
 	token: "yv8JXeTTfqyedLcU2LAqHUTKtYA4G1kz", //由旅游卡业务接入网关提供给合作伙伴的认证 Token 
 	iccid: "", //旅游卡ICCID ,当无卡用户购买时首次为空
+	cartData:{
+		trafficCardfee: 10,//卡费
+		ordinaryExpressfee: 10,//普通快递费
+		sFexpressfee: 15,//顺丰快递费
+		orderFullX: 30//价格超出免卡费
+	},
 	mealsData: [],
 	routerData: {},
 	langType:'cn',

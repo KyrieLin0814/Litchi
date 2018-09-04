@@ -96,6 +96,12 @@
 					that.$store.state.openId = res.data.data.tradeData[0].openId
 					//记录openid
 					that.$store.state.partnerCode = res.data.data.partnerCode
+					//记录各个价格
+					that.$store.state.cartData.trafficCardfee = Number(res.data.data.trafficCardfee)
+					that.$store.state.cartData.ordinaryExpressfee = Number(res.data.data.ordinaryExpressfee)
+					that.$store.state.cartData.sFexpressfee = Number(res.data.data.sFexpressfee)
+					that.$store.state.cartData.orderFullX = Number(res.data.data.orderFullX)
+					//console.log(that.$store.state.cartData)
 					
 					//定义类型  mcc数组
 					var typeArr = []

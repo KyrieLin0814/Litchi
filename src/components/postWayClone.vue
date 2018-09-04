@@ -9,12 +9,12 @@
 			<ul>
 				<li @click="chooseWay(1)">
 					<cube-checkbox v-model="checkedObj.type1" :option="option" :hollow-style="true" shape="circle" />
-					<div class="post-txt"><span>普通快递</span>（免费）</div>
+					<div class="post-txt"><span>普通快递</span></div>
 					<p><span>{{norPost.toFixed(2)}}</span>元</p>
 				</li>
 				<li @click="chooseWay(2)">
 					<cube-checkbox v-model="checkedObj.type2" :option="option" :hollow-style="true" shape="circle" />
-					<div class="post-txt"><span>顺风快递</span>（更快送达）</div>
+					<div class="post-txt"><span>顺风快递</span></div>
 					<p><span>{{SFPost.toFixed(2)}}</span>元</p>
 				</li>
 				<li @click="chooseWay(3)">
@@ -33,31 +33,39 @@
 		</div>
 
 		<div class="buy-box clearfix">
-			<p>合计： <span>{{ finalPrice.toFixed(2) }}</span> 元</p>
+			<p>合计：<span>{{ finalPrice.toFixed(2) }}</span> 元</p>
 			<span class="slide" :class="{'active': slideFlage}" @click="slideFunc"></span>
 			<a @click="payFunc">支付</a>
 			<router-link to="/order">返回</router-link>
-		</div>
-
-		<transition name="fade" mode="out-in">
-			<div class="cost-box" :class="{'active': slideFlage}">
-				<p>费用详情</p>
-				<ul>
-					<li v-for="i in shopCarData">
-						<div class="flexBox text-meal">
-							<div class="text-meaL-content">{{i.meal.name}} ({{ i.text }})</div>
-							<div class="flex-1"></div>
-							<div class="price"><span>{{ i.finalPrice.toFixed(2) }}</span>元</div>
+			
+			<transition name="fade" mode="out-in">
+				<div class="cost-box" :class="{'active': slideFlage}">
+					<div class="tle">费用详情</div>
+					<ul>
+						<li v-for="i in shopCarData">
+							<div class="flexBox text-meal">
+								<div class="text-meaL-content">{{i.meal.name}} ({{ i.text }})</div>
+								<div class="flex-1"></div>
+								<div class="price"><span>{{ i.finalPrice.toFixed(2) }}</span>元</div>
+							</div>
+						</li>
+					</ul>
+					<div class="flexBox" v-if="expressType != 3">
+						<div>快递费 </div>
+						<div class="flex-1"></div>
+						<div class="price"><span>{{ expressCost.toFixed(2) }}</span>元</div>
+					</div>
+					<div class="flexBox cardCost" :class="{cardFree: !cardCostFlag}" v-if="expressType != 3">
+						<div>荔枝卡费
+							<span class="cardFreeTxt" v-if="!cardCostFlag"> (单笔满{{orderFullX}}元，已免除)</span>
+							<span class="cardFreeTxt" v-else> (单笔满{{orderFullX}}元，可免除)</span>
 						</div>
-					</li>
-				</ul>
-				<div class="flexBox" v-if="expressType == 2">
-					<div>快递费 </div>
-					<div class="flex-1"></div>
-					<div class="price"><span>{{ SFPost.toFixed(2) }}</span>元</div>
+						<div class="flex-1"></div>
+						<div class="price"><span>{{ trafficCardfee.toFixed(2) }}</span>元</div>
+					</div>
 				</div>
-			</div>
-		</transition>
+			</transition>
+		</div>
 
 		<cube-popup type="my-popup" :mask="false" ref="myPopup">{{ popupTxt }}</cube-popup>
 	</div>
@@ -90,10 +98,14 @@
 				orderList: [],
 				codes: "",
 				orderPeriods:"",
+				cardCostFlag:true,
+				expressCost:this.$store.state.cartData.ordinaryExpressfee,
+				orderFullX:this.$store.state.cartData.orderFullX,
 				//快递信息
 				expressType: 1,
-				norPost: 0,
-				SFPost: 15,
+				trafficCardfee:this.$store.state.cartData.trafficCardfee,
+				norPost: this.$store.state.cartData.ordinaryExpressfee,
+				SFPost: this.$store.state.cartData.sFexpressfee,
 				address: {},
 				addressGet: '',
 			}
@@ -114,6 +126,9 @@
 			that.iccid = that.$store.state.iccid
 			that.finalPrice = that.$store.state.totalPrice
 			that.mealPrice = that.$store.state.totalPrice
+			if(that.mealPrice >= that.orderFullX){
+				that.cardCostFlag = false
+			}
 			
 			//地址
 			that.address = that.$store.state.address
@@ -175,6 +190,7 @@
 						setTimeout(() => {
 							component.hide()
 						}, 1500)
+						that.chooseWay(1)
 					}
 				})
 			}
@@ -215,9 +231,21 @@
 				this.$store.state.expressType = ((id == 3)? "" : id.toString());
 				this.expressType = id
 				this.$store.state.wayFlag = id
-
-				if(id == 2) {
-					this.finalPrice = this.mealPrice + this.SFPost
+				
+				if(id == 1){
+					this.expressCost = this.norPost
+					if(this.cardCostFlag){
+						this.finalPrice = this.mealPrice + this.norPost + this.trafficCardfee
+					}else{
+						this.finalPrice = this.mealPrice + this.norPost
+					}
+				}else if(id == 2) {
+					this.expressCost = this.SFPost
+					if(this.cardCostFlag){
+						this.finalPrice = this.mealPrice + this.SFPost + this.trafficCardfee
+					}else{
+						this.finalPrice = this.mealPrice + this.SFPost
+					}
 				} else {
 					this.finalPrice = this.mealPrice
 				}
@@ -646,5 +674,28 @@
 	}
 	.price{
 		line-height:32px;
+		position: relative;
+	}
+	.cardCost.cardFree{
+		color:#999;
+	}
+	.cardCost .cardFreeTxt{
+		color:#999;
+		font-size:0.6rem;
+	}
+	
+	.cardCost.cardFree .price,
+	.cardCost.cardFree .price span
+	{
+		color:#999;
+	}
+	.cardCost.cardFree .price:after{
+		content: "";
+		display: block;
+		position: absolute;
+		top:50%;
+		left:-5px;
+		width:calc(100% + 10px);
+		border-top:1px solid #c5c5c5;
 	}
 </style>

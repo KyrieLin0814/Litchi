@@ -6,9 +6,10 @@
 					<div class="banner" :style="{backgroundImage: 'url(' + obj.pictureDetails + ')', backgroundSize: '100% auto', backgroundPosition:'center'}">
 						<p class="text-1">{{obj.packageDesc}}</p>
 					</div>
-					<div class="common-title">
+					<div class="common-title flexBox">
 						<i></i>
 						<span>{{$t('message.chooseMeal')}}</span>
+						<p class="flex-1">累计购买{{orderFullX}}元免卡费，30天内激活使用</p>
 					</div>
 					<div class="car-content">
 						<div class="car-tab flexBox">
@@ -118,7 +119,8 @@
 				scrollDown: true,
 				scrollUp: true,
 				popupTxt: '',
-				number:'天数'
+				number:'天数',
+				orderFullX:this.$store.state.cartData.orderFullX
 			}
 		},
 		watch: {
@@ -655,7 +657,15 @@
 		left: -15px;
 	}*/
 	.addCar{
-		margin-top:-2px;
 		padding:12px 24px;
+	}
+	.common-title i{
+		height:auto;
+	}
+	.common-title p{
+		font-size:0.6rem;
+		line-height:30px;
+		color:#999;
+		padding-left:5px;
 	}
 </style>

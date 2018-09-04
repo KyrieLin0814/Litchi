@@ -24,8 +24,8 @@
 		</ul>
 
 		<div class="buy-box clearfix">
-			<p>需支付： <span>{{ price.toFixed(2) }}</span> 元</p>
-			<a @click="payFunc">结算</a>
+			<p>需支付：<span>{{ price.toFixed(2) }}</span> 元</p>
+			<a @click="payFunc"> 付 款 </a>
 			<router-link to="/">继续购买</router-link>
 		</div>
 
