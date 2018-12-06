@@ -25,7 +25,7 @@
 				<p class="text-1">{{ area?area:'请选择' }}</p>
 			</div>
 			<div>
-				<input type="text" maxlength="11" v-model="addressTxt" placeholder="详细地址">
+				<input type="text" v-model="addressTxt" placeholder="详细地址">
 			</div>
 		</div>
 

@@ -23,13 +23,15 @@
 				</li>
 			</ul>
 		</div>
-		<div class="more-info" @click="setAddress">
-			<p>收货地址</p>
-			<div>{{ addressGet ? addressGet : '编辑' }}</div>
-		</div>
-		<div class="more-info" @click="haveCard">
+		
+		<div class="more-info" @click="haveCard" v-show="checkedObj.type3">
 			<p>已有旅游卡信息</p>
 			<div>{{ iccid ? iccid : '编辑' }}</div>
+		</div>
+		
+		<div class="more-info" @click="setAddress" v-show="!checkedObj.type3">
+			<p>收货地址</p>
+			<div>{{ addressGet ? addressGet : '编辑' }}</div>
 		</div>
 
 		<div class="buy-box clearfix">
@@ -495,7 +497,7 @@
 				}
 
 				var paymentOrderId = date.getFullYear().toString() + month + strDate + hour + minute + sec + Math.floor(Math.random() * 999).toString()
-				var url = "/weixin/weixinpay?openId=" + that.$store.state.openId + "&partnerCode=" + that.$store.state.partnerCode + "&amount=" + that.finalPrice.toFixed(2) + "&paymentOrderId=" + paymentOrderId 
+				var url = "/weixin/weixinpay?openId=" + that.$store.state.openId + "&iccId="+ that.$store.state.iccid +  "&partnerCode=" + that.$store.state.partnerCode + "&amount=" + that.finalPrice.toFixed(2) + "&paymentOrderId=" + paymentOrderId
 						  + "&orderId=" + that.$store.state.orderId + "&temOrderId=" + that.$store.state.temOrderIdList +  "&packageCode=" + that.codes + "&orderPeriod=" + that.orderPeriods
 				//console.log(url)
 				that.$http.get(url).then((res) => {
